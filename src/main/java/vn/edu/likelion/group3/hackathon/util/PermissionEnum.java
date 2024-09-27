@@ -1,0 +1,24 @@
+package vn.edu.likelion.group3.hackathon.util;
+
+public enum PermissionEnum {
+    CREATE_APPOINTMENT(),
+    READ_APPOINTMENT(),
+    CANCEL_APPOINTMENT(),
+    UPDATE_APPOINTMENT(),
+    CREATE_STAFF(),
+    READ_STAFF(),
+    CANCEL_STAFF(),
+    UPDATE_STAFF(),
+    CREATE_USER(),
+    READ_USER(),
+    CANCEL_USER(),
+    UPDATE_USER(),
+    CREATE_CATEGORY_SERVICE(),
+    READ_CATEGORY_SERVICE(),
+    CANCEL_CATEGORY_SERVICE(),
+    UPDATE_CATEGORY_SERVICE(),
+    CREATE_SERVICE(),
+    READ_SERVICE(),
+    CANCEL_SERVICE(),
+    UPDATE_SERVICE(),
+}
