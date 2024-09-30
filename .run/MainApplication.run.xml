@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="MainApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" activateToolWindowBeforeRun="false" focusToolWindowBeforeRun="true" nameIsGenerated="true">
-    <module name="springbase" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="vn.edu.likelion.group3.hackathon.MainApplication" />
+    <module name="freelance-connecter" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="vn.com.freelanceconnect.MainApplication" />
     <method v="2">
       <option name="Make" enabled="true" />
       <option name="LaunchBrowser.Before.Run" url="http://localhost:8080/swagger-ui/index.html" />
