@@ -1,6 +1,7 @@
 package vn.com.freelanceconnect.exception;
 
 import lombok.Data;
+import vn.com.freelanceconnect.util.RoleEnum;
 
 import java.time.LocalDateTime;
 

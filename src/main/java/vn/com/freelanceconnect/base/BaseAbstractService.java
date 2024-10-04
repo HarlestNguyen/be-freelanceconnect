@@ -1,14 +1,11 @@
-package vn.com.freelanceconnect.service;
+package vn.com.freelanceconnect.base;
 
-import vn.com.freelanceconnect.exception.ErrorHandler;
-import vn.com.freelanceconnect.generic.IRepository;
-import vn.com.freelanceconnect.generic.IService;
-import vn.com.freelanceconnect.entity.EntityDefine;
 import org.springframework.http.HttpStatus;
+import vn.com.freelanceconnect.exception.ErrorHandler;
 
 import java.util.Collection;
 
-public abstract class AbstractService<T extends EntityDefine, ID> implements IService<T, ID> {
+public abstract class BaseAbstractService<T extends BaseEntity, ID> implements IService<T, ID> {
 
     protected abstract IRepository<T, ID> getRepository();
 

@@ -1,7 +1,5 @@
 package vn.com.freelanceconnect.config;
 
-import vn.com.freelanceconnect.jwt.JwtFilter;
-import vn.com.freelanceconnect.service.AccountService;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.models.Components;
@@ -27,6 +25,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import vn.com.freelanceconnect.jwt.JwtFilter;
+import vn.com.freelanceconnect.service.AccountService;
 
 import java.util.Arrays;
 import java.util.List;
@@ -56,7 +56,8 @@ public class SercurityConfig {
 //                                .requestMatchers("/api/*/*/admin/**").hasAuthority("ROLE_ADMIN")
 //                                .requestMatchers("/**").permitAll()
                                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                                .requestMatchers("api/auth/sign-up", "api/auth/sign-in", "api/auth/forget-password").permitAll()
+                                .requestMatchers("/**").permitAll()
+//                                .requestMatchers("api/auth/sign-up", "api/auth/sign-in", "api/auth/forget-password").permitAll()
                                 .anyRequest().authenticated()
                 )
                 //                .exceptionHandling(e -> {

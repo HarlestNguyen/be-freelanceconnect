@@ -1,9 +1,5 @@
 package vn.com.freelanceconnect.service.impl;
 
-import vn.com.freelanceconnect.util.EmailSubjectEnum;
-import vn.com.freelanceconnect.exception.ErrorHandler;
-import vn.com.freelanceconnect.service.MailService;
-import vn.com.freelanceconnect.util.TypeMailEnum;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import vn.com.freelanceconnect.exception.ErrorHandler;
+import vn.com.freelanceconnect.service.MailService;
+import vn.com.freelanceconnect.util.EmailSubjectEnum;
+import vn.com.freelanceconnect.util.TypeMailEnum;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,4 +1,4 @@
-package vn.com.freelanceconnect.entity;
+package vn.com.freelanceconnect.base;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -6,7 +6,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 @Data
 @MappedSuperclass
-public abstract class EntityDefine {
+public abstract class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)

@@ -1,4 +1,4 @@
-package vn.com.freelanceconnect.generic;
+package vn.com.freelanceconnect.base;
 
 import org.springframework.stereotype.Component;
 

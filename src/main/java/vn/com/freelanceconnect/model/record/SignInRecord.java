@@ -1,4 +1,4 @@
-package vn.com.freelanceconnect.record;
+package vn.com.freelanceconnect.model.record;
 
 public record SignInRecord(
         String username,

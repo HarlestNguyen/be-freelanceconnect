@@ -1,4 +1,4 @@
-package vn.com.freelanceconnect.entity;
+package vn.com.freelanceconnect.base;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 
 @Data
 @MappedSuperclass
-public abstract class TimeInfoEntityDefine extends EntityDefine {
+public abstract class BaseAuditableEntity extends BaseEntity {
     @Column(name = "created_date", updatable = false)
     @CreationTimestamp
     private Timestamp createdDate;

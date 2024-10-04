@@ -1,12 +1,14 @@
-package vn.com.freelanceconnect.entity;
+package vn.com.freelanceconnect.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import vn.com.freelanceconnect.base.BaseEntity;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -17,29 +19,28 @@ import java.util.Collections;
 @EqualsAndHashCode(callSuper = false)
 @Table(name = "tbl_account")
 @DynamicInsert
-public class Account extends TimeInfoEntityDefine implements Serializable, UserDetails {
+public class Account extends BaseEntity implements Serializable, UserDetails {
     @Column(unique = true, nullable = false)
     private String username;
     @Column(nullable = false)
     private String password;
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "tbl_role_account",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "account_id")
-    )
-    private Collection<Role> roles;
+    @Column(nullable = false)
+    @ColumnDefault("b'0'")
+    private Boolean isVerified;
+    @ManyToOne
+    @JoinColumn(nullable = false, name = "role_id")
+    private Role role;
+
+    @ManyToOne
+    @JoinColumn(name = "profile_id", nullable = false)
+    private Profile profile;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (roles == null) {
+        if (role == null) {
             return Collections.emptyList();
         }
-        // Convert permissions to granted authority
-//        return roles.stream()
-//                .flatMap(role -> role.getPermissions().stream())
-//                .map(permission -> new SimpleGrantedAuthority(permission.getName()))
-//                .toList();
-        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).toList();
+        return Collections.singleton(new SimpleGrantedAuthority(role.getName().getRoleName()));
     }
+
 }

@@ -1,15 +1,5 @@
 package vn.com.freelanceconnect.service.impl;
 
-import vn.com.freelanceconnect.dto.TokenDTO;
-import vn.com.freelanceconnect.jwt.JwtService;
-import vn.com.freelanceconnect.repository.AccountRepository;
-import vn.com.freelanceconnect.entity.Account;
-import vn.com.freelanceconnect.exception.ErrorHandler;
-import vn.com.freelanceconnect.generic.IRepository;
-import vn.com.freelanceconnect.record.RegisterRecord;
-import vn.com.freelanceconnect.record.SignInRecord;
-import vn.com.freelanceconnect.service.AbstractService;
-import vn.com.freelanceconnect.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
@@ -21,11 +11,23 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import vn.com.freelanceconnect.model.dto.TokenDTO;
+import vn.com.freelanceconnect.model.entity.Account;
+import vn.com.freelanceconnect.model.entity.Profile;
+import vn.com.freelanceconnect.exception.ErrorHandler;
+import vn.com.freelanceconnect.base.IRepository;
+import vn.com.freelanceconnect.jwt.JwtService;
+import vn.com.freelanceconnect.model.record.RegisterRecord;
+import vn.com.freelanceconnect.model.record.SignInRecord;
+import vn.com.freelanceconnect.repository.AccountRepository;
+import vn.com.freelanceconnect.repository.ProfileRepository;
+import vn.com.freelanceconnect.base.BaseAbstractService;
+import vn.com.freelanceconnect.service.AccountService;
 
 import java.util.Optional;
 
 @Service
-public class AccountServiceImpl extends AbstractService<Account, Integer> implements AccountService {
+public class AccountServiceImpl extends BaseAbstractService<Account, Integer> implements AccountService {
     @Autowired
     private AccountRepository accountRepository;
 
@@ -39,6 +41,9 @@ public class AccountServiceImpl extends AbstractService<Account, Integer> implem
 
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    private ProfileRepository profileRepository;
 
     @Override
     protected IRepository<Account, Integer> getRepository() {
@@ -74,9 +79,17 @@ public class AccountServiceImpl extends AbstractService<Account, Integer> implem
     @Override
     public Account signUp(RegisterRecord record) {
         Account account = new Account();
+        profileRepository.findByEmail(record.email()).ifPresentOrElse(
+                profile -> account.setProfile(profile),
+                () -> {
+                    Profile profile = new Profile();
+                    profile.setEmail(record.email());
+                    profile.setFullname(record.fullname());
+                    account.setProfile(profileRepository.save(profile));
+                }
+        );
         account.setUsername(record.username());
         account.setPassword(passwordEncoder.encode(record.password()));
-        account.setIsDeleted(false);
         return save(account);
     }
 

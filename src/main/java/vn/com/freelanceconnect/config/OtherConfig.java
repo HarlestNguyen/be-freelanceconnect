@@ -1,9 +1,9 @@
 package vn.com.freelanceconnect.config;
 
-import vn.com.freelanceconnect.util.DateTimeFormat;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
+import vn.com.freelanceconnect.util.DateTimeFormat;
 
 import javax.sql.DataSource;
 

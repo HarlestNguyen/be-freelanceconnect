@@ -1,4 +1,4 @@
-package vn.com.freelanceconnect.dto;
+package vn.com.freelanceconnect.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
