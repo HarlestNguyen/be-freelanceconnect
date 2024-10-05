@@ -17,7 +17,7 @@ public class Role extends BaseEntity {
     private RoleEnum name;
     @Column(columnDefinition = "longtext")
     private String description;
-    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
     @JsonIgnore
     private Collection<Account> accounts;
 }

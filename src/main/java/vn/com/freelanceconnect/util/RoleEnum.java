@@ -1,8 +1,9 @@
 package vn.com.freelanceconnect.util;
 
 public enum RoleEnum {
-    ADMIN(1, "ROLE_ADMIN"),
-    BUYER(2, "ROLE_BUYER");
+    ROLE_ADMIN(1, "ROLE_ADMIN"),
+    ROLE_EMPLOYER(2, "ROLE_EMPLOYER"),
+    ROLE_APPLIER(3, "ROLE_APPLIER");
     private final int id;
     private final String roleName;
 
