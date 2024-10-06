@@ -85,6 +85,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         Map<String, String> errors = new HashMap<>();
+        ex.printStackTrace();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();

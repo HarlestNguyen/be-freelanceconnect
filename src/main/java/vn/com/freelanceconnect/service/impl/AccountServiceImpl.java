@@ -77,10 +77,19 @@ public class AccountServiceImpl extends BaseAbstractService<Account, Integer> im
     }
 
     @Override
-    public Account signUp(RegisterRecord record) {
+    public TokenDTO signUp(RegisterRecord record) {
         Account account = new Account();
         profileRepository.findByEmail(record.email()).ifPresentOrElse(
-                profile -> account.setProfile(profile),
+                profile -> {
+                    if (profile.getFullname().equals(record.fullname()) && profile.getEmail().equals(record.email())) {
+                        account.setProfile(profile);
+                    }else {
+                        Profile profile1 = new Profile();
+                        profile1.setEmail(record.email());
+                        profile1.setFullname(record.fullname());
+                        account.setProfile(profileRepository.save(profile1));
+                    }
+                },
                 () -> {
                     Profile profile = new Profile();
                     profile.setEmail(record.email());
@@ -90,11 +99,14 @@ public class AccountServiceImpl extends BaseAbstractService<Account, Integer> im
         );
         account.setUsername(record.username());
         account.setPassword(passwordEncoder.encode(record.password()));
-        return save(account);
+        Account result = save(account);
+        String accessToken = jwtService.generateToken(result);
+        if (accessToken != null) {
+            return new TokenDTO(accessToken);
+        }
+        return null;
     }
 
-
-    @Override
     public Account findOne(String username) {
         return accountRepository.findByUsername(username).orElseThrow(
                 () -> new ErrorHandler(HttpStatus.NOT_FOUND, "Entity not found")

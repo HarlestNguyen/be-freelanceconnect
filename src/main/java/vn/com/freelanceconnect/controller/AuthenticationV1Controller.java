@@ -37,20 +37,13 @@ public class AuthenticationV1Controller {
     @PreAuthorize(AuthConstants.NONE)
     @Transactional
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRecord record) {
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("Register successfully, please check your email to verify account.", accountService.signUp(record)));
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("Register successfully", accountService.signUp(record)));
     }
 
     @PostMapping("/sign-out")
     @PreAuthorize(AuthConstants.ALL)
     @SecurityRequirement(name = "bearer-key")
     public ResponseEntity<?> logout(HttpServletRequest request) {
-//        JwtBlacklistToken blacklistToken = new JwtBlacklistToken();
-//        blacklistToken.setToken(request.getHeader("Authorization").substring(7));
-//        blacklistToken.setExpirationDate(new Timestamp(jwtService
-//                .extractExpiration(request
-//                        .getHeader("Authorization")
-//                        .substring(7)).getTime()));
-//        jwtBlacklistTokenRepository.save(blacklistToken);
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("Logout successfully."));
     }
 

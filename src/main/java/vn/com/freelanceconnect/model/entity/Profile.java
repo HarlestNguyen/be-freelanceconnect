@@ -19,7 +19,7 @@ public class Profile extends BaseAuditableEntity {
     private String fullname;
     @Column(nullable = false)
     private String email;
-    @Column(nullable = false)
+    @Column
     private Date dob;
     @OneToMany(mappedBy = "profile", fetch = FetchType.LAZY)
     private Collection<Account> accounts;
