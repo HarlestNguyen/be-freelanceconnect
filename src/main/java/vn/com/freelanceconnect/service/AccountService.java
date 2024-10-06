@@ -9,7 +9,7 @@ import vn.com.freelanceconnect.model.record.SignInRecord;
 public interface AccountService extends UserDetailsService {
     TokenDTO signIn(SignInRecord record);
 
-    Account signUp(RegisterRecord record);
+    TokenDTO signUp(RegisterRecord record);
 
     Account findOne(String username);
 
