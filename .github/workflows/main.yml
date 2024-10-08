@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - develop
+      - master
 
 jobs:
   run_pull:
