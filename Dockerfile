@@ -8,10 +8,10 @@ RUN apt-get update && apt-get install -y git
 WORKDIR /app
 
 # Sao chép file JAR vào trong hình ảnh
-COPY target/course.jar course.jar
+COPY target/easyjob.jar easyjob.jar
 
 # Chạy ứng dụng
-ENTRYPOINT ["java", "-jar", "course.jar"]
+ENTRYPOINT ["java", "-jar", "easyjob.jar"]
 
 
 
