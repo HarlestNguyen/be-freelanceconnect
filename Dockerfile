@@ -12,7 +12,3 @@ COPY target/easyjob.jar easyjob.jar
 
 # Chạy ứng dụng
 ENTRYPOINT ["java", "-jar", "easyjob.jar"]
-
-
-
-
