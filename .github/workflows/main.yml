@@ -1,0 +1,23 @@
+# check this thread to understand why it needed:
+# https://stackoverflow.com/a/70447517
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  run_pull:
+    name: run pull
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install SSH keys
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -p ${{ secrets.PORT }} -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+
+      - name: Connect and pull code from VPS
+        run: ssh -p ${{ secrets.PORT }} -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "sudo bash -c 'cd ${{ secrets.WORK_DIR }} && git pull && chmod +x ./script.sh && ./script.sh'"
+
