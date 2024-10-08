@@ -2,6 +2,7 @@ package vn.com.freelanceconnect.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import vn.com.freelanceconnect.base.BaseAuditableEntity;
@@ -17,12 +18,14 @@ import java.util.Collection;
 public class Profile extends BaseAuditableEntity {
     @Column(length = 80, nullable = false)
     private String fullname;
-    @Column(nullable = false)
-    private String email;
-    @Column
+    @OneToOne(mappedBy = "profile")
+    @PrimaryKeyJoinColumn
+    private Account account;
+    @OneToOne(mappedBy = "profile")
+    @PrimaryKeyJoinColumn
+    private CitizenIdentityCard citizenIdentityCard;
     private Date dob;
-    @OneToMany(mappedBy = "profile", fetch = FetchType.LAZY)
-    private Collection<Account> accounts;
+    private String avatar;
     @OneToMany(mappedBy = "poster", fetch = FetchType.LAZY)
     private Collection<JobDetail> jobDetails;
     @OneToMany(mappedBy = "applier", fetch = FetchType.LAZY)

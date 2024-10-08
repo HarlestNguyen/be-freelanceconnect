@@ -15,7 +15,7 @@ public class AppliedJob extends BaseAuditableEntity {
     @ManyToOne
     @JoinColumn(name = "job_detail", nullable = false)
     private JobDetail jobDetail;
-    @Column(name = "applie_status", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private ApplieStatusEnum applieStatus;
+    @ManyToOne
+    @JoinColumn(name = "applie_status_id", nullable = false)
+    private ApplieStatus applieStatus;
 }

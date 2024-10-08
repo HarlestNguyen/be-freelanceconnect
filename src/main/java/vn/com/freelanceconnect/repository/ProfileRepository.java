@@ -8,5 +8,4 @@ import java.util.Optional;
 
 @Repository
 public interface ProfileRepository extends IRepository<Profile, Integer> {
-    Optional<Profile> findByEmail(String email);
 }

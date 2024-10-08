@@ -2,10 +2,12 @@ package vn.com.freelanceconnect.base;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.ColumnDefault;
 
 @Data
 @MappedSuperclass
+@EqualsAndHashCode
 public abstract class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

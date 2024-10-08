@@ -1,5 +1,6 @@
 package vn.com.freelanceconnect.model.record;
 
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 public record SignInRecord(

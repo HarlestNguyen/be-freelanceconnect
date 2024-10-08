@@ -17,12 +17,17 @@ import vn.com.freelanceconnect.model.entity.Profile;
 import vn.com.freelanceconnect.exception.ErrorHandler;
 import vn.com.freelanceconnect.base.IRepository;
 import vn.com.freelanceconnect.jwt.JwtService;
+import vn.com.freelanceconnect.model.entity.Role;
 import vn.com.freelanceconnect.model.record.RegisterRecord;
 import vn.com.freelanceconnect.model.record.SignInRecord;
 import vn.com.freelanceconnect.repository.AccountRepository;
 import vn.com.freelanceconnect.repository.ProfileRepository;
 import vn.com.freelanceconnect.base.BaseAbstractService;
 import vn.com.freelanceconnect.service.AccountService;
+import vn.com.freelanceconnect.service.MailService;
+import vn.com.freelanceconnect.util.EmailSubjectEnum;
+import vn.com.freelanceconnect.util.RoleEnum;
+import vn.com.freelanceconnect.util.TypeMailEnum;
 
 import java.util.Optional;
 
@@ -45,6 +50,9 @@ public class AccountServiceImpl extends BaseAbstractService<Account, Integer> im
     @Autowired
     private ProfileRepository profileRepository;
 
+    @Autowired
+    private MailService mailService;
+
     @Override
     protected IRepository<Account, Integer> getRepository() {
         return accountRepository;
@@ -52,10 +60,11 @@ public class AccountServiceImpl extends BaseAbstractService<Account, Integer> im
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Account> account = accountRepository.findByUsername(username);
-        if (account.isPresent() && !account.get().getIsDeleted())
-            return account.get();
-        else throw new ErrorHandler(HttpStatus.UNAUTHORIZED, "Account not exist");
+//        Optional<Account> account = accountRepository.findByEmail(username);
+//        if (account.isPresent() && !account.get().getIsDeleted())
+//            return account.get();
+//        else throw new ErrorHandler(HttpStatus.UNAUTHORIZED, "Account not exist");
+        return findOne(username);
     }
 
 
@@ -66,7 +75,7 @@ public class AccountServiceImpl extends BaseAbstractService<Account, Integer> im
                 new UsernamePasswordAuthenticationToken(record.username(), record.password()));
         if (authentication.isAuthenticated()) {
             Account account = new Account();
-            account.setUsername(authentication.getName());
+            account.setEmail(authentication.getName());
             accessToken = jwtService.generateToken(account);
         }
         //missing refresh token
@@ -79,26 +88,17 @@ public class AccountServiceImpl extends BaseAbstractService<Account, Integer> im
     @Override
     public TokenDTO signUp(RegisterRecord record) {
         Account account = new Account();
-        profileRepository.findByEmail(record.email()).ifPresentOrElse(
-                profile -> {
-                    if (profile.getFullname().equals(record.fullname()) && profile.getEmail().equals(record.email())) {
-                        account.setProfile(profile);
-                    }else {
-                        Profile profile1 = new Profile();
-                        profile1.setEmail(record.email());
-                        profile1.setFullname(record.fullname());
-                        account.setProfile(profileRepository.save(profile1));
-                    }
-                },
-                () -> {
-                    Profile profile = new Profile();
-                    profile.setEmail(record.email());
-                    profile.setFullname(record.fullname());
-                    account.setProfile(profileRepository.save(profile));
-                }
-        );
-        account.setUsername(record.username());
+        Profile profile = new Profile();
+        profile.setFullname(record.fullname().toUpperCase());
+        account.setProfile(profileRepository.save(profile));
+
+        Role role = new Role();
+        role.setId(record.role().getId());
+
+        account.setEmail(record.email());
         account.setPassword(passwordEncoder.encode(record.password()));
+        account.setRole(role);
+
         Account result = save(account);
         String accessToken = jwtService.generateToken(result);
         if (accessToken != null) {
@@ -107,9 +107,11 @@ public class AccountServiceImpl extends BaseAbstractService<Account, Integer> im
         return null;
     }
 
-    public Account findOne(String username) {
-        return accountRepository.findByUsername(username).orElseThrow(
-                () -> new ErrorHandler(HttpStatus.NOT_FOUND, "Entity not found")
+    public Account findOne(String email) {
+        return accountRepository.findByEmail(email)
+                .filter(account -> !account.getIsDeleted())
+                .orElseThrow(
+                () -> new ErrorHandler(HttpStatus.NOT_FOUND, "Account not found")
         );
     }
 
@@ -124,6 +126,8 @@ public class AccountServiceImpl extends BaseAbstractService<Account, Integer> im
 
     @Override
     public Boolean isSendMailForgetPassword(String email) {
-        return null;
+        String otp = "123456";
+        return mailService.sendWithTemplate(email, otp, EmailSubjectEnum.OTP, TypeMailEnum.OTP);
+
     }
 }

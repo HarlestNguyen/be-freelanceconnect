@@ -20,20 +20,22 @@ import java.util.Collections;
 @Table(name = "tbl_account")
 @DynamicInsert
 public class Account extends BaseEntity implements Serializable, UserDetails {
-    @Column(unique = true, nullable = false)
-    private String username;
+    @Column(nullable = false, unique = true)
+    private String email;
     @Column(nullable = false)
     private String password;
-    @Column(nullable = false)
-    @ColumnDefault("b'0'")
-    private Boolean isVerified;
     @ManyToOne
     @JoinColumn(nullable = false, name = "role_id")
     private Role role;
-
-    @ManyToOne
-    @JoinColumn(name = "profile_id", nullable = false)
+    @OneToOne
+    @MapsId
+    @JoinColumn(nullable = false, name = "id")
     private Profile profile;
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -42,5 +44,7 @@ public class Account extends BaseEntity implements Serializable, UserDetails {
         }
         return Collections.singleton(new SimpleGrantedAuthority(role.getName().getRoleName()));
     }
+
+
 
 }
