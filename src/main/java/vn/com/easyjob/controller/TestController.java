@@ -1,5 +1,6 @@
 package vn.com.easyjob.controller;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/test")
+@Hidden
 public class TestController {
     private final static String testToken = UUID.randomUUID().toString();
     @Autowired

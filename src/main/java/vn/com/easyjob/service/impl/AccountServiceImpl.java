@@ -11,18 +11,18 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import vn.com.easyjob.base.BaseAbstractService;
+import vn.com.easyjob.base.IRepository;
+import vn.com.easyjob.exception.ErrorHandler;
+import vn.com.easyjob.jwt.JwtService;
 import vn.com.easyjob.model.dto.TokenDTO;
 import vn.com.easyjob.model.entity.Account;
 import vn.com.easyjob.model.entity.Profile;
-import vn.com.easyjob.exception.ErrorHandler;
-import vn.com.easyjob.base.IRepository;
-import vn.com.easyjob.jwt.JwtService;
 import vn.com.easyjob.model.entity.Role;
 import vn.com.easyjob.model.record.RegisterRecord;
 import vn.com.easyjob.model.record.SignInRecord;
 import vn.com.easyjob.repository.AccountRepository;
 import vn.com.easyjob.repository.ProfileRepository;
-import vn.com.easyjob.base.BaseAbstractService;
 import vn.com.easyjob.service.AccountService;
 import vn.com.easyjob.service.MailService;
 import vn.com.easyjob.util.EmailSubjectEnum;
@@ -108,8 +108,8 @@ public class AccountServiceImpl extends BaseAbstractService<Account, Integer> im
         return accountRepository.findByEmail(email)
                 .filter(account -> !account.getIsDeleted())
                 .orElseThrow(
-                () -> new ErrorHandler(HttpStatus.NOT_FOUND, "Account not found")
-        );
+                        () -> new ErrorHandler(HttpStatus.NOT_FOUND, "Account not found")
+                );
     }
 
     @Override

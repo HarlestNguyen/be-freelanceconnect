@@ -29,4 +29,11 @@ public class Profile extends BaseAuditableEntity {
     private Collection<JobDetail> jobDetails;
     @OneToMany(mappedBy = "applier", fetch = FetchType.LAZY)
     private Collection<AppliedJob> appliedJobs;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "tbl_profile_skill",
+            joinColumns = @JoinColumn(name = "profile_id"),
+            inverseJoinColumns = @JoinColumn(name = "job_skill_id")
+    )
+    private Collection<JobSkill> jobSkills;
 }

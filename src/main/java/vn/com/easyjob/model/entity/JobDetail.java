@@ -39,4 +39,11 @@ public class JobDetail extends BaseAuditableEntity {
     private Collection<ImageJobDetail> imageJobDetails;
     @OneToMany(mappedBy = "jobDetail", fetch = FetchType.LAZY)
     private Collection<AppliedJob> jobApplies;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "tbl_job_available_skill",
+            joinColumns = @JoinColumn(name = "job_detail_id"),
+            inverseJoinColumns = @JoinColumn(name = "job_skill_id")
+    )
+    private Collection<JobSkill> jobSkills;
 }
