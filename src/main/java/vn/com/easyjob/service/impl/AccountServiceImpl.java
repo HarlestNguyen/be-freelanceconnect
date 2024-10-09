@@ -19,6 +19,7 @@ import vn.com.easyjob.model.dto.TokenDTO;
 import vn.com.easyjob.model.entity.Account;
 import vn.com.easyjob.model.entity.Profile;
 import vn.com.easyjob.model.entity.Role;
+import vn.com.easyjob.model.record.ChangePasswordRecord;
 import vn.com.easyjob.model.record.RegisterRecord;
 import vn.com.easyjob.model.record.SignInRecord;
 import vn.com.easyjob.repository.AccountRepository;
@@ -127,4 +128,17 @@ public class AccountServiceImpl extends BaseAbstractService<Account, Integer> im
         return mailService.sendWithTemplate(email, otp, EmailSubjectEnum.OTP, TypeMailEnum.OTP);
 
     }
+
+    @Override
+    public Boolean isChangePassword(ChangePasswordRecord changePasswordRecord) {
+        Account account = getAuthenticatedAccount();
+        if (passwordEncoder.matches(changePasswordRecord.oldPassword(), account.getPassword())){
+            account.setPassword(passwordEncoder.encode(changePasswordRecord.newPassword()));
+            save(account);
+            return true;
+        }else {
+            return false;
+        }
+    }
+
 }
