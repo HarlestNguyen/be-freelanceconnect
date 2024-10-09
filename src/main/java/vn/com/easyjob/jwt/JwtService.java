@@ -23,8 +23,6 @@ public class JwtService {
     @Value("${security.jwt.expiration-time}")
     private long MINUTE_EXPIRATION;
 
-    private final long JWT_EXPIRATION = 1000 * 60 * MINUTE_EXPIRATION;
-
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
                 .setSigningKey(getSignInKey())
@@ -57,6 +55,10 @@ public class JwtService {
                 .compact();
     }
 
+    private long getJwtExpiration() {
+        return 1000 * 60 * MINUTE_EXPIRATION;
+    }
+
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -71,7 +73,7 @@ public class JwtService {
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        return buildToken(extraClaims, userDetails, JWT_EXPIRATION);
+        return buildToken(extraClaims, userDetails, getJwtExpiration());
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
