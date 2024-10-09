@@ -19,7 +19,7 @@ import vn.com.easyjob.model.record.SignInRecord;
 import vn.com.easyjob.service.AccountService;
 import vn.com.easyjob.util.AuthConstants;
 
-@Tag(name = "Authen")
+@Tag(name = "auth-v1")
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthenticationV1Controller {
