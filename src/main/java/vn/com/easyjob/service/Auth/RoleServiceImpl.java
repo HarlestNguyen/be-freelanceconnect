@@ -1,4 +1,4 @@
-package vn.com.easyjob.service.Auth;
+package vn.com.easyjob.service.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

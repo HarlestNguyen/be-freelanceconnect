@@ -1,4 +1,4 @@
-package vn.com.easyjob.service.Auth;
+package vn.com.easyjob.service.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -24,11 +24,12 @@ import vn.com.easyjob.model.record.RegisterRecord;
 import vn.com.easyjob.model.record.SignInRecord;
 import vn.com.easyjob.repository.AccountRepository;
 import vn.com.easyjob.repository.ProfileRepository;
+import vn.com.easyjob.service.mail.MailService;
 import vn.com.easyjob.util.EmailSubjectEnum;
 import vn.com.easyjob.util.TypeMailEnum;
 
 @Service
-public class AccountServiceImpl extends BaseAbstractService<Account, Integer> implements AccountService {
+public class AccountServiceImpl extends BaseAbstractService<Account, Long> implements AccountService {
     @Autowired
     private AccountRepository accountRepository;
 
@@ -50,7 +51,7 @@ public class AccountServiceImpl extends BaseAbstractService<Account, Integer> im
     private MailService mailService;
 
     @Override
-    protected IRepository<Account, Integer> getRepository() {
+    protected IRepository<Account, Long> getRepository() {
         return accountRepository;
     }
 
@@ -83,6 +84,9 @@ public class AccountServiceImpl extends BaseAbstractService<Account, Integer> im
 
     @Override
     public TokenDTO signUp(RegisterRecord record) {
+        if (record.role().getId() == 1L) {
+            return null;
+        }
         Account account = new Account();
         Profile profile = new Profile();
         profile.setFullname(record.fullname().toUpperCase());
@@ -122,8 +126,8 @@ public class AccountServiceImpl extends BaseAbstractService<Account, Integer> im
 
     @Override
     public Boolean isSendMailForgetPassword(String email) {
-        String otp = "123456";
-        return mailService.sendWithTemplate(email, otp, EmailSubjectEnum.OTP, TypeMailEnum.OTP);
+        findOne(email);
+        return mailService.sendWithTemplate(email, null, EmailSubjectEnum.OTP, TypeMailEnum.OTP);
 
     }
 

@@ -7,6 +7,6 @@ import vn.com.easyjob.model.entity.Account;
 import java.util.Optional;
 
 @Repository
-public interface AccountRepository extends IRepository<Account, Integer> {
+public interface AccountRepository extends IRepository<Account, Long> {
     Optional<Account> findByEmail(String email);
 }
