@@ -45,5 +45,4 @@ public class Account extends BaseEntity implements Serializable, UserDetails {
     }
 
 
-
 }

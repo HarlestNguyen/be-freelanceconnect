@@ -1,8 +1,10 @@
 package vn.com.easyjob.model.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Data;
-import vn.com.easyjob.base.BaseEntity;
 import vn.com.easyjob.base.BaseIMG;
 
 @Entity

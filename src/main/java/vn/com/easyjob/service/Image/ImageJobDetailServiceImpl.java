@@ -17,13 +17,13 @@ import java.util.Set;
 @Service
 public class ImageJobDetailServiceImpl implements ImageJobDetailService {
     @Autowired
-    CloudinaryService cloudinaryService;
+    private CloudinaryService cloudinaryService;
 
     @Autowired
-    ImageJobDetailRepository imageJobDetailRepository;
+    private ImageJobDetailRepository imageJobDetailRepository;
 
     @Autowired
-    JobDetailRepository jobDetailRepository;
+    private JobDetailRepository jobDetailRepository;
 
     @Override
     public Set<ImageDTO> saveImageOfJobDetail(MultipartFile[] imageOfJobDetail, Long JobDetailID, String typeofImage) throws Exception {

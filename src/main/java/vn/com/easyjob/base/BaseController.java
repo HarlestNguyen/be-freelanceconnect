@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import vn.com.easyjob.base.IService;
 import vn.com.easyjob.model.dto.ResponseDTO;
 
 public abstract class BaseController<T, ID> {

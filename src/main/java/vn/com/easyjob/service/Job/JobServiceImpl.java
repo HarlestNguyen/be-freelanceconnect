@@ -2,12 +2,10 @@ package vn.com.easyjob.service.Job;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,35 +18,33 @@ import vn.com.easyjob.model.entity.JobDetail;
 import vn.com.easyjob.model.entity.JobType;
 import vn.com.easyjob.model.entity.Profile;
 import vn.com.easyjob.model.record.JobDetailRequest;
-import vn.com.easyjob.repository.ImageJobDetailRepository;
 import vn.com.easyjob.repository.JobDetailRepository;
-import vn.com.easyjob.repository.JobtypeRepository;
+import vn.com.easyjob.repository.JobTypeRepository;
 import vn.com.easyjob.repository.ProfileRepository;
 import vn.com.easyjob.service.Image.ImageJobDetailService;
-
 
 import java.sql.Date;
 import java.util.stream.Collectors;
 
 @Service
-public class JobServiceImpl implements JobSerivce{
+public class JobServiceImpl implements JobSerivce {
 
     @Autowired
-    JobDetailRepository jobDetailRepository;
+    private JobDetailRepository jobDetailRepository;
 
     @Autowired
-    ProfileRepository profileRepository;
+    private ProfileRepository profileRepository;
 
     @Autowired
-    JobtypeRepository jobtypeRepository;
+    private JobTypeRepository jobTypeRepository;
 
     @Autowired
-    ImageJobDetailService imageJobDetailService;
+    private ImageJobDetailService imageJobDetailService;
 
     @Override
     public CustomPageResponse<JobDTO> findAllJobs(Pageable pageable) {
         // Lấy danh sách phân trang của JobDetail từ repository
-        CustomPageResponse<JobDetail> jobDetailsPage = jobDetailRepository.findCustomPage(pageable,JobDetail.class);
+        CustomPageResponse<JobDetail> jobDetailsPage = jobDetailRepository.findCustomPage(pageable, JobDetail.class);
         // Chuyển đổi từ JobDetail sang JobDTO với builder
         CustomPageResponse<JobDTO> jobDTOPage = jobDetailsPage.map(jobDetail ->
                 JobDTO.builder()
@@ -56,7 +52,7 @@ public class JobServiceImpl implements JobSerivce{
                         .title(jobDetail.getTitle())  // Gán tên công việc (title)
                         .description(jobDetail.getDesciption())  // Gán mô tả công việc
                         .address(jobDetail.getAddress())  // Gán địa chỉ công việc
-                        .phone(jobDetail.getPhone().toString())  // Gán số điện thoại liên hệ
+                        .phone(jobDetail.getPhone())  // Gán số điện thoại liên hệ
                         .contactPerson(jobDetail.getPoster().getFullname())  // Gán người liên hệ
                         .startDate(jobDetail.getStartDate())  // Gán ngày bắt đầu
                         .duration(jobDetail.getDuration())  // Gán thời gian làm việc
@@ -90,14 +86,14 @@ public class JobServiceImpl implements JobSerivce{
         Profile profile = getAuthenticatedProfile();
 
         // Lấy thông tin JobType
-        JobType jobType = jobtypeRepository.findById(request.jobTypeId())
+        JobType jobType = jobTypeRepository.findById(request.jobTypeId())
                 .orElseThrow(() -> new ErrorHandler(HttpStatus.NOT_FOUND, "JobType Not found"));
 
         // Tạo đối tượng JobDetail và lưu vào cơ sở dữ liệu
         JobDetail jobDetail = saveJobDetail(request, profile, jobType);
 
         // Lưu ảnh nếu có
-        if (request.imageJobDetails() != null ) {
+        if (request.imageJobDetails() != null) {
             imageJobDetailService.saveImageOfJobDetail(request.imageJobDetails(), jobDetail.getId(), "");
         }
     }
@@ -125,7 +121,7 @@ public class JobServiceImpl implements JobSerivce{
                         .desciption(request.description())
                         .startDate((Date) request.startDate())  // Không cần ép kiểu
                         .endDate((Date) request.endDate())      // Không cần ép kiểu
-                        .phone(request.phone().toString())
+                        .phone(request.phone())
                         .duration(request.duration())
                         .poster(profile)
                         .build()
