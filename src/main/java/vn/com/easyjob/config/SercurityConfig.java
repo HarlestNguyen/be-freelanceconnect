@@ -26,7 +26,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import vn.com.easyjob.jwt.JwtFilter;
-import vn.com.easyjob.service.AccountService;
+import vn.com.easyjob.service.Auth.AccountService;
 
 import java.util.Arrays;
 import java.util.List;

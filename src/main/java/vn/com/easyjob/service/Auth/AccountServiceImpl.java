@@ -1,4 +1,4 @@
-package vn.com.easyjob.service.impl;
+package vn.com.easyjob.service.Auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;

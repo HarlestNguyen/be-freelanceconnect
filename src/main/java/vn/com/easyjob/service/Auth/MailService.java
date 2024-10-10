@@ -1,4 +1,4 @@
-package vn.com.easyjob.service;
+package vn.com.easyjob.service.Auth;
 
 import org.springframework.stereotype.Service;
 import vn.com.easyjob.util.EmailSubjectEnum;

@@ -17,7 +17,7 @@ import vn.com.easyjob.exception.ExceptionResponse;
 import vn.com.easyjob.model.record.ChangePasswordRecord;
 import vn.com.easyjob.model.record.RegisterRecord;
 import vn.com.easyjob.model.record.SignInRecord;
-import vn.com.easyjob.service.AccountService;
+import vn.com.easyjob.service.Auth.AccountService;
 import vn.com.easyjob.util.AuthConstants;
 
 @Tag(name = "auth-v1")
