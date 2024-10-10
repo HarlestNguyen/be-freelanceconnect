@@ -1,8 +1,9 @@
 package vn.com.easyjob.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import vn.com.easyjob.base.IRepository;
 import vn.com.easyjob.model.entity.ImageJobDetail;
 
-public interface ImageJobDetailRepository extends JpaRepository<ImageJobDetail, Long> {
-
+@Repository
+public interface ImageJobDetailRepository extends IRepository<ImageJobDetail, Long> {
 }

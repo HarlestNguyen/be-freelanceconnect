@@ -14,12 +14,13 @@ import vn.com.easyjob.model.dto.ResponseDTO;
 import vn.com.easyjob.model.dto.TokenDTO;
 import vn.com.easyjob.exception.ErrorHandler;
 import vn.com.easyjob.exception.ExceptionResponse;
+import vn.com.easyjob.model.record.ChangePasswordRecord;
 import vn.com.easyjob.model.record.RegisterRecord;
 import vn.com.easyjob.model.record.SignInRecord;
 import vn.com.easyjob.service.Auth.AccountService;
 import vn.com.easyjob.util.AuthConstants;
 
-@Tag(name = "Authen")
+@Tag(name = "auth-v1")
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthenticationV1Controller {
@@ -47,6 +48,17 @@ public class AuthenticationV1Controller {
     @SecurityRequirement(name = "bearer-key")
     public ResponseEntity<?> logout(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("Logout successfully."));
+    }
+
+    @PostMapping("/change-password")
+    @PreAuthorize(AuthConstants.ALL)
+    @SecurityRequirement(name = "bearer-key")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRecord record) {
+        if (accountService.isChangePassword(record)) {
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("Change password successfully."));
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO("Old password is incorrect."));
+        }
     }
 
     @PostMapping("/forget-password")
