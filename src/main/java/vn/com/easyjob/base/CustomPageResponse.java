@@ -2,9 +2,6 @@ package vn.com.easyjob.base;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import vn.com.easyjob.model.dto.JobDTO;
 
 import java.util.List;
 import java.util.function.Function;

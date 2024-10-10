@@ -1,9 +1,7 @@
 package vn.com.easyjob.model.record;
 
 import org.springframework.web.multipart.MultipartFile;
-import vn.com.easyjob.model.dto.ImageDTO;
 
-import java.util.Collection;
 import java.util.Date;
 
 public record JobDetailRequest(

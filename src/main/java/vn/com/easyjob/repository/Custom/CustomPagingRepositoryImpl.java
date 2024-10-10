@@ -1,7 +1,6 @@
 package vn.com.easyjob.repository.Custom;
 
 
-import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,7 @@ public class CustomPagingRepositoryImpl<T> implements CustomPagingRepository<T> 
     private EntityManager entityManager;
 
     @Override
-    public CustomPageResponse<T> findCustomPage(Pageable pageable,Class<T> entityClass) {
+    public CustomPageResponse<T> findCustomPage(Pageable pageable, Class<T> entityClass) {
         // Viết query phù hợp cho entity của bạn
         TypedQuery<T> query = entityManager.createQuery("SELECT e FROM " + entityClass.getSimpleName() + " e", entityClass);
 

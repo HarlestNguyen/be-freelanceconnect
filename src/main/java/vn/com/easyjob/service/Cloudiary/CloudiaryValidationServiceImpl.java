@@ -24,6 +24,7 @@ public class CloudiaryValidationServiceImpl implements CloudiaryValidationServic
         return public_id != null;
 
     }
+
     private boolean hasPublicId(Map uploadMap) {
         return uploadMap.get("public_id") != null;
     }

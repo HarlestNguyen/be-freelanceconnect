@@ -24,8 +24,6 @@ import vn.com.easyjob.model.record.RegisterRecord;
 import vn.com.easyjob.model.record.SignInRecord;
 import vn.com.easyjob.repository.AccountRepository;
 import vn.com.easyjob.repository.ProfileRepository;
-import vn.com.easyjob.service.AccountService;
-import vn.com.easyjob.service.MailService;
 import vn.com.easyjob.util.EmailSubjectEnum;
 import vn.com.easyjob.util.TypeMailEnum;
 
@@ -132,11 +130,11 @@ public class AccountServiceImpl extends BaseAbstractService<Account, Integer> im
     @Override
     public Boolean isChangePassword(ChangePasswordRecord changePasswordRecord) {
         Account account = getAuthenticatedAccount();
-        if (passwordEncoder.matches(changePasswordRecord.oldPassword(), account.getPassword())){
+        if (passwordEncoder.matches(changePasswordRecord.oldPassword(), account.getPassword())) {
             account.setPassword(passwordEncoder.encode(changePasswordRecord.newPassword()));
             save(account);
             return true;
-        }else {
+        } else {
             return false;
         }
     }
