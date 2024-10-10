@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import vn.com.easyjob.service.MailService;
+import vn.com.easyjob.service.Auth.MailService;
 import vn.com.easyjob.util.EmailSubjectEnum;
 import vn.com.easyjob.util.TypeMailEnum;
 
@@ -18,6 +18,7 @@ public class TestController {
     private final static String testToken = UUID.randomUUID().toString();
     @Autowired
     private MailService mailService;
+
 
     @GetMapping
     public void test(@RequestParam String email, final HttpServletRequest request) {

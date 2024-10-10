@@ -1,4 +1,4 @@
-package vn.com.easyjob.service.impl;
+package vn.com.easyjob.service.Auth;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -9,7 +9,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import vn.com.easyjob.exception.ErrorHandler;
-import vn.com.easyjob.service.MailService;
 import vn.com.easyjob.util.EmailSubjectEnum;
 import vn.com.easyjob.util.TypeMailEnum;
 

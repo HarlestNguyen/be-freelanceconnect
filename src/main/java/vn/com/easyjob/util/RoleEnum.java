@@ -4,7 +4,7 @@ public enum RoleEnum {
     ROLE_ADMIN(1, "ROLE_ADMIN"),
     ROLE_EMPLOYER(2, "ROLE_EMPLOYER"),
     ROLE_APPLIER(3, "ROLE_APPLIER");
-    private final int id;
+    private final long id;
     private final String roleName;
 
     RoleEnum(int id, String roleName) {
@@ -16,7 +16,7 @@ public enum RoleEnum {
         return roleName;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

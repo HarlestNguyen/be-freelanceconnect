@@ -12,7 +12,7 @@ public abstract class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    private Integer id;
+    private Long id;
     @Column(name = "is_deleted", nullable = false)
     @ColumnDefault("b'0'")
     private Boolean isDeleted;

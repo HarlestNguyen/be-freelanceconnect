@@ -1,4 +1,4 @@
-package vn.com.easyjob.service.impl;
+package vn.com.easyjob.service.Auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -23,8 +23,6 @@ import vn.com.easyjob.model.record.SignInRecord;
 import vn.com.easyjob.repository.AccountRepository;
 import vn.com.easyjob.repository.ProfileRepository;
 import vn.com.easyjob.base.BaseAbstractService;
-import vn.com.easyjob.service.AccountService;
-import vn.com.easyjob.service.MailService;
 import vn.com.easyjob.util.EmailSubjectEnum;
 import vn.com.easyjob.util.TypeMailEnum;
 
