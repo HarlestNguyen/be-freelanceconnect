@@ -4,5 +4,6 @@ public enum ApplieStatusEnum {
     WAITING,
     REJECT,
     CANCEL,
-    ACCEPTED
+    ACCEPTED,
+    COMPLETED
 }

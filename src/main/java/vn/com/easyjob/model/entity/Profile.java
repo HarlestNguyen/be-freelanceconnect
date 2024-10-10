@@ -25,6 +25,11 @@ public class Profile extends BaseAuditableEntity {
     private CitizenIdentityCard citizenIdentityCard;
     private Date dob;
     private String avatar;
+    private String address;
+    @Column(name = "district_id")
+    private Integer districtId;
+    @Column(name = "province_id")
+    private Integer provinceId;
     @OneToMany(mappedBy = "poster", fetch = FetchType.LAZY)
     private Collection<JobDetail> jobDetails;
     @OneToMany(mappedBy = "applier", fetch = FetchType.LAZY)

@@ -1,13 +1,13 @@
 package vn.com.easyjob.util;
 
 public enum RoleEnum {
-    ROLE_ADMIN(1, "ROLE_ADMIN"),
-    ROLE_EMPLOYER(2, "ROLE_EMPLOYER"),
-    ROLE_APPLIER(3, "ROLE_APPLIER");
-    private final long id;
+    ROLE_ADMIN(1L, "ROLE_ADMIN"),
+    ROLE_EMPLOYER(2L, "ROLE_EMPLOYER"),
+    ROLE_APPLIER(3L, "ROLE_APPLIER");
+    private final Long id;
     private final String roleName;
 
-    RoleEnum(int id, String roleName) {
+    RoleEnum(Long id, String roleName) {
         this.id = id;
         this.roleName = roleName;
     }
@@ -16,7 +16,7 @@ public enum RoleEnum {
         return roleName;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
