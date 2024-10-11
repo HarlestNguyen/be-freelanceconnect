@@ -1,4 +1,4 @@
-package vn.com.easyjob.service.auth;
+package vn.com.easyjob.service.Auth;
 
 
 public interface RoleService {

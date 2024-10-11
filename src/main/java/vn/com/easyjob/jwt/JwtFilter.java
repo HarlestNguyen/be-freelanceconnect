@@ -13,7 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import vn.com.easyjob.service.auth.AccountService;
+import vn.com.easyjob.service.Auth.AccountService;
 
 import java.io.IOException;
 

@@ -15,7 +15,7 @@ import vn.com.easyjob.model.dto.ResponseDTO;
 import vn.com.easyjob.model.dto.TokenDTO;
 import vn.com.easyjob.model.record.RegisterRecord;
 import vn.com.easyjob.model.record.SignInRecord;
-import vn.com.easyjob.service.auth.AccountService;
+import vn.com.easyjob.service.Auth.AccountService;
 import vn.com.easyjob.util.AuthConstants;
 
 @Tag(name = "auth-v1")

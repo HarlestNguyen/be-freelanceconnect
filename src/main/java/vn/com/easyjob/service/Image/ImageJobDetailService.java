@@ -1,4 +1,4 @@
-package vn.com.easyjob.service.image;
+package vn.com.easyjob.service.Image;
 
 import org.springframework.web.multipart.MultipartFile;
 import vn.com.easyjob.base.IService;

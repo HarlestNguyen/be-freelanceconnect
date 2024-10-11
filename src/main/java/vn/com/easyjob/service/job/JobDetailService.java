@@ -1,4 +1,4 @@
-package vn.com.easyjob.service.job;
+package vn.com.easyjob.service.Job;
 
 import org.springframework.data.domain.Pageable;
 import vn.com.easyjob.base.CustomPageResponse;
@@ -11,4 +11,6 @@ public interface JobDetailService extends IService<JobDetail, Long> {
     CustomPageResponse<JobDTO> findAllJobs(Pageable pageable);
 
     void createJob(JobDetailRecord request) throws Exception;
+
+    JobDTO findJobById(Long id);
 }

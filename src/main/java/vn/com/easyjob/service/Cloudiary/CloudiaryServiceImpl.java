@@ -1,4 +1,4 @@
-package vn.com.easyjob.service.cloudiary;
+package vn.com.easyjob.service.Cloudiary;
 
 
 import com.cloudinary.Cloudinary;

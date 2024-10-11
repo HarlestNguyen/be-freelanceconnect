@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.com.easyjob.model.dto.ResponseDTO;
 import vn.com.easyjob.model.record.JobDetailRecord;
-import vn.com.easyjob.service.job.JobDetailService;
+import vn.com.easyjob.service.Job.JobDetailService;
 
 @RestController
 @RequestMapping("/api/jobs")
@@ -22,14 +22,14 @@ public class JobController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createJob(@ModelAttribute JobDetailRequest request) throws Exception {
-        jobService.createJob(request);  // Không cần kết quả trả về
+    public ResponseEntity<?> createJob(@ModelAttribute JobDetailRecord request) throws Exception {
+        jobDetailService.createJob(request);  // Không cần kết quả trả về
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("Job created successfully"));
     }
 
     // API lấy công việc theo ID
     @GetMapping("/{jobId}")
     public ResponseEntity<?> findJobById(@PathVariable("jobId") Long jobId) {
-       return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO(jobService.findJobById(jobId)));
+       return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO(jobDetailService.findJobById(jobId)));
     }
 }

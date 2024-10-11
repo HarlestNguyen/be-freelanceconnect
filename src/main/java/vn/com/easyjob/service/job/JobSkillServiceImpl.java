@@ -1,4 +1,4 @@
-package vn.com.easyjob.service.job;
+package vn.com.easyjob.service.Job;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

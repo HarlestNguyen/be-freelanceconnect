@@ -1,4 +1,4 @@
-package vn.com.easyjob.service.auth;
+package vn.com.easyjob.service.Auth;
 
 import vn.com.easyjob.base.IService;
 import vn.com.easyjob.model.entity.Profile;

@@ -1,4 +1,4 @@
-package vn.com.easyjob.service.job;
+package vn.com.easyjob.service.Job;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -21,11 +21,13 @@ import vn.com.easyjob.model.entity.Profile;
 import vn.com.easyjob.model.record.JobDetailRecord;
 import vn.com.easyjob.repository.JobDetailRepository;
 import vn.com.easyjob.repository.JobTypeRepository;
-import vn.com.easyjob.repository.ProfileRepository;
-import vn.com.easyjob.service.auth.ProfileService;
-import vn.com.easyjob.service.image.ImageJobDetailService;
 
-import java.sql.Date;
+import vn.com.easyjob.repository.ProfileRepository;
+import vn.com.easyjob.service.Auth.ProfileService;
+
+import vn.com.easyjob.service.Image.ImageJobDetailService;
+
+
 import java.util.stream.Collectors;
 
 @Service
@@ -47,12 +49,15 @@ public class JobDetailServiceImpl extends BaseAbstractService<JobDetail, Long> i
     @Autowired
     private ImageJobDetailService imageJobDetailService;
 
+    @Autowired
+    private ProfileRepository profileRepository;
+
     @Override
     public CustomPageResponse<JobDTO> findAllJobs(Pageable pageable) {
         // Lấy danh sách phân trang của JobDetail từ repository
         CustomPageResponse<JobDetail> jobDetailsPage = jobDetailRepository.findCustomPage(pageable, JobDetail.class);
         // Chuyển đổi từ JobDetail sang JobDTO với phương thức builder
-        CustomPageResponse<JobDTO> jobDTOPage = jobDetailsPage.map(JobServiceImpl::fromJobDetail);
+        CustomPageResponse<JobDTO> jobDTOPage = jobDetailsPage.map(JobDetailServiceImpl::fromJobDetail);
 
         return jobDTOPage;
     }
@@ -90,7 +95,9 @@ public class JobDetailServiceImpl extends BaseAbstractService<JobDetail, Long> i
             throw new UsernameNotFoundException("User is not authenticated");
         }
         String email = authentication.getName();
-        return profileRepository.findByEmail(email);
+        return profileRepository.findByAccount_Email(email).orElseThrow(
+                () -> new ErrorHandler(HttpStatus.NOT_FOUND, "Account Not found")
+        );
 
     }
 
