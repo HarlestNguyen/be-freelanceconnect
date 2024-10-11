@@ -6,19 +6,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.com.easyjob.model.dto.ResponseDTO;
-import vn.com.easyjob.model.record.JobDetailRequest;
-import vn.com.easyjob.service.Job.JobSerivce;
+import vn.com.easyjob.model.record.JobDetailRecord;
+import vn.com.easyjob.service.job.JobDetailService;
 
 @RestController
 @RequestMapping("/api/jobs")
 public class JobController {
     @Autowired
-    private JobSerivce jobService;
+    private JobDetailService jobDetailService;
 
     // API lấy tất cả các công việc (có phân trang)
     @GetMapping
     public ResponseEntity<?> getAllJobs(Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO(jobService.findAllJobs(pageable)));
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO(jobDetailService.findAllJobs(pageable)));
     }
 
     @PostMapping

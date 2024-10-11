@@ -1,26 +1,33 @@
-package vn.com.easyjob.service.Image;
+package vn.com.easyjob.service.image;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import vn.com.easyjob.base.BaseAbstractService;
+import vn.com.easyjob.base.IRepository;
 import vn.com.easyjob.model.dto.ImageDTO;
 import vn.com.easyjob.model.entity.ImageJobDetail;
 import vn.com.easyjob.model.entity.JobDetail;
 import vn.com.easyjob.repository.ImageJobDetailRepository;
 import vn.com.easyjob.repository.JobDetailRepository;
-import vn.com.easyjob.service.Cloudiary.CloudinaryService;
+import vn.com.easyjob.service.cloudiary.CloudinaryService;
 
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 @Service
-public class ImageJobDetailServiceImpl implements ImageJobDetailService {
+public class ImageJobDetailServiceImpl extends BaseAbstractService<ImageJobDetail, Long> implements ImageJobDetailService {
     @Autowired
     private CloudinaryService cloudinaryService;
 
     @Autowired
     private ImageJobDetailRepository imageJobDetailRepository;
+
+    @Override
+    protected IRepository<ImageJobDetail, Long> getRepository() {
+        return imageJobDetailRepository;
+    }
 
     @Autowired
     private JobDetailRepository jobDetailRepository;
