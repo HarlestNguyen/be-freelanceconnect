@@ -45,37 +45,9 @@ public class JobServiceImpl implements JobSerivce {
     public CustomPageResponse<JobDTO> findAllJobs(Pageable pageable) {
         // Lấy danh sách phân trang của JobDetail từ repository
         CustomPageResponse<JobDetail> jobDetailsPage = jobDetailRepository.findCustomPage(pageable, JobDetail.class);
-        // Chuyển đổi từ JobDetail sang JobDTO với builder
-        CustomPageResponse<JobDTO> jobDTOPage = jobDetailsPage.map(jobDetail ->
-                JobDTO.builder()
-                        .jobId(jobDetail.getId())  // Gán ID công việc
-                        .title(jobDetail.getTitle())  // Gán tên công việc (title)
-                        .description(jobDetail.getDesciption())  // Gán mô tả công việc
-                        .address(jobDetail.getAddress())  // Gán địa chỉ công việc
-                        .phone(jobDetail.getPhone())  // Gán số điện thoại liên hệ
-                        .contactPerson(jobDetail.getPoster().getFullname())  // Gán người liên hệ
-                        .startDate(jobDetail.getStartDate())  // Gán ngày bắt đầu
-                        .duration(jobDetail.getDuration())  // Gán thời gian làm việc
-                        .jobType(JobTypeDTO.builder()  // Chuyển đổi loại công việc
-                                .id(jobDetail.getJobType().getId())
-                                .name(jobDetail.getJobType().getName())
-                                .description(jobDetail.getJobType().getDescription())
-                                .minPrice(jobDetail.getJobType().getMinPrice())
-                                .maxPrice(jobDetail.getJobType().getMaxPrice())
-                                .build()
-                        )
-                        .images(jobDetail.getImageJobDetails().stream()
-                                .map(image -> ImageDTO.builder()
-                                        .url(image.getUrl())
-                                        .cloudiaryPuclicUrl(image.getCloudiaryPuclicUrl())
-                                        .typeOfImg(image.getTypeOfImg())
-                                        .build())
-                                .collect(Collectors.toList())
-                        )  // Gán danh sách hình ảnh
-                        .postedDate(jobDetail.getCreatedDate())  // Gán ngày đăng công việc
-                        .verified(jobDetail.getIsDeleted())  // Gán trạng thái xác thực công việc
-                        .build()
-        );
+        // Chuyển đổi từ JobDetail sang JobDTO với phương thức builder
+        CustomPageResponse<JobDTO> jobDTOPage = jobDetailsPage.map(JobServiceImpl::fromJobDetail);
+
         return jobDTOPage;
     }
 
@@ -96,6 +68,12 @@ public class JobServiceImpl implements JobSerivce {
         if (request.imageJobDetails() != null) {
             imageJobDetailService.saveImageOfJobDetail(request.imageJobDetails(), jobDetail.getId(), "");
         }
+    }
+
+    @Override
+    public JobDTO findJobById(Long id) {
+        return fromJobDetail( jobDetailRepository.findById(id).orElseThrow(() -> new ErrorHandler(HttpStatus.NOT_FOUND, "Job Not found"))
+);
     }
 
     // Phương thức lấy thông tin người dùng đã đăng nhập và trả về Profile
@@ -119,12 +97,42 @@ public class JobServiceImpl implements JobSerivce {
                         .districtId(request.districtId())
                         .title(request.title())
                         .desciption(request.description())
-                        .startDate((Date) request.startDate())  // Không cần ép kiểu
-                        .endDate((Date) request.endDate())      // Không cần ép kiểu
+                        .startDate( request.startDate())
+                        .endDate(request.endDate())
                         .phone(request.phone())
                         .duration(request.duration())
                         .poster(profile)
                         .build()
         );
+    }
+    public static JobDTO fromJobDetail(JobDetail jobDetail) {
+        return JobDTO.builder()
+                .jobId(jobDetail.getId())  // Gán ID công việc
+                .title(jobDetail.getTitle())  // Gán tiêu đề công việc
+                .description(jobDetail.getDesciption())  // Gán mô tả công việc
+                .address(jobDetail.getAddress())  // Gán địa chỉ công việc
+                .phone(jobDetail.getPhone())  // Gán số điện thoại liên hệ
+                .contactPerson(jobDetail.getPoster() != null ? jobDetail.getPoster().getFullname() : null)  // Gán người liên hệ
+                .startDate(jobDetail.getStartDate())  // Gán ngày bắt đầu công việc
+                .duration(jobDetail.getDuration())  // Gán thời gian làm việc
+                .jobType(JobTypeDTO.builder()  // Chuyển đổi loại công việc
+                        .id(jobDetail.getJobType() != null ? jobDetail.getJobType().getId() : null)
+                        .name(jobDetail.getJobType() != null ? jobDetail.getJobType().getName() : null)
+                        .description(jobDetail.getJobType() != null ? jobDetail.getJobType().getDescription() : null)
+                        .minPrice(jobDetail.getJobType() != null ? jobDetail.getJobType().getMinPrice() : null)
+                        .maxPrice(jobDetail.getJobType() != null ? jobDetail.getJobType().getMaxPrice() : null)
+                        .build()
+                )
+                .images(jobDetail.getImageJobDetails().stream()
+                        .map(image -> ImageDTO.builder()
+                                .url(image.getUrl())
+                                .cloudiaryPuclicUrl(image.getCloudiaryPuclicUrl())
+                                .typeOfImg(image.getTypeOfImg())
+                                .build())
+                        .collect(Collectors.toList())
+                )  // Gán danh sách hình ảnh
+                .postedDate(jobDetail.getCreatedDate())  // Gán ngày đăng công việc
+                .verified(jobDetail.getIsDeleted())  // Gán trạng thái xác thực công việc (có thể là isDeleted hay isVerified, tùy vào logic của bạn)
+                .build();
     }
 }

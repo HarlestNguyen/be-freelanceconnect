@@ -1,7 +1,9 @@
 package vn.com.easyjob.model.record;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public record JobDetailRequest(
@@ -10,8 +12,10 @@ public record JobDetailRequest(
         String phone,
         Integer districtId,
         Integer provinceId,
-        Date startDate,
-        Date endDate,
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "GMT")
+        LocalDateTime startDate,
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "GMT")
+        LocalDateTime endDate,
         Integer duration,
         String description,
 

@@ -10,4 +10,6 @@ public interface JobSerivce {
     CustomPageResponse<JobDTO> findAllJobs(Pageable pageable);
 
     void createJob(JobDetailRequest request) throws Exception;
+
+    JobDTO findJobById(Long id);
 }
