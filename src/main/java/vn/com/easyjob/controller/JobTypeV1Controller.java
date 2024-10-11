@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 import vn.com.easyjob.base.BaseController;
 import vn.com.easyjob.base.IService;
 import vn.com.easyjob.model.entity.JobType;
-import vn.com.easyjob.service.Job.JobTypeService;
+import vn.com.easyjob.service.job.JobTypeService;
 import vn.com.easyjob.util.AuthConstants;
 
-@Tag(name = "job-type-v1")
+@Tag(name = "job-type")
 @RestController
 @RequestMapping("/api/v1/job-type")
 public class JobTypeV1Controller extends BaseController<JobType, Long> {

@@ -1,4 +1,4 @@
-package vn.com.easyjob.service.Job;
+package vn.com.easyjob.service.job;
 
 import vn.com.easyjob.base.IService;
 import vn.com.easyjob.model.entity.JobSkill;

@@ -1,4 +1,4 @@
-package vn.com.easyjob.service.Job;
+package vn.com.easyjob.service.job;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -23,9 +23,8 @@ import vn.com.easyjob.repository.JobDetailRepository;
 import vn.com.easyjob.repository.JobTypeRepository;
 
 import vn.com.easyjob.repository.ProfileRepository;
-import vn.com.easyjob.service.Auth.ProfileService;
-
-import vn.com.easyjob.service.Image.ImageJobDetailService;
+import vn.com.easyjob.service.auth.ProfileService;
+import vn.com.easyjob.service.image.ImageJobDetailService;
 
 
 import java.util.stream.Collectors;
@@ -84,21 +83,7 @@ public class JobDetailServiceImpl extends BaseAbstractService<JobDetail, Long> i
 
     @Override
     public JobDTO findJobById(Long id) {
-        return fromJobDetail( jobDetailRepository.findById(id).orElseThrow(() -> new ErrorHandler(HttpStatus.NOT_FOUND, "Job Not found"))
-);
-    }
-
-    // Phương thức lấy thông tin người dùng đã đăng nhập và trả về Profile
-    private Profile getAuthenticatedProfile() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new UsernameNotFoundException("User is not authenticated");
-        }
-        String email = authentication.getName();
-        return profileRepository.findByAccount_Email(email).orElseThrow(
-                () -> new ErrorHandler(HttpStatus.NOT_FOUND, "Account Not found")
-        );
-
+        return fromJobDetail( jobDetailRepository.findById(id).orElseThrow(() -> new ErrorHandler(HttpStatus.NOT_FOUND, "Job Not found")));
     }
 
 

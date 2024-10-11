@@ -1,4 +1,4 @@
-package vn.com.easyjob.service.Image;
+package vn.com.easyjob.service.image;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +10,7 @@ import vn.com.easyjob.model.entity.ImageJobDetail;
 import vn.com.easyjob.model.entity.JobDetail;
 import vn.com.easyjob.repository.ImageJobDetailRepository;
 import vn.com.easyjob.repository.JobDetailRepository;
-import vn.com.easyjob.service.Cloudiary.CloudinaryService;
+import vn.com.easyjob.service.cloudiary.CloudinaryService;
 
 import java.util.HashSet;
 import java.util.Map;

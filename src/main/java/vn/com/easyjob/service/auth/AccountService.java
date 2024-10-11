@@ -1,4 +1,4 @@
-package vn.com.easyjob.service.Auth;
+package vn.com.easyjob.service.auth;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 import vn.com.easyjob.base.IService;

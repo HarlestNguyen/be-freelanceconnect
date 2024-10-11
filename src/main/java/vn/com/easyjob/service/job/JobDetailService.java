@@ -1,4 +1,4 @@
-package vn.com.easyjob.service.Job;
+package vn.com.easyjob.service.job;
 
 import org.springframework.data.domain.Pageable;
 import vn.com.easyjob.base.CustomPageResponse;

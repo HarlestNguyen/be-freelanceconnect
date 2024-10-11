@@ -14,11 +14,10 @@ import vn.com.easyjob.model.dto.ResponseDTO;
 import vn.com.easyjob.model.entity.Profile;
 import vn.com.easyjob.model.record.ChangeInfoRecord;
 import vn.com.easyjob.model.record.ChangePasswordRecord;
-import vn.com.easyjob.service.Auth.AccountService;
-
-import vn.com.easyjob.service.Auth.ProfileService;
-import vn.com.easyjob.service.Cloudiary.CloudinaryService;
-import vn.com.easyjob.service.Job.JobSkillService;
+import vn.com.easyjob.service.auth.AccountService;
+import vn.com.easyjob.service.auth.ProfileService;
+import vn.com.easyjob.service.cloudiary.CloudinaryService;
+import vn.com.easyjob.service.job.JobSkillService;
 import vn.com.easyjob.util.ApplieStatusEnum;
 import vn.com.easyjob.util.AuthConstants;
 
@@ -29,7 +28,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
 
-@Tag(name = "self-v1")
+@Tag(name = "self")
 @RestController
 @PreAuthorize(AuthConstants.ALL)
 @SecurityRequirement(name = "bearer-key")

@@ -1,4 +1,4 @@
-package vn.com.easyjob.service.Cloudiary;
+package vn.com.easyjob.service.cloudiary;
 
 import org.springframework.web.multipart.MultipartFile;
 
