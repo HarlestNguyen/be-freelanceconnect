@@ -53,7 +53,7 @@ public class ImageJobDetailServiceImpl extends BaseAbstractService<ImageJobDetai
             img.setUrl(uploadResult.get("secure_url").toString());
             img.setCloudiaryPuclicUrl(uuid);  // Đổi tên biến cho đúng chính tả
             img.setTypeOfImg(typeofImage);
-
+            img.setIsDeleted(false);
             // Lưu ImageJobDetail vào repository
             ImageJobDetail savedImg = imageJobDetailRepository.save(img);
 
