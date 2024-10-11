@@ -1,4 +1,4 @@
-package vn.com.easyjob.repository.Custom;
+package vn.com.easyjob.repository.custom;
 
 
 import jakarta.persistence.EntityManager;

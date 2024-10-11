@@ -3,6 +3,7 @@ package vn.com.easyjob.model.dto;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -15,8 +16,8 @@ public class JobDTO {
     private String address;           // Địa chỉ nơi làm việc
     private String phone;             // Số điện thoại liên hệ
     private String contactPerson;     // Người liên hệ
-    private Date startDate;  // Ngày giờ bắt đầu làm việc
-    private Date endDate;      // Ngày giờ ngưng nhận việc
+    private LocalDateTime startDate;  // Ngày giờ bắt đầu làm việc
+    private LocalDateTime endDate;      // Ngày giờ ngưng nhận việc
     private Integer duration;         // Thời gian làm việc (giờ)
     private JobTypeDTO jobType;       // Loại công việc (bao gồm ID và tên)
     private List<ImageDTO> images;  // Danh sách hình ảnh của công việc

@@ -7,6 +7,7 @@ import org.hibernate.annotations.DynamicInsert;
 import vn.com.easyjob.base.BaseAuditableEntity;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 @Entity
@@ -29,9 +30,9 @@ public class JobDetail extends BaseAuditableEntity {
     @Column(name = "province_id", nullable = false)
     private Integer provinceId;
     @Column(name = "start_date", nullable = false)
-    private Date startDate;
+    private LocalDateTime startDate;
     @Column(name = "end_date", nullable = false)
-    private Date endDate;
+    private LocalDateTime endDate;
     @Column(nullable = false)
     @Max(8 * 60)
     private Integer duration;
