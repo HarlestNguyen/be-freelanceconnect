@@ -26,4 +26,10 @@ public class JobController {
         jobDetailService.createJob(request);  // Không cần kết quả trả về
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("Job created successfully"));
     }
+
+    // API lấy công việc theo ID
+    @GetMapping("/{jobId}")
+    public ResponseEntity<?> findJobById(@PathVariable("jobId") Long jobId) {
+       return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO(jobDetailService.findJobById(jobId)));
+    }
 }
