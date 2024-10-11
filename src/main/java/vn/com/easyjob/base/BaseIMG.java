@@ -1,7 +1,6 @@
 package vn.com.easyjob.base;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Data;
 

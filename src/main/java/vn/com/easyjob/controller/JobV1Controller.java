@@ -24,7 +24,7 @@ public class JobV1Controller {
     }
 
     @PostMapping
-    public ResponseEntity<?> createJob(@RequestBody JobDetailRecord request) throws Exception {
+    public ResponseEntity<?> createJob(@ModelAttribute JobDetailRecord request) throws Exception {
         jobDetailService.createJob(request);  // Không cần kết quả trả về
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("Job created successfully"));
     }
@@ -32,6 +32,6 @@ public class JobV1Controller {
     // API lấy công việc theo ID
     @GetMapping("/{jobId}")
     public ResponseEntity<?> findJobById(@PathVariable("jobId") Long jobId) {
-       return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO(jobDetailService.findJobById(jobId)));
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO(jobDetailService.findJobById(jobId)));
     }
 }

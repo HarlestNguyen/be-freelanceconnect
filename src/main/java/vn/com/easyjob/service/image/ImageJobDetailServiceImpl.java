@@ -23,14 +23,13 @@ public class ImageJobDetailServiceImpl extends BaseAbstractService<ImageJobDetai
 
     @Autowired
     private ImageJobDetailRepository imageJobDetailRepository;
+    @Autowired
+    private JobDetailRepository jobDetailRepository;
 
     @Override
     protected IRepository<ImageJobDetail, Long> getRepository() {
         return imageJobDetailRepository;
     }
-
-    @Autowired
-    private JobDetailRepository jobDetailRepository;
 
     @Override
     public Set<ImageDTO> saveImageOfJobDetail(MultipartFile[] imageOfJobDetail, Long JobDetailID, String typeofImage) throws Exception {
