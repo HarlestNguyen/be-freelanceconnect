@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import vn.com.easyjob.base.CustomPageResponse;
 import vn.com.easyjob.base.IRepository;
 import vn.com.easyjob.model.entity.JobDetail;
-import vn.com.easyjob.repository.Custom.CustomPagingRepository;
+import vn.com.easyjob.repository.custom.CustomPagingRepository;
 
 @Repository
 public interface JobDetailRepository extends IRepository<JobDetail, Long>, CustomPagingRepository<JobDetail> {

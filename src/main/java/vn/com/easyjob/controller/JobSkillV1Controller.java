@@ -13,7 +13,7 @@ import vn.com.easyjob.model.entity.JobSkill;
 import vn.com.easyjob.service.job.JobSkillService;
 import vn.com.easyjob.util.AuthConstants;
 
-@Tag(name = "job-skill-v1")
+@Tag(name = "job-skill")
 @RestController
 @RequestMapping("/api/v1/job-skill")
 public class JobSkillV1Controller extends BaseController<JobSkill, Long> {

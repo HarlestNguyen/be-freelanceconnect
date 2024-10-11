@@ -28,7 +28,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
 
-@Tag(name = "self-v1")
+@Tag(name = "self")
 @RestController
 @PreAuthorize(AuthConstants.ALL)
 @SecurityRequirement(name = "bearer-key")
