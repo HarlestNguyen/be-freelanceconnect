@@ -6,14 +6,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import vn.com.easyjob.base.BaseAbstractService;
+import vn.com.easyjob.base.BaseService;
 import vn.com.easyjob.base.IRepository;
 import vn.com.easyjob.exception.ErrorHandler;
 import vn.com.easyjob.model.entity.Profile;
 import vn.com.easyjob.repository.ProfileRepository;
 
 @Service
-public class ProfileServiceImpl extends BaseAbstractService<Profile, Integer> implements ProfileService {
+public class ProfileServiceImpl extends BaseService<Profile, Integer> implements ProfileService {
     @Autowired
     private ProfileRepository profileRepository;
 

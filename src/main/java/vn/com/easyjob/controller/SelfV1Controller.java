@@ -67,7 +67,7 @@ public class SelfV1Controller {
                 .isVerified(profile.getCitizenIdentityCard().getIsVerified())
                 .jobSkills(profile.getJobSkills().stream().filter(jobSkill -> !jobSkill.getIsDeleted()).map(jobSkill -> JobSkillDTO.builder()
                         .skill(jobSkill.getSkill())
-                        .id(jobSkill.getId().intValue())
+                        .id(jobSkill.getId())
                         .description(jobSkill.getDescription())
                         .build()
                 ).toList())

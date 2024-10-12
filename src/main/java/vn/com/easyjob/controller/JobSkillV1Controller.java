@@ -8,21 +8,26 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vn.com.easyjob.base.BaseController;
+import vn.com.easyjob.base.BaseControllerDTO;
+import vn.com.easyjob.base.BaseServiceDTO;
 import vn.com.easyjob.base.IService;
+import vn.com.easyjob.model.dto.JobSkillDTO;
 import vn.com.easyjob.model.entity.JobSkill;
+import vn.com.easyjob.model.mapper.JobSkillMapper;
 import vn.com.easyjob.service.job.JobSkillService;
 import vn.com.easyjob.util.AuthConstants;
 
 @Tag(name = "job-skill-v1")
 @RestController
 @RequestMapping("/api/v1/job-skill")
-public class JobSkillV1Controller extends BaseController<JobSkill, Long> {
+public class JobSkillV1Controller extends BaseControllerDTO<JobSkill, JobSkillDTO, Long> {
     @Autowired
     private JobSkillService jobSkillService;
 
+
     @Override
-    public IService<JobSkill, Long> getService() {
-        return jobSkillService;
+    public BaseServiceDTO<JobSkill, JobSkillDTO, Long> getService() {
+        return (BaseServiceDTO<JobSkill, JobSkillDTO, Long>) jobSkillService;
     }
 
     @Override
