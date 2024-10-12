@@ -5,7 +5,7 @@ import vn.com.easyjob.exception.ErrorHandler;
 
 import java.util.Collection;
 
-public abstract class BaseAbstractService<T extends BaseEntity, ID> implements IService<T, ID> {
+public abstract class BaseService<T extends BaseEntity, ID> implements IService<T, ID> {
 
     protected abstract IRepository<T, ID> getRepository();
 
@@ -40,4 +40,5 @@ public abstract class BaseAbstractService<T extends BaseEntity, ID> implements I
                 .filter(t -> !t.getIsDeleted())
                 .orElseThrow(() -> new ErrorHandler(HttpStatus.NOT_FOUND, "Entity not found or had bean deleted."));
     }
+
 }

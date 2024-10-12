@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import vn.com.easyjob.base.BaseAbstractService;
+import vn.com.easyjob.base.BaseService;
 import vn.com.easyjob.base.IRepository;
 import vn.com.easyjob.exception.ErrorHandler;
 import vn.com.easyjob.jwt.JwtService;
@@ -29,7 +29,7 @@ import vn.com.easyjob.util.EmailSubjectEnum;
 import vn.com.easyjob.util.TypeMailEnum;
 
 @Service
-public class AccountServiceImpl extends BaseAbstractService<Account, Long> implements AccountService {
+public class AccountServiceImpl extends BaseService<Account, Long> implements AccountService {
     @Autowired
     private AccountRepository accountRepository;
 

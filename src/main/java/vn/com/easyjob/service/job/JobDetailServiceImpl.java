@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import vn.com.easyjob.base.BaseAbstractService;
+import vn.com.easyjob.base.BaseService;
 import vn.com.easyjob.base.CustomPageResponse;
 import vn.com.easyjob.base.IRepository;
 import vn.com.easyjob.exception.ErrorHandler;
@@ -24,7 +24,7 @@ import vn.com.easyjob.service.image.ImageJobDetailService;
 import java.util.stream.Collectors;
 
 @Service
-public class JobDetailServiceImpl extends BaseAbstractService<JobDetail, Long> implements JobDetailService {
+public class JobDetailServiceImpl extends BaseService<JobDetail, Long> implements JobDetailService {
     @Autowired
     private JobDetailRepository jobDetailRepository;
     @Autowired
