@@ -9,5 +9,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 public class MainApplication {
     public static void main(String[] args) {
         SpringApplication.run(MainApplication.class, args);
+        System.out.println("http://localhost:8080/swagger");
     }
 }
