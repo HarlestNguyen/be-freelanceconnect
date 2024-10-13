@@ -93,6 +93,10 @@ public class SercurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("http://localhost:3000");  // Chỉ định cụ thể nguồn gốc
+        configuration.addAllowedOrigin("http://61.14.233.181:3000");  // Chỉ định cụ thể nguồn gốc
+        configuration.addAllowedOrigin("https://api.easyjob.io.vn");
+
         configuration.setAllowedOrigins(List.of("*"));
         configuration.setAllowPrivateNetwork(false);
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
