@@ -96,12 +96,15 @@ public class SercurityConfig {
         configuration.addAllowedOrigin("http://localhost:3000");  // Chỉ định cụ thể nguồn gốc
         configuration.addAllowedOrigin("http://61.14.233.181:3000");  // Chỉ định cụ thể nguồn gốc
         configuration.addAllowedOrigin("https://api.easyjob.io.vn");
+        configuration.addAllowedMethod("*");
+        configuration.addAllowedHeader("*");
+        configuration.setAllowCredentials(true); // Cho phép gửi cookie cùng với request
 
         configuration.setAllowedOrigins(List.of("*"));
         configuration.setAllowPrivateNetwork(false);
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(false);
+        // configuration.setAllowCredentials(false);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
