@@ -85,7 +85,7 @@ public class AccountServiceImpl extends BaseService<Account, Long> implements Ac
     @Override
     public TokenDTO signUp(RegisterRecord record) {
         if (record.role().getId() == 1L) {
-            return null;
+            throw new ErrorHandler(HttpStatus.BAD_REQUEST, "Can not sign up with role "+ record.role().getRoleName());
         }
         Account account = new Account();
         Profile profile = new Profile();
@@ -103,8 +103,9 @@ public class AccountServiceImpl extends BaseService<Account, Long> implements Ac
         String accessToken = jwtService.generateToken(result);
         if (accessToken != null) {
             return new TokenDTO(accessToken);
+        } else {
+            throw new ErrorHandler(HttpStatus.INTERNAL_SERVER_ERROR, "Can not generate access token, please sign in with this account.");
         }
-        return null;
     }
 
     public Account findOne(String email) {

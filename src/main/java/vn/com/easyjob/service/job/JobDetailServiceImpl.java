@@ -75,7 +75,7 @@ public class JobDetailServiceImpl extends BaseService<JobDetail, Long> implement
         // Lấy danh sách phân trang của JobDetail từ repository
         CustomPageResponse<JobDetail> jobDetailsPage = jobDetailRepository.findCustomPage(pageable, JobDetail.class);
         // Chuyển đổi từ JobDetail sang JobDTO với phương thức builder
-        CustomPageResponse<JobDTO> jobDTOPage = jobDetailsPage.map(JobServiceImpl::fromJobDetail);
+        CustomPageResponse<JobDTO> jobDTOPage = jobDetailsPage.map(JobDetailServiceImpl::fromJobDetail);
 
         return jobDTOPage;
     }

@@ -55,26 +55,7 @@ public class SelfV1Controller {
 
     @GetMapping()
     public ResponseEntity<?> getSelf() {
-        Profile profile = profileService.getAuthenticatedProfile();
-        ProfileDTO dto = ProfileDTO.builder()
-                .age(Period.between(profile.getDob().toLocalDate(), LocalDate.now()).getYears())
-                .address(profile.getAddress())
-                .avatar(profile.getAvatar())
-                .createdDate(profile.getCreatedDate())
-                .provinceId(profile.getProvinceId())
-                .districtId(profile.getDistrictId())
-                .fullname(profile.getFullname())
-                .isVerified(profile.getCitizenIdentityCard().getIsVerified())
-                .jobSkills(profile.getJobSkills().stream().filter(jobSkill -> !jobSkill.getIsDeleted()).map(jobSkill -> JobSkillDTO.builder()
-                        .skill(jobSkill.getSkill())
-                        .id(jobSkill.getId())
-                        .description(jobSkill.getDescription())
-                        .build()
-                ).toList())
-//                .star()
-                .numOfJob((int) profile.getAppliedJobs().stream().filter(appliedJob -> appliedJob.getApplieStatus().getName().equals(ApplieStatusEnum.COMPLETED.name())).count())
-                .build();
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("Get info successfully.", dto));
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("Get info successfully.", profileService.getSelfInformation()));
     }
 
     @PatchMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
