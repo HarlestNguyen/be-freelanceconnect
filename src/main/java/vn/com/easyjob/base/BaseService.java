@@ -5,7 +5,8 @@ import vn.com.easyjob.exception.ErrorHandler;
 
 import java.util.Collection;
 
-public abstract class  BaseService<T extends BaseEntity, ID> implements IService<T, ID> {
+public abstract class BaseService<T extends BaseEntity, ID> implements IService<T, ID> {
+
     protected abstract IRepository<T, ID> getRepository();
 
     public T save(T t) {

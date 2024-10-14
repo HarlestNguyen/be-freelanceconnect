@@ -2,6 +2,7 @@ package vn.com.easyjob.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import vn.com.easyjob.base.BaseAuditableEntity;
@@ -27,6 +28,9 @@ public class Profile extends BaseAuditableEntity {
     @OneToOne(mappedBy = "profile")
     @PrimaryKeyJoinColumn
     private CitizenIdentityCard citizenIdentityCard;
+    @Column(name = "is_verified", nullable = false)
+    @ColumnDefault("b'0'")
+    private Boolean isVerified;
     private Date dob;
     private String avatar;
     private String address;
