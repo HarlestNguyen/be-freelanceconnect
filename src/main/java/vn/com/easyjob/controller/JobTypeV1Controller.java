@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import vn.com.easyjob.base.BaseController;
+import vn.com.easyjob.base.BaseControllerDTO;
+import vn.com.easyjob.base.BaseServiceDTO;
 import vn.com.easyjob.base.IService;
 import vn.com.easyjob.model.dto.JobTypeDTO;
 import vn.com.easyjob.model.entity.JobType;
@@ -18,13 +20,14 @@ import vn.com.easyjob.util.AuthConstants;
 @Tag(name = "job-type")
 @RestController
 @RequestMapping("/api/v1/job-type")
-public class JobTypeV1Controller extends BaseController<JobType, Long> {
+public class JobTypeV1Controller extends BaseControllerDTO<JobType, JobTypeDTO, Long> {
     @Autowired
     private JobTypeService jobTypeService;
 
+
     @Override
-    public IService<JobType, Long> getService() {
-        return jobTypeService;
+    public BaseServiceDTO<JobType, JobTypeDTO, Long> getService() {
+        return (BaseServiceDTO<JobType, JobTypeDTO, Long>) jobTypeService;
     }
 
     @Override

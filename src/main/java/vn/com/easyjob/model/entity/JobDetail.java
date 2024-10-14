@@ -6,7 +6,6 @@ import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import vn.com.easyjob.base.BaseAuditableEntity;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.Collection;
 

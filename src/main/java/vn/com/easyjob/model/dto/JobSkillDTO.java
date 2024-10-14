@@ -6,7 +6,7 @@ import lombok.Data;
 @Builder
 @Data
 public class JobSkillDTO {
-    private Integer id;
+    private Long id;
     private String skill;
     private String description;
 }
