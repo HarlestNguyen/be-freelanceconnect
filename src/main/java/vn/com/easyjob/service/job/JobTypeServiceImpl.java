@@ -4,12 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import vn.com.easyjob.base.BaseMapper;
-import vn.com.easyjob.base.BaseService;
 import vn.com.easyjob.base.BaseServiceDTO;
 import vn.com.easyjob.base.IRepository;
+import vn.com.easyjob.exception.ErrorHandler;
 import vn.com.easyjob.model.dto.JobTypeDTO;
 import vn.com.easyjob.model.entity.JobType;
 import vn.com.easyjob.model.mapper.JobTypeMapper;
+import vn.com.easyjob.model.record.JobtypeRecord;
 import vn.com.easyjob.repository.JobTypeRepository;
 
 @Service
@@ -29,7 +30,7 @@ public class JobTypeServiceImpl extends BaseServiceDTO<JobType, JobTypeDTO, Long
     @Override
     public JobTypeDTO updateJobType(JobTypeDTO jobtypeDTO) {
         JobType jobType = jobTypeRepository.findById(jobtypeDTO.getId()).orElseThrow(
-                () -> new ErrorHandler(HttpStatus.NOT_FOUND,"JobType Updated Not Found")
+                () -> new ErrorHandler(HttpStatus.NOT_FOUND, "JobType Updated Not Found")
         );
         jobType.setName(jobtypeDTO.getName());
         jobType.setDescription(jobtypeDTO.getDescription());
@@ -70,8 +71,11 @@ public class JobTypeServiceImpl extends BaseServiceDTO<JobType, JobTypeDTO, Long
                 .minPrice(savedJobType.getMinPrice())
                 .maxPrice(savedJobType.getMaxPrice())
                 .build();
+
+    }
+
+    @Override
     protected BaseMapper<JobType, JobTypeDTO> getMapper() {
         return jobTypeMapper;
     }
 }
-

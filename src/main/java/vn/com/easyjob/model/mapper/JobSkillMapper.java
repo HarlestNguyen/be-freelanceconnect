@@ -7,4 +7,5 @@ import vn.com.easyjob.model.entity.JobSkill;
 
 @Mapper(componentModel = "spring")
 public interface JobSkillMapper extends BaseMapper<JobSkill, JobSkillDTO> {
+
 }
