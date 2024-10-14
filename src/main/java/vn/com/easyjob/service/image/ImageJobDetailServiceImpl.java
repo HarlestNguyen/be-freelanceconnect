@@ -3,7 +3,7 @@ package vn.com.easyjob.service.image;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import vn.com.easyjob.base.BaseAbstractService;
+import vn.com.easyjob.base.BaseService;
 import vn.com.easyjob.base.IRepository;
 import vn.com.easyjob.model.dto.ImageDTO;
 import vn.com.easyjob.model.entity.ImageJobDetail;
@@ -17,20 +17,19 @@ import java.util.Map;
 import java.util.Set;
 
 @Service
-public class ImageJobDetailServiceImpl extends BaseAbstractService<ImageJobDetail, Long> implements ImageJobDetailService {
+public class ImageJobDetailServiceImpl extends BaseService<ImageJobDetail, Long> implements ImageJobDetailService {
     @Autowired
     private CloudinaryService cloudinaryService;
 
     @Autowired
     private ImageJobDetailRepository imageJobDetailRepository;
+    @Autowired
+    private JobDetailRepository jobDetailRepository;
 
     @Override
     protected IRepository<ImageJobDetail, Long> getRepository() {
         return imageJobDetailRepository;
     }
-
-    @Autowired
-    private JobDetailRepository jobDetailRepository;
 
     @Override
     public Set<ImageDTO> saveImageOfJobDetail(MultipartFile[] imageOfJobDetail, Long JobDetailID, String typeofImage) throws Exception {

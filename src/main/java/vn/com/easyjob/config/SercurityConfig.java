@@ -25,6 +25,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import vn.com.easyjob.jwt.JwtFilter;
 import vn.com.easyjob.service.auth.AccountService;
 
@@ -101,6 +102,21 @@ public class SercurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
+    }
+
+    @Bean
+    public CorsFilter corsFilter() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedOrigin("http://localhost:3000");        // Chỉ định cụ thể nguồn gốc
+        config.addAllowedOrigin("http://61.14.233.181:3000");    // Chỉ định cụ thể nguồn gốc
+        config.addAllowedOrigin("https://api.easyjob.io.vn");    // Chỉ định cụ thể nguồn gốc
+        config.addAllowedMethod("*");
+        config.addAllowedHeader("*");
+        config.setAllowCredentials(true); // Cho phép gửi cookie cùng với request
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
     }
 
     //config security swagger

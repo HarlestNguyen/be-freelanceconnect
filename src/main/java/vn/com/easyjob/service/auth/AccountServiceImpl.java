@@ -13,7 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import vn.com.easyjob.base.BaseAbstractService;
+import vn.com.easyjob.base.BaseService;
 import vn.com.easyjob.base.IRepository;
 import vn.com.easyjob.exception.ErrorHandler;
 import vn.com.easyjob.jwt.JwtService;
@@ -37,7 +37,7 @@ import vn.com.easyjob.util.RoleEnum;
 import vn.com.easyjob.util.TypeMailEnum;
 
 @Service
-public class AccountServiceImpl extends BaseAbstractService<Account, Long> implements AccountService {
+public class AccountServiceImpl extends BaseService<Account, Long> implements AccountService {
     @Autowired
     private AccountRepository accountRepository;
 
@@ -117,7 +117,7 @@ public class AccountServiceImpl extends BaseAbstractService<Account, Long> imple
     @Override
     public TokenDTO signUp(RegisterRecord record) {
         if (record.role().getId() == 1L) {
-            return null;
+            throw new ErrorHandler(HttpStatus.BAD_REQUEST, "Can not sign up with role "+ record.role().getRoleName());
         }
         Account account = new Account();
         Profile profile = new Profile();
@@ -135,8 +135,9 @@ public class AccountServiceImpl extends BaseAbstractService<Account, Long> imple
         String accessToken = jwtService.generateToken(result);
         if (accessToken != null) {
             return new TokenDTO(accessToken);
+        } else {
+            throw new ErrorHandler(HttpStatus.INTERNAL_SERVER_ERROR, "Can not generate access token, please sign in with this account.");
         }
-        return null;
     }
 
     public Account findOne(String email) {

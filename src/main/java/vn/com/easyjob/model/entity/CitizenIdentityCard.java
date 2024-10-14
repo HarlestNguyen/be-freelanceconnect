@@ -18,9 +18,6 @@ public class CitizenIdentityCard extends BaseEntity {
     private Profile profile;
     @Column(nullable = false, length = 12)
     private Character no;
-    @Column(name = "is_verified", nullable = false)
-    @ColumnDefault("b'0'")
-    private Boolean isVerified;
     @Column(nullable = false)
     private String fullname;
     @Column(nullable = false, name = "dob")
