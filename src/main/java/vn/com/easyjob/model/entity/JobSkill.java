@@ -1,13 +1,17 @@
 package vn.com.easyjob.model.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import vn.com.easyjob.base.BaseEntity;
 
 import java.util.Collection;
 
 @Entity
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Setter
+@Getter
 @Table(name = "tbl_job_skill")
 public class JobSkill extends BaseEntity {
     @Column(unique = true, nullable = false)
