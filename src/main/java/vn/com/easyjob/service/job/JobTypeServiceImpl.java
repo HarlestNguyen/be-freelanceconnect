@@ -9,6 +9,7 @@ import vn.com.easyjob.base.IRepository;
 import vn.com.easyjob.model.dto.JobTypeDTO;
 import vn.com.easyjob.model.entity.JobType;
 import vn.com.easyjob.model.mapper.JobTypeMapper;
+import vn.com.easyjob.model.record.JobTypeRecord;
 import vn.com.easyjob.repository.JobTypeRepository;
 
 @Service
@@ -28,6 +29,30 @@ public class JobTypeServiceImpl extends BaseServiceDTO<JobType, JobTypeDTO, Long
     @Override
     protected BaseMapper<JobType, JobTypeDTO> getMapper() {
         return jobTypeMapper;
+    }
+
+    @Override
+    public JobTypeDTO save(JobTypeRecord record) {
+        JobType jobType = JobType.builder()
+                .name(record.name())
+                .description(record.description())
+                .minPrice(record.minPrice())
+                .maxPrice(record.maxPrice())
+                .build();
+        return jobTypeMapper.toDto(save(jobType));
+    }
+
+    @Override
+    public JobTypeDTO update(Long id, JobTypeRecord record) {
+        JobType jobType = JobType.builder()
+                .name(record.name())
+                .description(record.description())
+                .minPrice(record.minPrice())
+                .maxPrice(record.maxPrice())
+                .build();
+        jobType.setId(id);
+        jobType.setIsDeleted(false);
+        return jobTypeMapper.toDto(save(jobType));
     }
 }
 
