@@ -17,6 +17,7 @@ import vn.com.easyjob.model.record.RegisterRecord;
 import vn.com.easyjob.model.record.SignInRecord;
 import vn.com.easyjob.service.auth.AccountService;
 import vn.com.easyjob.util.AuthConstants;
+import vn.com.easyjob.util.RoleEnum;
 
 @Tag(name = "auth")
 @RestController
@@ -57,4 +58,11 @@ public class AuthenticationV1Controller {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO("Failed to send change password link."));
         }
     }
+
+    @PostMapping("/outbound")
+    @PreAuthorize(AuthConstants.NONE)
+    public ResponseEntity<?> outbound(@RequestParam String code, @RequestParam String role) {
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("Outbound successfully.",accountService.outboundAuthenticate(code, RoleEnum.valueOf(role))));
+    }
+
 }

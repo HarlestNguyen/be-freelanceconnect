@@ -7,6 +7,7 @@ import vn.com.easyjob.model.entity.Account;
 import vn.com.easyjob.model.record.ChangePasswordRecord;
 import vn.com.easyjob.model.record.RegisterRecord;
 import vn.com.easyjob.model.record.SignInRecord;
+import vn.com.easyjob.util.RoleEnum;
 
 public interface AccountService extends UserDetailsService, IService<Account, Long> {
     TokenDTO signIn(SignInRecord record);
@@ -21,6 +22,6 @@ public interface AccountService extends UserDetailsService, IService<Account, Lo
 
     Boolean isChangePassword(ChangePasswordRecord changePasswordRecord);
 
-    TokenDTO outboundAuthenticate(String code);
+    TokenDTO outboundAuthenticate(String code, RoleEnum role);
 
 }

@@ -30,10 +30,13 @@ public class MailServiceImpl implements MailService {
                 case OTP -> {
                     htmlContent = htmlContent.replaceAll("##otp##", content);
                     sendHtmlEmail(email, subject.getSubject(), htmlContent);
-
                 }
                 case VERIFY_LINK -> {
                     htmlContent = htmlContent.replaceAll("##verify_link##", content);
+                    sendHtmlEmail(email, subject.getSubject(), htmlContent);
+                }
+                case PASSWORD -> {
+                    htmlContent = htmlContent.replaceAll("##password##", content);
                     sendHtmlEmail(email, subject.getSubject(), htmlContent);
                 }
             }
@@ -46,10 +49,11 @@ public class MailServiceImpl implements MailService {
     private void sendHtmlEmail(String toMail, String subject, String htmlBody) throws MessagingException, UnsupportedEncodingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-        helper.setFrom("", "Third Team");
+        helper.setFrom("noreply@yourdomain.com", "EasyJob Team");
         helper.setTo(toMail);
         helper.setSubject(subject);
         helper.setText(htmlBody, true);
+
         javaMailSender.send(message);
     }
 

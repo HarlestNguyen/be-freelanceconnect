@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import vn.com.easyjob.base.BaseService;
 import vn.com.easyjob.base.IRepository;
 import vn.com.easyjob.exception.ErrorHandler;
@@ -35,6 +36,8 @@ import vn.com.easyjob.util.EmailSubjectEnum;
 import vn.com.easyjob.util.PasswordGenerator;
 import vn.com.easyjob.util.RoleEnum;
 import vn.com.easyjob.util.TypeMailEnum;
+
+import java.util.Optional;
 
 @Service
 public class AccountServiceImpl extends BaseService<Account, Long> implements AccountService {
@@ -177,7 +180,8 @@ public class AccountServiceImpl extends BaseService<Account, Long> implements Ac
     }
 
     @Override
-    public TokenDTO outboundAuthenticate(String code) {
+    @Transactional
+    public TokenDTO outboundAuthenticate(String code, RoleEnum role) {
         var response = outboundIdentityClient.exchangeToken(ExchangeTokenRequest.builder()
                 .code(code)
                 .clientId(OUTBOUND_IDENTITY_CLIENT_ID)
@@ -186,16 +190,27 @@ public class AccountServiceImpl extends BaseService<Account, Long> implements Ac
                 .grantType(GRANT_TYPE)
                 .build());
         var userInfo = outboundUserClient.GetUserInfo("json",response.getAccessToken());
-        Role role = roleRepository.findByName(RoleEnum.ROLE_EMPLOYER).orElseThrow(
-                () -> new ErrorHandler(HttpStatus.NOT_FOUND, "Role not found")
-        );
+
+
+        // Check if the email already exists in the database
+        Optional<Account> existingAccount = accountRepository.findByEmail(userInfo.getEmail());
+
+        if (existingAccount.isPresent()) {
+            // If the account already exists, just return the token without creating or sending an email
+            return new TokenDTO(jwtService.generateToken(existingAccount.get()));
+        }
+
+
+
         String password = PasswordGenerator.generatePassword(8);
 
-        accountRepository.save(
+        Account newAccount = accountRepository.save(
                 Account.builder()
                         .email(userInfo.getEmail())
                         .password(passwordEncoder.encode(password))
-                        .role(role)
+                        .role(roleRepository.findByName(role).orElseThrow(
+                                () -> new ErrorHandler(HttpStatus.NOT_FOUND, "Role not found")
+                        ))
                         .profile(
                                 profileRepository.save(
                                         Profile.builder()
@@ -206,8 +221,9 @@ public class AccountServiceImpl extends BaseService<Account, Long> implements Ac
                         .build()
         );
 
+        mailService.sendWithTemplate(newAccount.getEmail(), password, EmailSubjectEnum.PASSWORD, TypeMailEnum.PASSWORD);
 
-        return null;
+        return new TokenDTO(jwtService.generateToken(newAccount));
     }
 
 }
