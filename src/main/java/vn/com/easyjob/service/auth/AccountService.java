@@ -20,4 +20,7 @@ public interface AccountService extends UserDetailsService, IService<Account, Lo
     Boolean isSendMailForgetPassword(String email);
 
     Boolean isChangePassword(ChangePasswordRecord changePasswordRecord);
+
+    TokenDTO outboundAuthenticate(String code);
+
 }

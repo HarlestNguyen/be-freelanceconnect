@@ -7,5 +7,6 @@ import vn.com.easyjob.model.record.JobSkillRecord;
 
 public interface JobSkillService extends IService<JobSkill, Long> {
     JobSkillDTO save(JobSkillRecord record);
+
     JobSkillDTO update(Long id, JobSkillRecord record);
 }

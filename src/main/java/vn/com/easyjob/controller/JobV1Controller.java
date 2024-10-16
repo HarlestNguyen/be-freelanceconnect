@@ -1,5 +1,6 @@
 package vn.com.easyjob.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import vn.com.easyjob.model.dto.ResponseDTO;
 import vn.com.easyjob.model.record.JobDetailRecord;
 import vn.com.easyjob.service.job.JobDetailService;
 
+@Tag(name = "job")
 @RestController
 @RequestMapping("/api/v1/job")
 public class JobV1Controller {

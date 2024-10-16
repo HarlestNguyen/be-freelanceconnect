@@ -1,7 +1,7 @@
 package vn.com.easyjob.model.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -11,7 +11,11 @@ import java.sql.Date;
 import java.util.Collection;
 
 @Entity
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @DynamicInsert
 @DynamicUpdate
 @Table(name = "tbl_profile")

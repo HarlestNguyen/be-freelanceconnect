@@ -1,12 +1,8 @@
 package vn.com.easyjob.base;
 
-import org.springframework.http.HttpStatus;
-import vn.com.easyjob.exception.ErrorHandler;
-
-import java.lang.reflect.Field;
 import java.util.Collection;
 
-public abstract class BaseServiceDTO<T extends BaseEntity, DTO, ID> extends BaseService<T, ID> implements IService<T, ID>  {
+public abstract class BaseServiceDTO<T extends BaseEntity, DTO, ID> extends BaseService<T, ID> implements IService<T, ID> {
 
     protected abstract BaseMapper<T, DTO> getMapper();
 

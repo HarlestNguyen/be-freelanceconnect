@@ -1,9 +1,7 @@
 package vn.com.easyjob.model.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,11 +13,15 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Entity
-@Data
 @EqualsAndHashCode(callSuper = false)
 @Table(name = "tbl_account")
 @DynamicInsert
 @ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class Account extends BaseEntity implements Serializable, UserDetails {
     @Column(nullable = false, unique = true)
     private String email;

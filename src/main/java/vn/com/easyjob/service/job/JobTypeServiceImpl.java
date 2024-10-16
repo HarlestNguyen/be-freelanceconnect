@@ -3,7 +3,6 @@ package vn.com.easyjob.service.job;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.com.easyjob.base.BaseMapper;
-import vn.com.easyjob.base.BaseService;
 import vn.com.easyjob.base.BaseServiceDTO;
 import vn.com.easyjob.base.IRepository;
 import vn.com.easyjob.model.dto.JobTypeDTO;
@@ -44,15 +43,11 @@ public class JobTypeServiceImpl extends BaseServiceDTO<JobType, JobTypeDTO, Long
 
     @Override
     public JobTypeDTO update(Long id, JobTypeRecord record) {
-        JobType jobType = JobType.builder()
-                .name(record.name())
-                .description(record.description())
-                .minPrice(record.minPrice())
-                .maxPrice(record.maxPrice())
-                .build();
-        jobType.setId(id);
-        jobType.setIsDeleted(false);
+        JobType jobType = findOne(id);
+        jobType.setName(record.name());
+        jobType.setDescription(record.description());
+        jobType.setMinPrice(record.minPrice());
+        jobType.setMaxPrice(record.maxPrice());
         return jobTypeMapper.toDto(save(jobType));
     }
 }
-

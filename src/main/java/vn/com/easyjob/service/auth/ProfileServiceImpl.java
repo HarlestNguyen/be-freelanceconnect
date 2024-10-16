@@ -43,7 +43,7 @@ public class ProfileServiceImpl extends BaseService<Profile, Integer> implements
     public ProfileDTO getSelfInformation() {
         Profile profile = getAuthenticatedProfile();
         ProfileDTO dto = new ProfileDTO();
-        if (profile.getDob() != null){
+        if (profile.getDob() != null) {
             dto.setAge(Period.between(profile.getDob().toLocalDate(), LocalDate.now()).getYears());
         }
         dto.setFullname(profile.getFullname());
@@ -54,10 +54,10 @@ public class ProfileServiceImpl extends BaseService<Profile, Integer> implements
         dto.setDistrictId(profile.getDistrictId());
         dto.setIsVerified(profile.getIsVerified());
         dto.setJobSkills(profile.getJobSkills().stream().filter(jobSkill -> !jobSkill.getIsDeleted()).map(jobSkill -> JobSkillDTO.builder()
-                                .skill(jobSkill.getSkill())
-                                .id(jobSkill.getId())
-                                .description(jobSkill.getDescription())
-                                .build()).toList());
+                .skill(jobSkill.getSkill())
+                .id(jobSkill.getId())
+                .description(jobSkill.getDescription())
+                .build()).toList());
         dto.setStar(null);
         dto.setNumOfJob((int) profile.getAppliedJobs().stream().filter(appliedJob -> appliedJob.getApplieStatus().getName().equals(ApplieStatusEnum.COMPLETED.name())).count());
 

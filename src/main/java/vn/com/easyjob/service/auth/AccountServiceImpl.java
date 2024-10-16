@@ -1,6 +1,8 @@
 package vn.com.easyjob.service.auth;
 
+import lombok.experimental.NonFinal;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +17,7 @@ import vn.com.easyjob.base.BaseService;
 import vn.com.easyjob.base.IRepository;
 import vn.com.easyjob.exception.ErrorHandler;
 import vn.com.easyjob.jwt.JwtService;
+import vn.com.easyjob.model.dto.ExchangeTokenRequest;
 import vn.com.easyjob.model.dto.TokenDTO;
 import vn.com.easyjob.model.entity.Account;
 import vn.com.easyjob.model.entity.Profile;
@@ -24,31 +27,49 @@ import vn.com.easyjob.model.record.RegisterRecord;
 import vn.com.easyjob.model.record.SignInRecord;
 import vn.com.easyjob.repository.AccountRepository;
 import vn.com.easyjob.repository.ProfileRepository;
+import vn.com.easyjob.repository.RoleRepository;
+import vn.com.easyjob.repository.httpclient.OutboundIdentityClient;
+import vn.com.easyjob.repository.httpclient.OutboundUserClient;
 import vn.com.easyjob.service.mail.MailService;
 import vn.com.easyjob.util.EmailSubjectEnum;
+import vn.com.easyjob.util.PasswordGenerator;
+import vn.com.easyjob.util.RoleEnum;
 import vn.com.easyjob.util.TypeMailEnum;
 
 @Service
 public class AccountServiceImpl extends BaseService<Account, Long> implements AccountService {
+    @NonFinal
+    protected final String GRANT_TYPE = "authorization_code";
+    @NonFinal
+    @Value("${outbound.identity.client-id}")
+    protected String OUTBOUND_IDENTITY_CLIENT_ID;
+    @NonFinal
+    @Value("${outbound.identity.redirect-uri}")
+    protected String OUTBOUND_IDENTITY_REDIRECT_URI;
+    @NonFinal
+    @Value("${outbound.identity.client-secret}")
+    protected String OUTBOUND_IDENTITY_CLIENT_SECRET;
+    @Autowired
+    OutboundIdentityClient outboundIdentityClient;
+    @Autowired
+    OutboundUserClient outboundUserClient;
     @Autowired
     private AccountRepository accountRepository;
-
     @Autowired
     @Lazy
     private PasswordEncoder passwordEncoder;
-
     @Autowired
     @Lazy
     private AuthenticationManager authenticationManager;
-
     @Autowired
     private JwtService jwtService;
-
     @Autowired
     private ProfileRepository profileRepository;
-
     @Autowired
     private MailService mailService;
+    @Autowired
+    private RoleRepository roleRepository;
+
 
     @Override
     protected IRepository<Account, Long> getRepository() {
@@ -85,7 +106,7 @@ public class AccountServiceImpl extends BaseService<Account, Long> implements Ac
     @Override
     public TokenDTO signUp(RegisterRecord record) {
         if (record.role().getId() == 1L) {
-            throw new ErrorHandler(HttpStatus.BAD_REQUEST, "Can not sign up with role "+ record.role().getRoleName());
+            throw new ErrorHandler(HttpStatus.BAD_REQUEST, "Can not sign up with role " + record.role().getRoleName());
         }
         Account account = new Account();
         Profile profile = new Profile();
@@ -142,6 +163,40 @@ public class AccountServiceImpl extends BaseService<Account, Long> implements Ac
         } else {
             return false;
         }
+    }
+
+    @Override
+    public TokenDTO outboundAuthenticate(String code) {
+        var response = outboundIdentityClient.exchangeToken(ExchangeTokenRequest.builder()
+                .code(code)
+                .clientId(OUTBOUND_IDENTITY_CLIENT_ID)
+                .redirectUri(OUTBOUND_IDENTITY_REDIRECT_URI)
+                .clientSecret(OUTBOUND_IDENTITY_CLIENT_SECRET)
+                .grantType(GRANT_TYPE)
+                .build());
+        var userInfo = outboundUserClient.GetUserInfo("json", response.getAccessToken());
+        Role role = roleRepository.findByName(RoleEnum.ROLE_EMPLOYER).orElseThrow(
+                () -> new ErrorHandler(HttpStatus.NOT_FOUND, "Role not found")
+        );
+        String password = PasswordGenerator.generatePassword(8);
+
+        accountRepository.save(
+                Account.builder()
+                        .email(userInfo.getEmail())
+                        .password(passwordEncoder.encode(password))
+                        .role(role)
+                        .profile(
+                                profileRepository.save(
+                                        Profile.builder()
+                                                .fullname(userInfo.getGivenName() + " " + userInfo.getFamilyName() + " " + userInfo.getName())
+                                                .build()
+                                )
+                        )
+                        .build()
+        );
+
+
+        return null;
     }
 
 }

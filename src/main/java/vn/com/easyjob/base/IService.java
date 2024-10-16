@@ -6,6 +6,7 @@ import java.util.Collection;
 
 @Component
 public interface IService<T, ID> {
+
     T save(T t);
 
     Boolean delete(ID id);
