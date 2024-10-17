@@ -9,6 +9,6 @@ public record ChangeInfoRecord(
         String address,
         Integer districtId,
         Integer provinceId,
-        Integer[] skillIds
+        Long[] skillIds
 ) {
 }

@@ -45,57 +45,8 @@ public class JobSkillV1Controller extends BaseControllerDTO<JobSkill, JobSkillDT
 
      @PreAuthorize(AuthConstants.ADMIN)
      @SecurityRequirement(name = "bearer-key")
-     @PostMapping("/{id}")
+     @PatchMapping("/{id}")
      public ResponseEntity<?> update(@RequestBody JobSkillRecord record, @PathVariable Long id) {
          return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("Update Job Skill successfully", jobSkillService.update(id, record)));
      }
-    // ================================================
-    //               	CREATE JOB SKILL
-    // ================================================
-//    @PostMapping
-//    public ResponseEntity<?> save(@RequestBody JobSkillRecord jobSkillRecord) {
-//        JobSkillDTO jobSkillDTO = jobSkillService.save(jobSkillRecord);
-//
-//        if (jobSkillDTO != null) {
-//            ResponseObject<JobSkillDTO> response = new ResponseObject<>(
-//                    "Thành công !",
-//                    HttpStatus.CREATED.value(),
-//                    jobSkillDTO,
-//                    new Date()
-//            );
-//
-//            return new ResponseEntity<>(response, HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>("Failed to add job skill", HttpStatus.BAD_REQUEST);
-//        }
-//    }
-
-    // ================================================
-    //               	UPDATE JOB SKILL
-    // ================================================
-//    @PutMapping
-//    public ResponseEntity<?> update(@RequestBody JobSkillDTO jobSkillDTO) {
-//        JobSkillDTO jobSkillDto = jobSkillService.updateJobSkill(jobSkillDTO);
-//
-//        if (jobSkillDto != null) {
-//            ResponseObject<JobSkillDTO> response = new ResponseObject<>(
-//                    "Update success!",
-//                    HttpStatus.OK.value(),
-//                    jobSkillDto,
-//                    new Date()
-//            );
-//
-//            return new ResponseEntity<>(response, HttpStatus.OK);
-//        } else {
-//            ResponseObject<String> response = new ResponseObject<>(
-//                    "Failed to update Course ID:" + jobSkillDto.getId(),
-//                    HttpStatus.NOT_FOUND.value(),
-//                    null,
-//                    new Date()
-//            );
-//            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-//        }
-//    }
-
-
 }

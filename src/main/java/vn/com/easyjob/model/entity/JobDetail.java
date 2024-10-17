@@ -8,6 +8,7 @@ import vn.com.easyjob.base.BaseAuditableEntity;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Table(name = "tbl_job_detail")
@@ -53,5 +54,5 @@ public class JobDetail extends BaseAuditableEntity {
             joinColumns = @JoinColumn(name = "job_detail_id"),
             inverseJoinColumns = @JoinColumn(name = "job_skill_id")
     )
-    private Collection<JobSkill> jobSkills;
+    private Set<JobSkill> jobSkills;
 }

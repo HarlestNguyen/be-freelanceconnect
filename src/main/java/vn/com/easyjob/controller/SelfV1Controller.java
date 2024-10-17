@@ -55,49 +55,7 @@ public class SelfV1Controller {
 
     @PatchMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> updateSelf(@ModelAttribute ChangeInfoRecord record) throws Exception {
-        Profile profile = profileService.getAuthenticatedProfile();
-        Field[] fields = record.getClass().getDeclaredFields();
-        for (Field field : fields) {
-            switch (field.getName()) {
-                case "fullname":
-                    profile.setFullname(record.fullname());
-                    break;
-                case "dob":
-                    break;
-                case "address":
-                    profile.setAddress(record.address());
-                    break;
-                case "avatar":
-                    Map<String, Object> uploadResult = cloudinaryService.uploadImage(record.avatar(), UUID.randomUUID().toString());
-                    profile.setAvatar(uploadResult.get("secure_url").toString());
-                    break;
-                case "districtId":
-                    profile.setDistrictId(record.districtId());
-                    break;
-                case "provinceId":
-                    profile.setProvinceId(record.provinceId());
-                    break;
-                case "skillIds":
-                    profile.setJobSkills(Arrays.stream(record.skillIds()).map(id -> jobSkillService.findOne(id.longValue())).toList());
-                    break;
-                default:
-                    break;
-            }
-        }
-//        Account account = accountService.getAuthenticatedAccount();
-//        Profile profile = account.getProfile();
-//        profile.setFullname(record.fullname());
-//        profile.setPhone(record.phone());
-//        account.setProfile(profile);
-//        account = accountService.save(account);
-//        ProfileDTO p = ProfileDTO.builder()
-//                .id(account.getId())
-//                .email(account.getProfile().getEmail())
-//                .roleName(account.getRole().getName())
-//                .fullname(account.getProfile().getFullname())
-//                .isVerified(account.isVerified())
-//                .build();
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("Update profile successfully.", profileService.save(profile)));
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("Update profile successfully.", profileService.updateProfile(record)));
     }
 
     @DeleteMapping()
