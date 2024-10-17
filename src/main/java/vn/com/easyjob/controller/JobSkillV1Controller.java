@@ -3,17 +3,16 @@ package vn.com.easyjob.controller;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import vn.com.easyjob.base.BaseController;
+import org.springframework.web.bind.annotation.*;
 import vn.com.easyjob.base.BaseControllerDTO;
 import vn.com.easyjob.base.BaseServiceDTO;
-import vn.com.easyjob.base.IService;
 import vn.com.easyjob.model.dto.JobSkillDTO;
+import vn.com.easyjob.model.dto.ResponseDTO;
 import vn.com.easyjob.model.entity.JobSkill;
-import vn.com.easyjob.model.mapper.JobSkillMapper;
+import vn.com.easyjob.model.record.JobSkillRecord;
 import vn.com.easyjob.service.job.JobSkillService;
 import vn.com.easyjob.util.AuthConstants;
 
@@ -36,4 +35,67 @@ public class JobSkillV1Controller extends BaseControllerDTO<JobSkill, JobSkillDT
     public ResponseEntity<?> delete(Long id) {
         return super.delete(id);
     }
+
+     @PreAuthorize(AuthConstants.ADMIN)
+     @SecurityRequirement(name = "bearer-key")
+     @PostMapping
+     public ResponseEntity<?> save(@RequestBody JobSkillRecord record) {
+         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("Create Job Skill successfully", jobSkillService.save(record)));
+     }
+
+     @PreAuthorize(AuthConstants.ADMIN)
+     @SecurityRequirement(name = "bearer-key")
+     @PostMapping("/{id}")
+     public ResponseEntity<?> update(@RequestBody JobSkillRecord record, @PathVariable Long id) {
+         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("Update Job Skill successfully", jobSkillService.update(id, record)));
+     }
+    // ================================================
+    //               	CREATE JOB SKILL
+    // ================================================
+//    @PostMapping
+//    public ResponseEntity<?> save(@RequestBody JobSkillRecord jobSkillRecord) {
+//        JobSkillDTO jobSkillDTO = jobSkillService.save(jobSkillRecord);
+//
+//        if (jobSkillDTO != null) {
+//            ResponseObject<JobSkillDTO> response = new ResponseObject<>(
+//                    "Thành công !",
+//                    HttpStatus.CREATED.value(),
+//                    jobSkillDTO,
+//                    new Date()
+//            );
+//
+//            return new ResponseEntity<>(response, HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>("Failed to add job skill", HttpStatus.BAD_REQUEST);
+//        }
+//    }
+
+    // ================================================
+    //               	UPDATE JOB SKILL
+    // ================================================
+//    @PutMapping
+//    public ResponseEntity<?> update(@RequestBody JobSkillDTO jobSkillDTO) {
+//        JobSkillDTO jobSkillDto = jobSkillService.updateJobSkill(jobSkillDTO);
+//
+//        if (jobSkillDto != null) {
+//            ResponseObject<JobSkillDTO> response = new ResponseObject<>(
+//                    "Update success!",
+//                    HttpStatus.OK.value(),
+//                    jobSkillDto,
+//                    new Date()
+//            );
+//
+//            return new ResponseEntity<>(response, HttpStatus.OK);
+//        } else {
+//            ResponseObject<String> response = new ResponseObject<>(
+//                    "Failed to update Course ID:" + jobSkillDto.getId(),
+//                    HttpStatus.NOT_FOUND.value(),
+//                    null,
+//                    new Date()
+//            );
+//            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+//        }
+//    }
+
+
 }

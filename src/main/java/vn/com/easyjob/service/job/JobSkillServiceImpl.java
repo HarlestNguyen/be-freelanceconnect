@@ -1,14 +1,16 @@
 package vn.com.easyjob.service.job;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import vn.com.easyjob.base.BaseMapper;
-import vn.com.easyjob.base.BaseService;
 import vn.com.easyjob.base.BaseServiceDTO;
 import vn.com.easyjob.base.IRepository;
+import vn.com.easyjob.exception.ErrorHandler;
 import vn.com.easyjob.model.dto.JobSkillDTO;
 import vn.com.easyjob.model.entity.JobSkill;
 import vn.com.easyjob.model.mapper.JobSkillMapper;
+import vn.com.easyjob.model.record.JobSkillRecord;
 import vn.com.easyjob.repository.JobSkillRepository;
 
 @Service
@@ -28,4 +30,22 @@ public class JobSkillServiceImpl extends BaseServiceDTO<JobSkill, JobSkillDTO, L
     protected BaseMapper<JobSkill, JobSkillDTO> getMapper() {
         return jobSkillMapper;
     }
+
+
+     @Override
+     public JobSkillDTO save(JobSkillRecord record) {
+         JobSkill jobSkill = save(JobSkill.builder()
+                 .skill(record.skill())
+                 .description(record.description())
+                 .build());
+         return jobSkillMapper.toDto(jobSkill);
+     }
+
+     @Override
+     public JobSkillDTO update(Long id, JobSkillRecord record) {
+         JobSkill jobSkill = findOne(id);
+         jobSkill.setSkill(record.skill());
+         jobSkill.setDescription(record.description());
+         return jobSkillMapper.toDto(save(jobSkill));
+     }
 }

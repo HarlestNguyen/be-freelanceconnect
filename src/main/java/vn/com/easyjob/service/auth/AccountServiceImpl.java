@@ -41,46 +41,35 @@ import java.util.Optional;
 
 @Service
 public class AccountServiceImpl extends BaseService<Account, Long> implements AccountService {
-    @Autowired
-    private AccountRepository accountRepository;
-
-    @Autowired
-    @Lazy
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    @Lazy
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private JwtService jwtService;
-
-    @Autowired
-    private ProfileRepository profileRepository;
-
-    @Autowired
-    private MailService mailService;
-
+    @NonFinal
+    protected final String GRANT_TYPE = "authorization_code";
     @NonFinal
     @Value("${outbound.identity.client-id}")
     protected String OUTBOUND_IDENTITY_CLIENT_ID;
-
     @NonFinal
     @Value("${outbound.identity.redirect-uri}")
     protected String OUTBOUND_IDENTITY_REDIRECT_URI;
-
     @NonFinal
     @Value("${outbound.identity.client-secret}")
     protected String OUTBOUND_IDENTITY_CLIENT_SECRET;
-
     @Autowired
     OutboundIdentityClient outboundIdentityClient;
-
     @Autowired
     OutboundUserClient outboundUserClient;
-
-    @NonFinal
-    protected final String GRANT_TYPE = "authorization_code";
+    @Autowired
+    private AccountRepository accountRepository;
+    @Autowired
+    @Lazy
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    @Lazy
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private JwtService jwtService;
+    @Autowired
+    private ProfileRepository profileRepository;
+    @Autowired
+    private MailService mailService;
     @Autowired
     private RoleRepository roleRepository;
 
@@ -120,7 +109,7 @@ public class AccountServiceImpl extends BaseService<Account, Long> implements Ac
     @Override
     public TokenDTO signUp(RegisterRecord record) {
         if (record.role().getId() == 1L) {
-            throw new ErrorHandler(HttpStatus.BAD_REQUEST, "Can not sign up with role "+ record.role().getRoleName());
+            throw new ErrorHandler(HttpStatus.BAD_REQUEST, "Can not sign up with role " + record.role().getRoleName());
         }
         Account account = new Account();
         Profile profile = new Profile();

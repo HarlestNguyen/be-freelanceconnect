@@ -23,8 +23,10 @@ public abstract class BaseControllerDTO<T extends BaseEntity, DTO, ID> {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") ID id) {
-        getService().delete(id);
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("Delete successfully"));
+        if (getService().delete(id))
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("Delete successfully"));
+        else
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO("Delete failed"));
     }
 }
 

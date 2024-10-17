@@ -4,7 +4,6 @@ package vn.com.easyjob.repository.httpclient;
 import feign.QueryMap;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
-
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
 import vn.com.easyjob.model.dto.ExchangeTokenReponese;

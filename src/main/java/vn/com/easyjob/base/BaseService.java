@@ -40,4 +40,5 @@ public abstract class BaseService<T extends BaseEntity, ID> implements IService<
                 .filter(t -> !t.getIsDeleted())
                 .orElseThrow(() -> new ErrorHandler(HttpStatus.NOT_FOUND, "Entity not found or had bean deleted."));
     }
+
 }
