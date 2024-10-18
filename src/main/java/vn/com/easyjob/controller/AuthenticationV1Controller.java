@@ -10,9 +10,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import vn.com.easyjob.exception.ErrorHandler;
 import vn.com.easyjob.exception.ExceptionResponse;
 import vn.com.easyjob.model.dto.ResponseDTO;
 import vn.com.easyjob.model.dto.TokenDTO;
+import vn.com.easyjob.model.entity.Account;
 import vn.com.easyjob.model.record.RegisterRecord;
 import vn.com.easyjob.model.record.SignInRecord;
 import vn.com.easyjob.service.auth.AccountService;
@@ -51,11 +53,11 @@ public class AuthenticationV1Controller {
 
     @PostMapping("/forget-password")
     @PreAuthorize(AuthConstants.NONE)
-    public ResponseEntity<?> forgetPassword(@RequestParam String email) {
-        if (accountService.isSendMailForgetPassword(email)) {
+    public ResponseEntity<?> processForgotPassword(@RequestParam("email") String email) {
+        if (accountService.isSendMailForgetPassword(email)){
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("Please check your email to change your password."));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO("Failed to send change password link."));
+            throw new ErrorHandler(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to send change password link.");
         }
     }
 

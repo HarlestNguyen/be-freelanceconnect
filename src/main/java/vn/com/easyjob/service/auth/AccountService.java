@@ -24,4 +24,5 @@ public interface AccountService extends UserDetailsService, IService<Account, Lo
 
     TokenDTO outboundAuthenticate(String code, RoleEnum role);
 
+    Boolean validateTokenAndChangePassword(String token, String password);
 }
