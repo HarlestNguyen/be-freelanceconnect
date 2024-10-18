@@ -109,9 +109,14 @@ public class SercurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.addAllowedOrigin("http://localhost:3000");        // Chỉ định cụ thể nguồn gốc
         config.addAllowedOrigin("http://61.14.233.181:3000");    // Chỉ định cụ thể nguồn gốc
-        config.addAllowedOrigin("https://api.easyjob.io.vn");    // Chỉ định cụ thể nguồn gốc
+        config.addAllowedOrigin("https://61.14.233.181:3000");    // Chỉ định cụ thể nguồn gốc
         config.addAllowedOrigin("http://61.14.233.181:443");
+        config.addAllowedOrigin("https://61.14.233.181:443");
+        config.addAllowedOrigin("http://api.easyjob.io.vn");    // Chỉ định cụ thể nguồn gốc
+        config.addAllowedOrigin("https://api.easyjob.io.vn");    // Chỉ định cụ thể nguồn gốc
+        config.addAllowedOrigin("http://easyjob.io.vn");
         config.addAllowedOrigin("https://easyjob.io.vn");
+        config.addAllowedOrigin("http://easyjob.io.vn:3000");
         config.addAllowedOrigin("https://easyjob.io.vn:3000");
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
