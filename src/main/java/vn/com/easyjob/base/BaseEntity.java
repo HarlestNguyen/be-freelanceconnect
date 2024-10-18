@@ -15,5 +15,5 @@ public abstract class BaseEntity {
     private Long id;
     @Column(name = "is_deleted", nullable = false)
     @ColumnDefault("b'0'")
-    private Boolean isDeleted;
+    private Boolean isDeleted = Boolean.FALSE;
 }

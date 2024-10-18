@@ -73,7 +73,15 @@ public class JwtService {
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        return buildToken(extraClaims, userDetails, getJwtExpiration());
+        return generateToken(extraClaims, userDetails, getJwtExpiration());
+    }
+
+    public String generateToken(UserDetails userDetails, Long expiration) {
+        return generateToken(new HashMap<>(), userDetails, expiration);
+    }
+
+    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails, Long expiration) {
+        return buildToken(extraClaims, userDetails, expiration);
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {

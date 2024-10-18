@@ -2,7 +2,6 @@ package vn.com.easyjob.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.annotations.ColumnDefault;
 import vn.com.easyjob.base.BaseEntity;
 import vn.com.easyjob.util.GenderEnum;
 

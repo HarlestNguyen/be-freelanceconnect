@@ -1,9 +1,10 @@
 package vn.com.easyjob.util;
 
 public enum EmailSubjectEnum {
-    BASIC("Email From The Third Team"),
-    OTP("Email Otp Verification From The Third Team"),
-    LINK("Email Link Verification From The Third Team");
+    BASIC("Email From The EasyJob Team"),
+    OTP("Email OTP Verification From EasyJob"),
+    LINK("Email Link Verification From EasyJob"),
+    PASSWORD("Email Password Reset From EasyJob");
 
     private final String subject;
 
