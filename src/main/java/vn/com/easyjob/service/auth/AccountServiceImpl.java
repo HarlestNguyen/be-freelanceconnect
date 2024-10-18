@@ -4,6 +4,7 @@ import lombok.experimental.NonFinal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +19,7 @@ import vn.com.easyjob.base.BaseService;
 import vn.com.easyjob.base.IRepository;
 import vn.com.easyjob.exception.ErrorHandler;
 import vn.com.easyjob.jwt.JwtService;
+import vn.com.easyjob.model.cache.ResetPasswordCache;
 import vn.com.easyjob.model.dto.ExchangeTokenRequest;
 import vn.com.easyjob.model.dto.TokenDTO;
 import vn.com.easyjob.model.entity.Account;
@@ -31,13 +33,17 @@ import vn.com.easyjob.repository.ProfileRepository;
 import vn.com.easyjob.repository.RoleRepository;
 import vn.com.easyjob.repository.httpclient.OutboundIdentityClient;
 import vn.com.easyjob.repository.httpclient.OutboundUserClient;
+import vn.com.easyjob.service.ApplicationUrlService;
 import vn.com.easyjob.service.mail.MailService;
 import vn.com.easyjob.util.EmailSubjectEnum;
 import vn.com.easyjob.util.PasswordGenerator;
 import vn.com.easyjob.util.RoleEnum;
 import vn.com.easyjob.util.TypeMailEnum;
 
+import java.sql.Timestamp;
 import java.util.Optional;
+import java.util.Random;
+import java.util.UUID;
 
 @Service
 public class AccountServiceImpl extends BaseService<Account, Long> implements AccountService {
@@ -72,6 +78,10 @@ public class AccountServiceImpl extends BaseService<Account, Long> implements Ac
     private MailService mailService;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private ApplicationUrlService applicationUrlService;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
 
     @Override
@@ -151,10 +161,35 @@ public class AccountServiceImpl extends BaseService<Account, Long> implements Ac
 
     @Override
     public Boolean isSendMailForgetPassword(String email) {
-        findOne(email);
-        return mailService.sendWithTemplate(email, null, EmailSubjectEnum.OTP, TypeMailEnum.OTP);
-
+        Account account = findOne(email);
+        long exp = System.currentTimeMillis() + 60*15;
+        if (account != null) {
+            String uuid = UUID.randomUUID().toString();
+            String url = applicationUrlService.getApplicationUrl() + "/change-password?token=" + uuid;
+            ResetPasswordCache cache = new ResetPasswordCache();
+            cache.setToken(uuid);
+            cache.setExpiryTime(new Timestamp(exp));
+            cache.setUsername(account.getUsername());
+            redisTemplate.opsForValue().set(uuid, cache);
+            return mailService.sendWithTemplate(email, url, EmailSubjectEnum.LINK, TypeMailEnum.VERIFY_LINK);
+        }
+        return false;
     }
+
+    @Override
+    public Boolean validateTokenAndChangePassword(String token, String password) {
+        ResetPasswordCache fromCache = (ResetPasswordCache) redisTemplate.opsForValue().get(token);
+        if (fromCache != null && fromCache.getExpiryTime().getTime() < System.currentTimeMillis()) {
+            Account account = findOne(fromCache.getUsername());
+            account.setPassword(passwordEncoder.encode(password));
+            if(save(account) != null) {
+                redisTemplate.delete(token);
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     @Override
     public Boolean isChangePassword(ChangePasswordRecord changePasswordRecord) {

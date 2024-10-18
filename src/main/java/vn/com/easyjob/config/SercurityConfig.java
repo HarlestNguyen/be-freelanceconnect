@@ -110,6 +110,8 @@ public class SercurityConfig {
         config.addAllowedOrigin("http://localhost:3000");        // Chỉ định cụ thể nguồn gốc
         config.addAllowedOrigin("http://61.14.233.181:3000");    // Chỉ định cụ thể nguồn gốc
         config.addAllowedOrigin("https://api.easyjob.io.vn");    // Chỉ định cụ thể nguồn gốc
+        config.addAllowedOrigin("http://61.14.233.181:443");
+        config.addAllowedOrigin("https://easyjob.io.vn");
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
         config.setAllowCredentials(true); // Cho phép gửi cookie cùng với request
