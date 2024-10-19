@@ -1,13 +1,17 @@
 package vn.com.easyjob.service.auth;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import vn.com.easyjob.base.BaseService;
+import vn.com.easyjob.base.CustomPageResponse;
 import vn.com.easyjob.base.IRepository;
+
 import vn.com.easyjob.exception.ErrorHandler;
 import vn.com.easyjob.model.dto.JobSkillDTO;
 import vn.com.easyjob.model.dto.ProfileDTO;
@@ -15,18 +19,21 @@ import vn.com.easyjob.model.entity.JobSkill;
 import vn.com.easyjob.model.entity.Profile;
 import vn.com.easyjob.model.record.ChangeInfoRecord;
 import vn.com.easyjob.repository.ProfileRepository;
+import vn.com.easyjob.response.ResponseListPagination;
 import vn.com.easyjob.service.cloudiary.CloudinaryService;
 import vn.com.easyjob.service.job.JobSkillService;
 import vn.com.easyjob.util.ApplieStatusEnum;
 import vn.com.easyjob.util.DateTimeFormat;
-
+import org.springframework.data.domain.Pageable;
 import java.lang.reflect.Field;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ProfileServiceImpl extends BaseService<Profile, Integer> implements ProfileService {
@@ -159,5 +166,66 @@ public class ProfileServiceImpl extends BaseService<Profile, Integer> implements
         return profileDTO;
 
 
+    }
+
+    @Override
+    public CustomPageResponse<ProfileDTO> getProfiles(Pageable pageable) {
+        return profileRepository.findCustomPage(pageable,Profile.class).map(ProfileServiceImpl::convertToDTO);
+    }
+
+    @Override
+    public CustomPageResponse<ProfileDTO> sreachProfile(Pageable pageable,String keyword) {
+        Page<Profile> profilePage = profileRepository.searchByFullnameOrEmail(keyword,pageable);
+        // Chuyển đổi từ Profile sang ProfileDTO
+        List<ProfileDTO> profileDTOs = profilePage.getContent().stream()
+                .map(ProfileServiceImpl::convertToDTO)
+                .toList();
+        return CustomPageResponse.<ProfileDTO>builder()
+                .content(profileDTOs)
+                .first(profilePage.isFirst())
+                .last(profilePage.isLast())
+                .empty(profilePage.isEmpty())
+                .size(profilePage.getSize())
+                .number(profilePage.getNumber())
+                .totalElements(profilePage.getTotalElements())
+                .totalPages(profilePage.getTotalPages())
+                .build();
+    }
+
+    private static ProfileDTO convertToDTO(Profile profile) {
+        ProfileDTO profileDTO = ProfileDTO.builder()
+                .fullname(profile.getFullname())
+                .address(profile.getAddress())
+                .avatar(profile.getAvatar())
+                .districtId(profile.getDistrictId())
+                .provinceId(profile.getProvinceId())
+                .isVerified(profile.getIsVerified())
+                .createdDate(profile.getCreatedDate()) // Assuming this field exists in Profile
+                .build();
+
+        // Tính toán tuổi nếu profile có ngày sinh
+        if (profile.getDob() != null) {
+            profileDTO.setAge(Period.between(profile.getDob(), LocalDate.now()).getYears());
+        }
+
+        // Lọc và chuyển đổi các kỹ năng công việc (jobSkills)
+        profileDTO.setJobSkills(profile.getJobSkills().stream()
+                .filter(jobSkill -> !jobSkill.getIsDeleted()) // Chỉ lấy những kỹ năng không bị xóa
+                .map(jobSkill -> JobSkillDTO.builder()
+                        .id(jobSkill.getId())
+                        .skill(jobSkill.getSkill())
+                        .description(jobSkill.getDescription())
+                        .build())
+                .toList());
+
+        // Tính số lượng công việc đã hoàn thành
+        profileDTO.setNumOfJob((int) profile.getAppliedJobs().stream()
+                .filter(appliedJob -> appliedJob.getApplieStatus().getName().equals(ApplieStatusEnum.COMPLETED.name()))
+                .count());
+
+        // Nếu có thuộc tính "star" trong DTO mà bạn muốn thiết lập sau, có thể để null hoặc tính toán nếu cần
+        profileDTO.setStar(null);
+
+        return profileDTO;
     }
 }
