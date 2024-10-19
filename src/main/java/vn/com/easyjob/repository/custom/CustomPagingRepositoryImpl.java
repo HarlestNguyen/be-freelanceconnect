@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import vn.com.easyjob.base.CustomPageResponse;
 
+
 import java.util.List;
 
 
@@ -46,4 +47,8 @@ public class CustomPagingRepositoryImpl<T> implements CustomPagingRepository<T> 
         return new CustomPageResponse<>(totalElements, totalPages, pageable.getPageSize(), pageable.getPageNumber(),
                 content, first, last, numberOfElements, empty);
     }
+
+
+
+
 }
