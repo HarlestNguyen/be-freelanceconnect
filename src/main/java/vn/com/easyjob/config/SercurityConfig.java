@@ -110,6 +110,7 @@ public class SercurityConfig {
         config.addAllowedHeader("*");
         config.setAllowCredentials(true); // Cho phép gửi cookie cùng với request
 
+        // Test data
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
