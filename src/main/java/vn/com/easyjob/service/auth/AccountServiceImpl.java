@@ -41,9 +41,7 @@ import vn.com.easyjob.util.RoleEnum;
 import vn.com.easyjob.util.TypeMailEnum;
 
 import java.sql.Timestamp;
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class AccountServiceImpl extends BaseService<Account, Long> implements AccountService {
@@ -107,13 +105,14 @@ public class AccountServiceImpl extends BaseService<Account, Long> implements Ac
         if (authentication.isAuthenticated()) {
             Account account = new Account();
             account.setEmail(authentication.getName());
-            accessToken = jwtService.generateToken(account);
+            Map extraClaims = new HashMap();
+            extraClaims.put("role", authentication.getAuthorities().iterator().next().getAuthority());
+            accessToken = jwtService.generateToken(extraClaims, account);
         }
         //missing refresh token
         if (accessToken != null) {
             return new TokenDTO(accessToken);
-        }
-        return null;
+        }else throw new RuntimeException("Generate token failed");
     }
 
     @Override
@@ -142,6 +141,7 @@ public class AccountServiceImpl extends BaseService<Account, Long> implements Ac
         }
     }
 
+    @Override
     public Account findOne(String email) {
         return accountRepository.findByEmail(email)
                 .filter(account -> !account.getIsDeleted())

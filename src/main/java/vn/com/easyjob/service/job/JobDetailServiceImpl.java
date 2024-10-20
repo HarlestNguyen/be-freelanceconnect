@@ -1,6 +1,7 @@
 package vn.com.easyjob.service.job;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,7 @@ public class JobDetailServiceImpl extends BaseService<JobDetail, Long> implement
     @Autowired
     private ImageJobDetailService imageJobDetailService;
 
-    public static JobDTO fromJobDetail(JobDetail jobDetail) {
+    public static JobDTO toDTO(JobDetail jobDetail) {
         return JobDTO.builder()
                 .jobId(jobDetail.getId())  // Gán ID công việc
                 .title(jobDetail.getTitle())  // Gán tiêu đề công việc
@@ -75,7 +76,7 @@ public class JobDetailServiceImpl extends BaseService<JobDetail, Long> implement
         // Lấy danh sách phân trang của JobDetail từ repository
         CustomPageResponse<JobDetail> jobDetailsPage = jobDetailRepository.findCustomPage(pageable, JobDetail.class);
         // Chuyển đổi từ JobDetail sang JobDTO với phương thức builder
-        CustomPageResponse<JobDTO> jobDTOPage = jobDetailsPage.map(JobDetailServiceImpl::fromJobDetail);
+        CustomPageResponse<JobDTO> jobDTOPage = jobDetailsPage.map(JobDetailServiceImpl::toDTO);
 
         return jobDTOPage;
     }
@@ -101,7 +102,7 @@ public class JobDetailServiceImpl extends BaseService<JobDetail, Long> implement
 
     @Override
     public JobDTO findJobById(Long id) {
-        return fromJobDetail(jobDetailRepository.findById(id).orElseThrow(() -> new ErrorHandler(HttpStatus.NOT_FOUND, "Job Not found")));
+        return toDTO(jobDetailRepository.findById(id).orElseThrow(() -> new ErrorHandler(HttpStatus.NOT_FOUND, "Job Not found")));
     }
 
     // Phương thức lưu JobDetail
