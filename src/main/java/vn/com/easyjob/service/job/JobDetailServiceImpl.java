@@ -3,6 +3,8 @@ package vn.com.easyjob.service.job;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +23,11 @@ import vn.com.easyjob.repository.JobDetailRepository;
 import vn.com.easyjob.repository.JobTypeRepository;
 import vn.com.easyjob.service.auth.ProfileService;
 import vn.com.easyjob.service.image.ImageJobDetailService;
+import vn.com.easyjob.specification.JobDetailSpecification;
+import vn.com.easyjob.util.DateTimeFormat;
 
+import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +40,12 @@ public class JobDetailServiceImpl extends BaseService<JobDetail, Long> implement
     private JobTypeRepository jobTypeRepository;
     @Autowired
     private ImageJobDetailService imageJobDetailService;
+    @Autowired
+    private JobDetailSpecification jobDetailSpecification;
+    @Autowired
+    private DateTimeFormat dateTimeFormat;
+    @Autowired
+    private JobTypeService jobTypeService;
 
     public static JobDTO toDTO(JobDetail jobDetail) {
         return JobDTO.builder()
@@ -44,6 +56,7 @@ public class JobDetailServiceImpl extends BaseService<JobDetail, Long> implement
                 .phone(jobDetail.getPhone())  // Gán số điện thoại liên hệ
                 .contactPerson(jobDetail.getPoster() != null ? jobDetail.getPoster().getFullname() : null)  // Gán người liên hệ
                 .startDate(jobDetail.getStartDate())  // Gán ngày bắt đầu công việc
+                .endDate(jobDetail.getEndDate())
                 .duration(jobDetail.getDuration())  // Gán thời gian làm việc
                 .jobType(JobTypeDTO.builder()  // Chuyển đổi loại công việc
                         .id(jobDetail.getJobType() != null ? jobDetail.getJobType().getId() : null)
@@ -72,14 +85,46 @@ public class JobDetailServiceImpl extends BaseService<JobDetail, Long> implement
     }
 
     @Override
-    public CustomPageResponse<JobDTO> findAllJobs(Pageable pageable) {
+    public CustomPageResponse<JobDTO> findAllJobs(Map<String, String> params) {
+        // Xử lý tham số phân trang và sắp xếp
+        // Kiểm tra "page" có tồn tại và không phải null
+        String pageParam = params.getOrDefault("page", "0");
+        int page = (pageParam != null && pageParam.matches("\\d+")) ? Integer.parseInt(pageParam) : 0;
+        // Kiểm tra "size" có tồn tại và không phải null
+        String sizeParam = params.getOrDefault("size", "12");
+        int size = (sizeParam != null && sizeParam.matches("\\d+")) ? Integer.parseInt(sizeParam) : 12;
+        String sortBy = params.getOrDefault("sortBy", "id");
+        String direction = params.getOrDefault("direction", "asc");
+
+        // Tạo đối tượng Pageable để phân trang và sắp xếp
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortBy));
+
+        // Xử lý các tham số tìm kiếm từ params
+        String title = params.get("title");
+        Integer districtId = params.containsKey("districtId") && params.get("districtId") != null ? Integer.parseInt(params.get("districtId")) : null;
+        Integer provinceId = params.containsKey("provinceId") && params.get("provinceId") != null ? Integer.parseInt(params.get("provinceId")) : null;
+        LocalDateTime startDate = params.containsKey("startDate") && params.get("startDate") != null ? dateTimeFormat.parseStringToLocalDate(params.get("startDate")).atStartOfDay() : null;
+        LocalDateTime endDate = params.containsKey("endDate") && params.get("endDate") != null ? dateTimeFormat.parseStringToLocalDate(params.get("endDate")).atStartOfDay() : null;
+        String jobTypeId = params.get("jobTypeId");
+        JobType jobType = jobTypeId != null ? jobTypeService.findOne(Long.parseLong(jobTypeId)) : null;
+
+        // Kết hợp các Specification, chỉ tạo các điều kiện khi giá trị không null
+        Specification<JobDetail> spec = Specification.where(
+                        (title != null ? jobDetailSpecification.hasTitle(title) : null))
+                .and(districtId != null ? jobDetailSpecification.hasDistrictId(districtId) : null)
+                .and(provinceId != null ? jobDetailSpecification.hasProvinceId(provinceId) : null)
+                .and((startDate != null || endDate != null) ? jobDetailSpecification.isWithinDateRange(startDate, endDate) : null)
+                .and(jobType != null ? jobDetailSpecification.hasJobType(jobType) : null);
+
         // Lấy danh sách phân trang của JobDetail từ repository
-        CustomPageResponse<JobDetail> jobDetailsPage = jobDetailRepository.findCustomPage(pageable, JobDetail.class);
-        // Chuyển đổi từ JobDetail sang JobDTO với phương thức builder
+        CustomPageResponse<JobDetail> jobDetailsPage = jobDetailRepository.findCustomPage(pageable, spec, JobDetail.class);
+
+        // Chuyển đổi từ JobDetail sang JobDTO với phương thức map
         CustomPageResponse<JobDTO> jobDTOPage = jobDetailsPage.map(JobDetailServiceImpl::toDTO);
 
         return jobDTOPage;
     }
+
 
     @Override
     @Transactional

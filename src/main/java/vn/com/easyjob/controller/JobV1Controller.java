@@ -1,14 +1,18 @@
 package vn.com.easyjob.controller;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.com.easyjob.model.dto.ResponseDTO;
 import vn.com.easyjob.model.record.JobDetailRecord;
 import vn.com.easyjob.service.job.JobDetailService;
+
+import java.util.Map;
 
 @Tag(name = "job")
 @RestController
@@ -19,8 +23,18 @@ public class JobV1Controller {
 
     // API lấy tất cả các công việc (có phân trang)
     @GetMapping
-    public ResponseEntity<?> getAllJobs(Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO(jobDetailService.findAllJobs(pageable)));
+    @Parameter(in = ParameterIn.QUERY, name = "page", schema = @Schema(type = "integer", defaultValue = "0"))
+    @Parameter(in = ParameterIn.QUERY, name = "size", schema = @Schema(type = "integer", defaultValue = "12"))
+    @Parameter(in = ParameterIn.QUERY, name = "sortBy", schema = @Schema(type = "string", defaultValue = "id"))
+    @Parameter(in = ParameterIn.QUERY, name = "direction", schema = @Schema(type = "string", defaultValue = "asc", allowableValues = {"asc", "desc"}))
+    @Parameter(in = ParameterIn.QUERY, name = "title", schema = @Schema(type = "string"), description = "Job title for filtering")
+    @Parameter(in = ParameterIn.QUERY, name = "districtId", schema = @Schema(type = "integer"), description = "District ID for filtering")
+    @Parameter(in = ParameterIn.QUERY, name = "provinceId", schema = @Schema(type = "integer"), description = "Province ID for filtering")
+    @Parameter(in = ParameterIn.QUERY, name = "startDate", schema = @Schema(type = "string", format = "date"), description = "Start date in yyyy-MM-dd format")
+    @Parameter(in = ParameterIn.QUERY, name = "endDate", schema = @Schema(type = "string", format = "date"), description = "End date in yyyy-MM-dd format")
+    @Parameter(in = ParameterIn.QUERY, name = "jobTypeId", schema = @Schema(type = "string"), description = "Job type ID for filtering")
+    public ResponseEntity<?> getAllJobs(@RequestParam(required = false) Map<String, String> params) {
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO(jobDetailService.findAllJobs(params)));
     }
 
     @PostMapping
