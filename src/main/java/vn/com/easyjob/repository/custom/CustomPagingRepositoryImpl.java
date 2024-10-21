@@ -62,7 +62,9 @@ public class CustomPagingRepositoryImpl<T> implements CustomPagingRepository<T> 
         // Áp dụng Specification (điều kiện)
         if (specification != null) {
             Predicate predicate = specification.toPredicate(root, cq, cb);
-            cq.where(predicate);
+            if (predicate != null) {
+                cq.where(predicate);  // Chỉ áp dụng điều kiện nếu Predicate không null
+            }
         }
 
         // Thêm ORDER BY theo Pageable (phân trang)
@@ -96,7 +98,9 @@ public class CustomPagingRepositoryImpl<T> implements CustomPagingRepository<T> 
         // Áp dụng Specification cho truy vấn đếm
         if (specification != null) {
             Predicate countPredicate = specification.toPredicate(countRoot, countQuery, cb);
-            countQuery.where(countPredicate);
+            if (countPredicate != null) {
+                countQuery.where(countPredicate);  // Chỉ áp dụng điều kiện nếu Predicate không null
+            }
         }
         long totalElements = entityManager.createQuery(countQuery).getSingleResult();
 
@@ -115,6 +119,7 @@ public class CustomPagingRepositoryImpl<T> implements CustomPagingRepository<T> 
         return new CustomPageResponse<>(totalElements, totalPages, pageable.getPageSize(), pageable.getPageNumber(),
                 content, first, last, numberOfElements, empty);
     }
+
 
 
 

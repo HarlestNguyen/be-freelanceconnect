@@ -14,37 +14,45 @@ import java.util.Set;
 public class JobDetailSpecification {
 
     public Specification<JobDetail> hasTitle(String title) {
-        return (root, query, cb) -> title == null ? cb.conjunction() : cb.like(cb.lower(root.get("title")), "%" + title.toLowerCase() + "%");
+        return (root, query, cb) ->
+                (title == null || title.trim().isEmpty()) ? cb.conjunction() : cb.like(cb.lower(root.get("title")), "%" + title.toLowerCase() + "%");
     }
 
     public Specification<JobDetail> hasDistrictId(Integer districtId) {
-        return (root, query, cb) -> districtId == null ? cb.conjunction() : cb.equal(root.get("districtId"), districtId);
+        return (root, query, cb) ->
+                districtId == null ? cb.conjunction() : cb.equal(root.get("districtId"), districtId);
     }
 
     public Specification<JobDetail> hasProvinceId(Integer provinceId) {
-        return (root, query, cb) -> provinceId == null ? cb.conjunction() : cb.equal(root.get("provinceId"), provinceId);
+        return (root, query, cb) ->
+                provinceId == null ? cb.conjunction() : cb.equal(root.get("provinceId"), provinceId);
     }
 
     public Specification<JobDetail> isWithinDateRange(LocalDateTime startDate, LocalDateTime endDate) {
         return (root, query, cb) -> {
             Predicate startPredicate = (startDate == null) ? cb.conjunction() : cb.greaterThanOrEqualTo(root.get("startDate"), startDate);
             Predicate endPredicate = (endDate == null) ? cb.conjunction() : cb.lessThanOrEqualTo(root.get("endDate"), endDate);
-            return cb.and(startPredicate, endPredicate);
+            return cb.and(startPredicate, endPredicate);  // Cả hai điều kiện sẽ được kết hợp
         };
     }
 
     public Specification<JobDetail> hasJobType(JobType jobType) {
-        return (root, query, cb) -> jobType == null ? cb.conjunction() : cb.equal(root.get("jobType"), jobType);
+        return (root, query, cb) ->
+                jobType == null ? cb.conjunction() : cb.equal(root.get("jobType"), jobType);
     }
 
     public Specification<JobDetail> hasJobSkills(Set<JobSkill> skills) {
         return (root, query, cb) -> {
             if (skills == null || skills.isEmpty()) {
-                return cb.conjunction();
+                return cb.conjunction();  // Nếu không có kỹ năng nào, bỏ qua điều kiện này
             }
-            return cb.and(skills.stream()
-                    .map(skill -> cb.isMember(skill, root.get("jobSkills")))
-                    .toArray(Predicate[]::new));
+            // Tạo một điều kiện AND cho từng kỹ năng
+            Predicate[] predicates = skills.stream()
+                    .map(skill -> cb.isMember(skill, root.get("jobSkills")))  // Kiểm tra kỹ năng có trong tập jobSkills
+                    .toArray(Predicate[]::new);
+
+            return cb.and(predicates);  // Trả về điều kiện AND cho tất cả kỹ năng
         };
     }
 }
+
