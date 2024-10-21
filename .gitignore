@@ -40,3 +40,5 @@ build/
 /target/maven-status/
 /target/surefire-reports/
 /target/test-classes/
+src/main/java/vn/com/easyjob/config/DataSourceConfig.java
+src/main/resources/application.properties
