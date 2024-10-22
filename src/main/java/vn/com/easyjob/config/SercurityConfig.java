@@ -95,22 +95,20 @@ public class SercurityConfig {
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("http://localhost:3000");        // Chỉ định cụ thể nguồn gốc
-        config.addAllowedOrigin("http://61.14.233.181:3000");    // Chỉ định cụ thể nguồn gốc
-        config.addAllowedOrigin("https://61.14.233.181:3000");    // Chỉ định cụ thể nguồn gốc
-        config.addAllowedOrigin("http://61.14.233.181:443");
-        config.addAllowedOrigin("https://61.14.233.181:443");
-        config.addAllowedOrigin("http://api.easyjob.io.vn");    // Chỉ định cụ thể nguồn gốc
-        config.addAllowedOrigin("https://api.easyjob.io.vn");    // Chỉ định cụ thể nguồn gốc
-        config.addAllowedOrigin("http://easyjob.io.vn");
-        config.addAllowedOrigin("https://easyjob.io.vn");
-        config.addAllowedOrigin("http://easyjob.io.vn:3000");
-        config.addAllowedOrigin("https://easyjob.io.vn:3000");
-        config.addAllowedMethod("*");
-        config.addAllowedHeader("*");
-        config.setAllowCredentials(true); // Cho phép gửi cookie cùng với request
 
-        // Test data
+        // Sử dụng "*" để cho phép tất cả các origin
+        config.setAllowedOriginPatterns(List.of("*"));  // Sử dụng khi setAllowCredentials(true)
+
+        // Cho phép tất cả các phương thức HTTP (GET, POST, PUT, DELETE, v.v.)
+        config.addAllowedMethod("*");
+
+        // Cho phép tất cả các header
+        config.addAllowedHeader("*");
+
+        // Cho phép gửi cookie cùng với request
+        config.setAllowCredentials(true);
+
+        // Áp dụng cho tất cả các URL
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
