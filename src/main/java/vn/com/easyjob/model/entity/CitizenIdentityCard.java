@@ -1,7 +1,7 @@
 package vn.com.easyjob.model.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import vn.com.easyjob.base.BaseEntity;
 import vn.com.easyjob.util.GenderEnum;
 
@@ -9,6 +9,11 @@ import java.sql.Date;
 
 @Entity
 @Data
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "tbl_citizen_identity_card")
 public class CitizenIdentityCard extends BaseEntity {
     @OneToOne

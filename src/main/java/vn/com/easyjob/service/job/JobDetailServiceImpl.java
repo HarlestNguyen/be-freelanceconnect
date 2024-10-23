@@ -51,7 +51,7 @@ public class JobDetailServiceImpl extends BaseService<JobDetail, Long> implement
         return JobDTO.builder()
                 .jobId(jobDetail.getId())  // Gán ID công việc
                 .title(jobDetail.getTitle())  // Gán tiêu đề công việc
-                .description(jobDetail.getDesciption())  // Gán mô tả công việc
+                .description(jobDetail.getDescription())  // Gán mô tả công việc
                 .address(jobDetail.getAddress())  // Gán địa chỉ công việc
                 .phone(jobDetail.getPhone())  // Gán số điện thoại liên hệ
                 .contactPerson(jobDetail.getPoster() != null ? jobDetail.getPoster().getFullname() : null)  // Gán người liên hệ
@@ -159,7 +159,7 @@ public class JobDetailServiceImpl extends BaseService<JobDetail, Long> implement
                         .provinceId(request.provinceId())
                         .districtId(request.districtId())
                         .title(request.title())
-                        .desciption(request.description())
+                        .description(request.description())
                         .startDate(request.startDate())
                         .endDate(request.endDate())
                         .phone(request.phone())

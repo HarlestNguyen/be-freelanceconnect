@@ -96,8 +96,11 @@ public class SercurityConfig {
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.addAllowedOrigin("http://localhost:3000");        // Chỉ định cụ thể nguồn gốc
+        config.addAllowedOrigin("http://localhost:3100");        // Chỉ định cụ thể nguồn gốc
         config.addAllowedOrigin("http://61.14.233.181:3000");    // Chỉ định cụ thể nguồn gốc
         config.addAllowedOrigin("https://61.14.233.181:3000");    // Chỉ định cụ thể nguồn gốc
+        config.addAllowedOrigin("http://61.14.233.181:3100");    // Chỉ định cụ thể nguồn gốc
+        config.addAllowedOrigin("https://61.14.233.181:3100");    // Chỉ định cụ thể nguồn gốc
         config.addAllowedOrigin("http://61.14.233.181:443");
         config.addAllowedOrigin("https://61.14.233.181:443");
         config.addAllowedOrigin("http://api.easyjob.io.vn");    // Chỉ định cụ thể nguồn gốc
@@ -106,6 +109,8 @@ public class SercurityConfig {
         config.addAllowedOrigin("https://easyjob.io.vn");
         config.addAllowedOrigin("http://easyjob.io.vn:3000");
         config.addAllowedOrigin("https://easyjob.io.vn:3000");
+        config.addAllowedOrigin("http://easyjob.io.vn:3100");
+        config.addAllowedOrigin("https://easyjob.io.vn:3100");
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
         config.setAllowCredentials(true); // Cho phép gửi cookie cùng với request

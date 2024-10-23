@@ -12,11 +12,12 @@ import vn.com.easyjob.base.BaseEntity;
 import java.util.Collection;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @Builder
-@Setter
-@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "tbl_job_type")
 @DynamicInsert
 @DynamicUpdate

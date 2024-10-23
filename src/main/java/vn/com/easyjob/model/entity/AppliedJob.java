@@ -4,11 +4,16 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.*;
 import vn.com.easyjob.base.BaseAuditableEntity;
 
 @Entity
 @Data
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "tbl_job_applie")
 public class AppliedJob extends BaseAuditableEntity {
     @ManyToOne

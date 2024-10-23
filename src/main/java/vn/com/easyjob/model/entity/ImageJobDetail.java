@@ -4,11 +4,16 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.*;
 import vn.com.easyjob.base.BaseIMG;
 
 @Entity
 @Data
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "tbl_image_job_detail")
 public class ImageJobDetail extends BaseIMG {
 

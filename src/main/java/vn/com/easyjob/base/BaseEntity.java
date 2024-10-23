@@ -8,12 +8,12 @@ import org.hibernate.annotations.ColumnDefault;
 @Data
 @MappedSuperclass
 @EqualsAndHashCode
-public abstract class BaseEntity {
+public class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
     @Column(name = "is_deleted", nullable = false)
     @ColumnDefault("b'0'")
-    private Boolean isDeleted = Boolean.FALSE;
+    private Boolean isDeleted;
 }

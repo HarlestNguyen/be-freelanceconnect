@@ -182,8 +182,8 @@ public class AccountServiceImpl extends BaseService<Account, Long> implements Ac
         if (fromCache != null && fromCache.getExpiryTime().getTime() < System.currentTimeMillis()) {
             Account account = findOne(fromCache.getUsername());
             account.setPassword(passwordEncoder.encode(password));
+            redisTemplate.delete(token);
             if(save(account) != null) {
-                redisTemplate.delete(token);
                 return true;
             }
         }
