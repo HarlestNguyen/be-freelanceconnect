@@ -15,6 +15,7 @@ public interface ProfileService extends IService<Profile, Integer> {
     Profile getAuthenticatedProfile();
     ProfileDTO getSelfInformation();
     ProfileDTO updateProfile(ChangeInfoRecord record);
-    CustomPageResponse<ProfileDTO> getProfiles(Pageable pageable);
+    CustomPageResponse<ProfileDTO> getProfiles(Pageable pageable,Integer role ,Boolean isDel);
     CustomPageResponse<ProfileDTO> sreachProfile(Pageable pageable,String keyword);
+    void ChangeIsdel(int id);
 }

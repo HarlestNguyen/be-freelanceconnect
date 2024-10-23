@@ -27,9 +27,22 @@ public class ProfileV1Controller {
     private ProfileService profileService;
 
     @GetMapping
-    public ResponseEntity<?> getProfile(Pageable pageable){
+    public ResponseEntity<?> getProfile(Pageable pageable,
+                                        @RequestParam(required = false) Boolean isDel,
+                                        @RequestParam(required = false) Integer role){
+        // Khởi tạo PageAndKeyword từ các tham số
+        Sort sort = pageable.getSort();
+        for (Sort.Order order : sort) {
+            String field = order.getProperty();
+            // Kiểm tra xem field có hợp lệ không
+            if (!SortUtils.isValidSortField(Profile.class, field)) {
+                // Nếu field không hợp lệ, bỏ qua sort hoặc thiết lập lại sort mặc định
+                pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+                break;
+            }
+        }
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseDTO("Get all Profile Success",profileService.getProfiles(pageable))
+                new ResponseDTO("Get all Profile Success",profileService.getProfiles(pageable,role,isDel))
         );
     }
 
@@ -53,5 +66,13 @@ public class ProfileV1Controller {
         // Gọi service để tìm kiếm hồ sơ theo từ khóa và phân trang
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ResponseDTO("Search Profile Success", profileService.sreachProfile(pageable,keywords)));
+    }
+
+    @PostMapping("toggleIsDeleted/{id}")
+    public ResponseEntity<?> changeStatus(
+            @PathVariable int id) {
+            profileService.ChangeIsdel(id);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ResponseDTO("Change Profile Success"));
     }
 }

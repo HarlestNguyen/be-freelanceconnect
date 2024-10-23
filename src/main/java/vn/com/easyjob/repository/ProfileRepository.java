@@ -22,4 +22,9 @@ public interface ProfileRepository extends IRepository<Profile, Integer>, Custom
             "OR LOWER(p.account.email) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     Page<Profile> searchByFullnameOrEmail(@Param("keyword") String keyword, Pageable pageable);
 
+    @Query("SELECT p FROM Profile p " +
+            "WHERE (:isDeleted IS NULL OR p.isDeleted = :isDeleted) " +
+            "AND ((:role IS NULL OR :role = 1) AND (p.account.role.id = 2 OR p.account.role.id = 3) " +
+            "OR (:role IS NOT NULL AND :role != 1 AND p.account.role.id = :role))")
+    Page<Profile> findByIsDeletedAndRole(Boolean isDeleted, Integer role, Pageable pageable);
 }

@@ -169,8 +169,19 @@ public class ProfileServiceImpl extends BaseService<Profile, Integer> implements
     }
 
     @Override
-    public CustomPageResponse<ProfileDTO> getProfiles(Pageable pageable) {
-        return profileRepository.findCustomPage(pageable,Profile.class).map(ProfileServiceImpl::convertToDTO);
+    public CustomPageResponse<ProfileDTO> getProfiles(Pageable pageable, Integer role ,Boolean isDel) {
+        Page<Profile> profiles = profileRepository.findByIsDeletedAndRole(isDel,role,pageable);
+        return CustomPageResponse.<ProfileDTO>builder()
+                .content(profiles.stream().map(ProfileServiceImpl::convertToDTO).toList())
+                .last(profiles.isLast())
+                .totalPages(profiles.getTotalPages())
+                .empty(profiles.isEmpty())
+                .size(profiles.getSize())
+                .number(profiles.getNumber())
+                .first(profiles.isFirst())
+                .numberOfElements(profiles.getNumberOfElements())
+                .totalElements(profiles.getTotalElements())
+                .build();
     }
 
     @Override
@@ -190,6 +201,15 @@ public class ProfileServiceImpl extends BaseService<Profile, Integer> implements
                 .totalElements(profilePage.getTotalElements())
                 .totalPages(profilePage.getTotalPages())
                 .build();
+    }
+
+    @Override
+    public void ChangeIsdel(int id) {
+      Profile p =  profileRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("profile not found")
+        );
+      p.setIsDeleted(!p.getIsDeleted());
+      profileRepository.save(p);
     }
 
     private static ProfileDTO convertToDTO(Profile profile) {
