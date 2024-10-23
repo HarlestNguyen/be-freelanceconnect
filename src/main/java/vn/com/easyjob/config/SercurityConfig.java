@@ -109,8 +109,8 @@ public class SercurityConfig {
         config.addAllowedOrigin("https://easyjob.io.vn");
         config.addAllowedOrigin("http://easyjob.io.vn:3000");
         config.addAllowedOrigin("https://easyjob.io.vn:3000");
-        config.addAllowedOrigin("http://easyjob.io.vn:3100");
-        config.addAllowedOrigin("https://easyjob.io.vn:3100");
+        config.addAllowedOrigin("http://admin.easyjob.io.vn:3100");
+        config.addAllowedOrigin("https://admin.easyjob.io.vn:3100");
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
         config.setAllowCredentials(true); // Cho phép gửi cookie cùng với request
