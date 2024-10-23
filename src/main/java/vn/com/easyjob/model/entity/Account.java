@@ -3,6 +3,7 @@ package vn.com.easyjob.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,15 +14,15 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Entity
-@EqualsAndHashCode(callSuper = false)
-@Table(name = "tbl_account")
-@DynamicInsert
-@ToString
+@Data
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Table(name = "tbl_account")
+@DynamicInsert
+@DynamicUpdate
 public class Account extends BaseEntity implements Serializable, UserDetails {
     @Column(nullable = false, unique = true)
     private String email;

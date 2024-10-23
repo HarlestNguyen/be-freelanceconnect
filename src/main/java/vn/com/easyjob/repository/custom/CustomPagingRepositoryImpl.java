@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
+import vn.com.easyjob.base.BaseEntity;
 import vn.com.easyjob.base.CustomPageResponse;
 
 
@@ -17,7 +18,7 @@ import java.util.List;
 
 
 @Component
-public class CustomPagingRepositoryImpl<T> implements CustomPagingRepository<T> {
+public class CustomPagingRepositoryImpl<T extends BaseEntity> implements CustomPagingRepository<T> {
     @Autowired
     private EntityManager entityManager;
 
@@ -59,12 +60,22 @@ public class CustomPagingRepositoryImpl<T> implements CustomPagingRepository<T> 
         CriteriaQuery<T> cq = cb.createQuery(entityClass);
         Root<T> root = cq.from(entityClass);
 
-        // Áp dụng Specification (điều kiện)
+        // Tạo điều kiện mặc định: isDeleted = false
+        Predicate isNotDeleted = cb.isFalse(root.get("isDeleted"));
+
+        // Áp dụng Specification (nếu có)
         if (specification != null) {
-            Predicate predicate = specification.toPredicate(root, cq, cb);
-            if (predicate != null) {
-                cq.where(predicate);  // Chỉ áp dụng điều kiện nếu Predicate không null
+            Predicate specificationPredicate = specification.toPredicate(root, cq, cb);
+            if (specificationPredicate != null) {
+                // Kết hợp điều kiện isDeleted = false và điều kiện từ Specification
+                cq.where(cb.and(isNotDeleted, specificationPredicate));
+            } else {
+                // Nếu Specification không có điều kiện, chỉ áp dụng điều kiện isDeleted = false
+                cq.where(isNotDeleted);
             }
+        } else {
+            // Nếu không có Specification, chỉ áp dụng điều kiện isDeleted = false
+            cq.where(isNotDeleted);
         }
 
         // Thêm ORDER BY theo Pageable (phân trang)
@@ -90,18 +101,23 @@ public class CustomPagingRepositoryImpl<T> implements CustomPagingRepository<T> 
         // Lấy nội dung kết quả
         List<T> content = query.getResultList();
 
-        // Lấy tổng số lượng phần tử dựa trên điều kiện Specification
+        // Lấy tổng số lượng phần tử dựa trên điều kiện Specification và isDeleted = false
         CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
         Root<T> countRoot = countQuery.from(entityClass);
         countQuery.select(cb.count(countRoot));
 
-        // Áp dụng Specification cho truy vấn đếm
+        // Áp dụng Specification và isDeleted = false cho truy vấn đếm
         if (specification != null) {
-            Predicate countPredicate = specification.toPredicate(countRoot, countQuery, cb);
-            if (countPredicate != null) {
-                countQuery.where(countPredicate);  // Chỉ áp dụng điều kiện nếu Predicate không null
+            Predicate countSpecificationPredicate = specification.toPredicate(countRoot, countQuery, cb);
+            if (countSpecificationPredicate != null) {
+                countQuery.where(cb.and(cb.isFalse(countRoot.get("isDeleted")), countSpecificationPredicate));
+            } else {
+                countQuery.where(cb.isFalse(countRoot.get("isDeleted")));
             }
+        } else {
+            countQuery.where(cb.isFalse(countRoot.get("isDeleted")));
         }
+
         long totalElements = entityManager.createQuery(countQuery).getSingleResult();
 
         // Tính toán số trang
@@ -119,8 +135,5 @@ public class CustomPagingRepositoryImpl<T> implements CustomPagingRepository<T> 
         return new CustomPageResponse<>(totalElements, totalPages, pageable.getPageSize(), pageable.getPageNumber(),
                 content, first, last, numberOfElements, empty);
     }
-
-
-
 
 }

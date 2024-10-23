@@ -1,0 +1,18 @@
+package vn.com.easyjob.util;
+
+import lombok.Getter;
+
+@Getter
+public enum JobApprovalStatusEnum {
+    PENDING(1, "PENDING"),
+    REJECTED(2, "REJECTED"),
+    APPROVED(3, "APPROVED");
+
+    private Long id;
+    private String name;
+
+    JobApprovalStatusEnum(Integer id, String name) {
+        this.id = id.longValue();
+        this.name = name;
+    }
+}

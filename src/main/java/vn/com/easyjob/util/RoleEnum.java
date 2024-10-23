@@ -1,23 +1,18 @@
 package vn.com.easyjob.util;
 
+import lombok.Getter;
+
+@Getter
 public enum RoleEnum {
-    ROLE_ADMIN(1L, "ROLE_ADMIN"),
-    ROLE_EMPLOYER(2L, "ROLE_EMPLOYER"),
-    ROLE_APPLIER(3L, "ROLE_APPLIER");
+    ROLE_ADMIN(1, "ROLE_ADMIN"),
+    ROLE_EMPLOYER(2, "ROLE_EMPLOYER"),
+    ROLE_APPLIER(3, "ROLE_APPLIER");
     private final Long id;
     private final String roleName;
 
-    RoleEnum(Long id, String roleName) {
-        this.id = id;
+    RoleEnum(Integer id, String roleName) {
+        this.id = id.longValue();
         this.roleName = roleName;
-    }
-
-    public String getRoleName() {
-        return roleName;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     @Override

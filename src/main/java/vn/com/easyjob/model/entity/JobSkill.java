@@ -9,12 +9,13 @@ import vn.com.easyjob.base.BaseEntity;
 import java.util.Collection;
 
 @Entity
+@Data
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @Builder
-@Setter
-@Getter
-@Table(name = "tbl_job_skill")
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "tbl_job_skill")
 @DynamicInsert
 @DynamicUpdate
 public class JobSkill extends BaseEntity {

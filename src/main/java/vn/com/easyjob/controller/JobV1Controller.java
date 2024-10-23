@@ -3,14 +3,17 @@ package vn.com.easyjob.controller;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import vn.com.easyjob.model.dto.ResponseDTO;
 import vn.com.easyjob.model.record.JobDetailRecord;
 import vn.com.easyjob.service.job.JobDetailService;
+import vn.com.easyjob.util.AuthConstants;
 
 import java.util.Map;
 
@@ -37,6 +40,8 @@ public class JobV1Controller {
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO(jobDetailService.findAllJobs(params)));
     }
 
+    @PreAuthorize(AuthConstants.EMPLOYER)
+    @SecurityRequirement(name = "bearer-key")
     @PostMapping
     public ResponseEntity<?> createJob(@ModelAttribute JobDetailRecord request) throws Exception {
         jobDetailService.createJob(request);  // Không cần kết quả trả về
@@ -47,5 +52,12 @@ public class JobV1Controller {
     @GetMapping("/{jobId}")
     public ResponseEntity<?> findJobById(@PathVariable("jobId") Long jobId) {
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO(jobDetailService.findJobById(jobId)));
+    }
+
+    @PreAuthorize(AuthConstants.APPLIER)
+    @SecurityRequirement(name = "bearer-key")
+    @PostMapping("/{id}/applie")
+    public ResponseEntity<?> applyJob(@PathVariable("id") Long id) {
+        return null;
     }
 }

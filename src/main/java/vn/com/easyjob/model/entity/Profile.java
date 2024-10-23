@@ -13,14 +13,15 @@ import java.util.Collection;
 import java.util.Set;
 
 @Entity
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "tbl_profile")
 @DynamicInsert
 @DynamicUpdate
-@Table(name = "tbl_profile")
 public class Profile extends BaseAuditableEntity {
     @Column(length = 80, nullable = false)
     private String fullname;
