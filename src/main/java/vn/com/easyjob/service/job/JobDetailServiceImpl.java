@@ -18,13 +18,11 @@ import vn.com.easyjob.model.dto.ImageDTO;
 import vn.com.easyjob.model.dto.JobDTO;
 import vn.com.easyjob.model.dto.JobSkillDTO;
 import vn.com.easyjob.model.dto.JobTypeDTO;
-import vn.com.easyjob.model.entity.JobApprovalStatus;
-import vn.com.easyjob.model.entity.JobDetail;
-import vn.com.easyjob.model.entity.JobType;
-import vn.com.easyjob.model.entity.Profile;
+import vn.com.easyjob.model.entity.*;
 import vn.com.easyjob.model.record.JobDetailRecord;
 import vn.com.easyjob.repository.JobApprovalStatusRepository;
 import vn.com.easyjob.repository.JobDetailRepository;
+import vn.com.easyjob.repository.JobSkillRepository;
 import vn.com.easyjob.repository.JobTypeRepository;
 import vn.com.easyjob.service.auth.ProfileService;
 import vn.com.easyjob.service.image.ImageJobDetailService;
@@ -59,6 +57,8 @@ public class JobDetailServiceImpl extends BaseService<JobDetail, Long> implement
     private JobApprovalStatusRepository approvalStatusRepository;
     @Autowired
     private JobApprovalStatusRepository jobApprovalStatusRepository;
+    @Autowired
+    private JobSkillRepository jobSkillRepository;
 
     public static JobDTO toDTO(JobDetail jobDetail) {
         return JobDTO.builder()
@@ -134,7 +134,8 @@ public class JobDetailServiceImpl extends BaseService<JobDetail, Long> implement
         JobType jobType = jobTypeId != null ? jobTypeService.findOne(Long.parseLong(jobTypeId)) : null;
         JobApprovalStatusEnum approvalStatus = params.containsKey("approval") && params.get("approval") != null ? JobApprovalStatusEnum.valueOf(params.get("approval")) : JobApprovalStatusEnum.APPROVED;
         JobApprovalStatus jobApprovalStatus = jobApprovalStatusRepository.findByName(approvalStatus).orElseThrow(() -> new RuntimeException("Approval status not found"));
-        log.warn(jobApprovalStatus.toString());
+        Integer jobSkillId = params.containsKey("jobSkillId") && params.get("jobSkillId") != null ? Integer.parseInt(params.get("jobSkillId")) : null;
+        JobSkill jobSkill = jobSkillRepository.findById(jobSkillId.longValue()).orElseThrow(() -> new RuntimeException("Job skill not found"));
         // Kết hợp các Specification, chỉ tạo các điều kiện khi giá trị không null
         Specification<JobDetail> spec = Specification.where(
                         (title != null ? jobDetailSpecification.hasTitle(title) : null))
@@ -142,6 +143,7 @@ public class JobDetailServiceImpl extends BaseService<JobDetail, Long> implement
                 .and(provinceId != null ? jobDetailSpecification.hasProvinceId(provinceId) : null)
                 .and((startDate != null || endDate != null) ? jobDetailSpecification.isWithinDateRange(startDate, endDate) : null)
                 .and(jobDetailSpecification.hasApprovalStatus(jobApprovalStatus))
+                .and(jobSkill != null ? jobDetailSpecification.hasJobSkill(jobSkill) : null)
                 .and(jobType != null ? jobDetailSpecification.hasJobType(jobType) : null);
 
         // Lấy danh sách phân trang của JobDetail từ repository

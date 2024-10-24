@@ -39,7 +39,8 @@ public class JobV1Controller {
     @Parameter(in = ParameterIn.QUERY, name = "provinceId", schema = @Schema(type = "integer"), description = "Province ID for filtering")
     @Parameter(in = ParameterIn.QUERY, name = "startDate", schema = @Schema(type = "string", format = "date"), description = "Start date in yyyy-MM-dd format")
     @Parameter(in = ParameterIn.QUERY, name = "endDate", schema = @Schema(type = "string", format = "date"), description = "End date in yyyy-MM-dd format")
-    @Parameter(in = ParameterIn.QUERY, name = "jobTypeId", schema = @Schema(type = "string"), description = "Job type ID for filtering")
+    @Parameter(in = ParameterIn.QUERY, name = "jobTypeId", schema = @Schema(type = "integer"), description = "Job type ID for filtering")
+    @Parameter(in = ParameterIn.QUERY, name = "jobSkillId", schema = @Schema(type = "integer"), description = "Job skill ID for filtering")
     @Parameter(in = ParameterIn.QUERY, name = "approval", schema = @Schema(type = "string", defaultValue = "", allowableValues = {"PENDING", "REJECTED", "APPROVED"}), description = "Required role ROLE_ADMIN")
     public ResponseEntity<?> getAllJobs(@RequestParam(required = false) Map<String, String> params) {
         if (params.containsKey("approval")) {

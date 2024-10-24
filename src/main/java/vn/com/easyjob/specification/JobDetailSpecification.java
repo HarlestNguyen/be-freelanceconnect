@@ -61,5 +61,17 @@ public class JobDetailSpecification {
             return cb.and(predicates);  // Trả về điều kiện AND cho tất cả kỹ năng
         };
     }
+
+    public Specification<JobDetail> hasJobSkill(JobSkill skill) {
+        return (root, query, cb) -> {
+            if (skill == null) {
+                return cb.conjunction();  // Nếu không có kỹ năng nào, bỏ qua điều kiện này
+            }
+
+            // Kiểm tra kỹ năng có trong tập jobSkills của JobDetail
+            return cb.isMember(skill, root.get("jobSkills"));
+        };
+    }
+
 }
 
