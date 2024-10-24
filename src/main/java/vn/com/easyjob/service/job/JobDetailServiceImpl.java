@@ -135,7 +135,10 @@ public class JobDetailServiceImpl extends BaseService<JobDetail, Long> implement
         JobApprovalStatusEnum approvalStatus = params.containsKey("approval") && params.get("approval") != null ? JobApprovalStatusEnum.valueOf(params.get("approval")) : JobApprovalStatusEnum.APPROVED;
         JobApprovalStatus jobApprovalStatus = jobApprovalStatusRepository.findByName(approvalStatus).orElseThrow(() -> new RuntimeException("Approval status not found"));
         Integer jobSkillId = params.containsKey("jobSkillId") && params.get("jobSkillId") != null ? Integer.parseInt(params.get("jobSkillId")) : null;
-        JobSkill jobSkill = jobSkillRepository.findById(jobSkillId.longValue()).orElseThrow(() -> new RuntimeException("Job skill not found"));
+        JobSkill jobSkill = Optional.ofNullable(jobSkillId)
+                .map(id -> jobSkillRepository.findById(id.longValue())
+                        .orElseThrow(() -> new RuntimeException("Job skill not found")))
+                .orElse(null);  // Trả về null nếu jobSkillId là null
         // Kết hợp các Specification, chỉ tạo các điều kiện khi giá trị không null
         Specification<JobDetail> spec = Specification.where(
                         (title != null ? jobDetailSpecification.hasTitle(title) : null))
