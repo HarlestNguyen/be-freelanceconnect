@@ -95,16 +95,20 @@ public class SercurityConfig {
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("http://localhost:3000");        // Chỉ định cụ thể nguồn gốc
-        config.addAllowedOrigin("http://localhost:3100");        // Chỉ định cụ thể nguồn gốc
-        config.addAllowedOrigin("http://61.14.233.181:3000");    // Chỉ định cụ thể nguồn gốc
-        config.addAllowedOrigin("https://61.14.233.181:3000");    // Chỉ định cụ thể nguồn gốc
-        config.addAllowedOrigin("http://61.14.233.181:3100");    // Chỉ định cụ thể nguồn gốc
-        config.addAllowedOrigin("https://61.14.233.181:3100");    // Chỉ định cụ thể nguồn gốc
+        config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedOrigin("http://localhost:3100");
+        config.addAllowedOrigin("http://61.14.233.181:3000");
+        config.addAllowedOrigin("https://61.14.233.181:3000");
+        config.addAllowedOrigin("http://61.14.233.181:3100");
+        config.addAllowedOrigin("https://61.14.233.181:3100");
         config.addAllowedOrigin("http://61.14.233.181:443");
         config.addAllowedOrigin("https://61.14.233.181:443");
-        config.addAllowedOrigin("http://api.easyjob.io.vn");    // Chỉ định cụ thể nguồn gốc
-        config.addAllowedOrigin("https://api.easyjob.io.vn");    // Chỉ định cụ thể nguồn gốc
+        config.addAllowedOrigin("http://api.easyjob.io.vn");
+        config.addAllowedOrigin("https://api.easyjob.io.vn");
+        config.addAllowedOrigin("http://api.easyjob.io.vn:8080");
+        config.addAllowedOrigin("https://api.easyjob.io.vn:8080");
+        config.addAllowedOrigin("http://admin.easyjob.io.vn");
+        config.addAllowedOrigin("https://admin.easyjob.io.vn");
         config.addAllowedOrigin("http://easyjob.io.vn");
         config.addAllowedOrigin("https://easyjob.io.vn");
         config.addAllowedOrigin("http://easyjob.io.vn:3000");
