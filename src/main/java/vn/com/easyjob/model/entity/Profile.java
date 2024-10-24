@@ -14,7 +14,7 @@ import java.util.Set;
 
 @Entity
 @Data
-@ToString(callSuper = true)
+@ToString(callSuper = true, exclude = {"account", "citizenIdentityCard", "jobDetails", "appliedJobs"})
 @EqualsAndHashCode(callSuper = true)
 @Builder
 @NoArgsConstructor

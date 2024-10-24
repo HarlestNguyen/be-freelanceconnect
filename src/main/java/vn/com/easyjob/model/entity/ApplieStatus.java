@@ -10,7 +10,7 @@ import java.util.Collection;
 
 @Entity
 @Data
-@ToString(callSuper = true)
+@ToString(callSuper = true, exclude = {"appliedJobs"})
 @EqualsAndHashCode(callSuper = true)
 @Builder
 @NoArgsConstructor
@@ -19,6 +19,6 @@ import java.util.Collection;
 public class ApplieStatus extends BaseStatusEntity<ApplieStatusEnum> {
     @Column(columnDefinition = "longtext")
     private String description;
-    @OneToMany(mappedBy = "applieStatus")
+    @OneToMany(mappedBy = "applieStatus", fetch = FetchType.LAZY)
     private Collection<AppliedJob> appliedJobs;
 }

@@ -2,6 +2,8 @@ package vn.com.easyjob.util;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+
 @Getter
 public enum JobApprovalStatusEnum {
     PENDING(1, "PENDING"),

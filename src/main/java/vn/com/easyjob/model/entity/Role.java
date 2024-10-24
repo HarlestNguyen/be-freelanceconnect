@@ -11,7 +11,7 @@ import java.util.Collection;
 
 @Entity
 @Data
-@ToString(callSuper = true)
+@ToString(callSuper = true, exclude = {"accounts"})
 @EqualsAndHashCode(callSuper = true)
 @Builder
 @NoArgsConstructor

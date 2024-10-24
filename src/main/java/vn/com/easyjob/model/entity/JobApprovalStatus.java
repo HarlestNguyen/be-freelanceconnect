@@ -1,10 +1,7 @@
 package vn.com.easyjob.model.entity;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import vn.com.easyjob.base.BaseEntity;
 import vn.com.easyjob.base.BaseStatusEntity;
@@ -14,7 +11,7 @@ import java.util.Collection;
 
 @Entity
 @Data
-@ToString(callSuper = true)
+@ToString(callSuper = true, exclude = {"jobDetails"})
 @EqualsAndHashCode(callSuper = true)
 @Builder
 @NoArgsConstructor
@@ -23,6 +20,6 @@ import java.util.Collection;
 public class JobApprovalStatus extends BaseStatusEntity<JobApprovalStatusEnum> {
     @Column(columnDefinition = "longtext")
     private String description;
-    @OneToMany(mappedBy = "jobApprovalStatus")
+    @OneToMany(mappedBy = "jobApprovalStatus", fetch = FetchType.LAZY)
     private Collection<JobDetail> jobDetails;
 }

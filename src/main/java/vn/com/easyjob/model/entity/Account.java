@@ -48,6 +48,4 @@ public class Account extends BaseEntity implements Serializable, UserDetails {
         }
         return Collections.singleton(new SimpleGrantedAuthority(role.getName().getRoleName()));
     }
-
-
 }

@@ -1,5 +1,7 @@
 package vn.com.easyjob.service.job;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,24 +16,31 @@ import vn.com.easyjob.base.IRepository;
 import vn.com.easyjob.exception.ErrorHandler;
 import vn.com.easyjob.model.dto.ImageDTO;
 import vn.com.easyjob.model.dto.JobDTO;
+import vn.com.easyjob.model.dto.JobSkillDTO;
 import vn.com.easyjob.model.dto.JobTypeDTO;
+import vn.com.easyjob.model.entity.JobApprovalStatus;
 import vn.com.easyjob.model.entity.JobDetail;
 import vn.com.easyjob.model.entity.JobType;
 import vn.com.easyjob.model.entity.Profile;
 import vn.com.easyjob.model.record.JobDetailRecord;
+import vn.com.easyjob.repository.JobApprovalStatusRepository;
 import vn.com.easyjob.repository.JobDetailRepository;
 import vn.com.easyjob.repository.JobTypeRepository;
 import vn.com.easyjob.service.auth.ProfileService;
 import vn.com.easyjob.service.image.ImageJobDetailService;
 import vn.com.easyjob.specification.JobDetailSpecification;
 import vn.com.easyjob.util.DateTimeFormat;
+import vn.com.easyjob.util.JobApprovalStatusEnum;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class JobDetailServiceImpl extends BaseService<JobDetail, Long> implements JobDetailService {
+    private static final Logger log = LoggerFactory.getLogger(JobDetailServiceImpl.class);
     @Autowired
     private JobDetailRepository jobDetailRepository;
     @Autowired
@@ -46,6 +55,10 @@ public class JobDetailServiceImpl extends BaseService<JobDetail, Long> implement
     private DateTimeFormat dateTimeFormat;
     @Autowired
     private JobTypeService jobTypeService;
+    @Autowired
+    private JobApprovalStatusRepository approvalStatusRepository;
+    @Autowired
+    private JobApprovalStatusRepository jobApprovalStatusRepository;
 
     public static JobDTO toDTO(JobDetail jobDetail) {
         return JobDTO.builder()
@@ -66,7 +79,10 @@ public class JobDetailServiceImpl extends BaseService<JobDetail, Long> implement
                         .maxPrice(jobDetail.getJobType() != null ? jobDetail.getJobType().getMaxPrice() : null)
                         .build()
                 )
-                .images(jobDetail.getImageJobDetails().stream()
+                .approvalStatus(jobDetail.getJobApprovalStatus().getName().getName())
+                .images(Optional.ofNullable(jobDetail.getImageJobDetails())
+                        .orElse(Collections.emptyList())
+                        .stream()
                         .map(image -> ImageDTO.builder()
                                 .url(image.getUrl())
                                 .cloudiaryPuclicUrl(image.getCloudiaryPuclicUrl())
@@ -74,6 +90,15 @@ public class JobDetailServiceImpl extends BaseService<JobDetail, Long> implement
                                 .build())
                         .collect(Collectors.toList())
                 )  // Gán danh sách hình ảnh
+                .jobSkills(Optional.ofNullable(jobDetail.getJobSkills())
+                        .orElse(Collections.emptySet()) // Trả về danh sách rỗng nếu jobSkills là null
+                        .stream()
+                        .map(jobSkill -> JobSkillDTO.builder()
+                                .skill(jobSkill.getSkill())
+                                .description(jobSkill.getDescription())
+                                .id(jobSkill.getId())
+                                .build())
+                        .collect(Collectors.toSet()))  // Gán danh sách kỹ năng thích hợp cho công việc
                 .postedDate(jobDetail.getCreatedDate())  // Gán ngày đăng công việc
                 .verified(jobDetail.getIsDeleted())  // Gán trạng thái xác thực công việc (có thể là isDeleted hay isVerified, tùy vào logic của bạn)
                 .build();
@@ -107,13 +132,16 @@ public class JobDetailServiceImpl extends BaseService<JobDetail, Long> implement
         LocalDateTime endDate = params.containsKey("endDate") && params.get("endDate") != null ? dateTimeFormat.parseStringToLocalDate(params.get("endDate")).atStartOfDay() : null;
         String jobTypeId = params.get("jobTypeId");
         JobType jobType = jobTypeId != null ? jobTypeService.findOne(Long.parseLong(jobTypeId)) : null;
-
+        JobApprovalStatusEnum approvalStatus = params.containsKey("approval") && params.get("approval") != null ? JobApprovalStatusEnum.valueOf(params.get("approval")) : JobApprovalStatusEnum.APPROVED;
+        JobApprovalStatus jobApprovalStatus = jobApprovalStatusRepository.findByName(approvalStatus).orElseThrow(() -> new RuntimeException("Approval status not found"));
+        log.warn(jobApprovalStatus.toString());
         // Kết hợp các Specification, chỉ tạo các điều kiện khi giá trị không null
         Specification<JobDetail> spec = Specification.where(
                         (title != null ? jobDetailSpecification.hasTitle(title) : null))
                 .and(districtId != null ? jobDetailSpecification.hasDistrictId(districtId) : null)
                 .and(provinceId != null ? jobDetailSpecification.hasProvinceId(provinceId) : null)
                 .and((startDate != null || endDate != null) ? jobDetailSpecification.isWithinDateRange(startDate, endDate) : null)
+                .and(jobDetailSpecification.hasApprovalStatus(jobApprovalStatus))
                 .and(jobType != null ? jobDetailSpecification.hasJobType(jobType) : null);
 
         // Lấy danh sách phân trang của JobDetail từ repository

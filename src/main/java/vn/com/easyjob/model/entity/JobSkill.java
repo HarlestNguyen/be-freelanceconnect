@@ -10,7 +10,7 @@ import java.util.Collection;
 
 @Entity
 @Data
-@ToString(callSuper = true)
+@ToString(callSuper = true, exclude = {"profiles", "jobDetails"})
 @EqualsAndHashCode(callSuper = true)
 @Builder
 @NoArgsConstructor

@@ -1,8 +1,10 @@
 package vn.com.easyjob.specification;
 
 import jakarta.persistence.criteria.Predicate;
+import org.springframework.boot.autoconfigure.batch.BatchProperties;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
+import vn.com.easyjob.model.entity.JobApprovalStatus;
 import vn.com.easyjob.model.entity.JobDetail;
 import vn.com.easyjob.model.entity.JobSkill;
 import vn.com.easyjob.model.entity.JobType;
@@ -39,6 +41,11 @@ public class JobDetailSpecification {
     public Specification<JobDetail> hasJobType(JobType jobType) {
         return (root, query, cb) ->
                 jobType == null ? cb.conjunction() : cb.equal(root.get("jobType"), jobType);
+    }
+
+    public Specification<JobDetail> hasApprovalStatus(JobApprovalStatus jobApprovalStatus) {
+        return (root, query, cb) ->
+                jobApprovalStatus == null ? cb.conjunction() : cb.equal(root.get("jobApprovalStatus"), jobApprovalStatus);
     }
 
     public Specification<JobDetail> hasJobSkills(Set<JobSkill> skills) {
