@@ -14,6 +14,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class ProfileDTO {
     private Long id;
+    private String email;
     private String fullname;
     private Integer age;
     private String avatar;

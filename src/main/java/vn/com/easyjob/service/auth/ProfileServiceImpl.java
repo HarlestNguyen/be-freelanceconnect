@@ -217,6 +217,7 @@ public class ProfileServiceImpl extends BaseService<Profile, Integer> implements
     private static ProfileDTO convertToDTO(Profile profile) {
         ProfileDTO profileDTO = ProfileDTO.builder()
                 .id(profile.getId())
+                .email(profile.getAccount().getEmail())
                 .fullname(profile.getFullname())
                 .address(profile.getAddress())
                 .avatar(profile.getAvatar())
