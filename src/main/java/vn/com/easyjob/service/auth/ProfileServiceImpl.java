@@ -14,6 +14,7 @@ import vn.com.easyjob.base.IRepository;
 
 import vn.com.easyjob.exception.ErrorHandler;
 import vn.com.easyjob.model.dto.JobSkillDTO;
+import vn.com.easyjob.model.dto.ProfileAppliesDTO;
 import vn.com.easyjob.model.dto.ProfileDTO;
 import vn.com.easyjob.model.entity.JobSkill;
 import vn.com.easyjob.model.entity.Profile;
@@ -222,12 +223,10 @@ public class ProfileServiceImpl extends BaseService<Profile, Integer> implements
                 .isVerified(profile.getIsVerified())
                 .createdDate(profile.getCreatedDate()) // Assuming this field exists in Profile
                 .build();
-
         // Tính toán tuổi nếu profile có ngày sinh
         if (profile.getDob() != null) {
             profileDTO.setAge(Period.between(profile.getDob(), LocalDate.now()).getYears());
         }
-
         // Lọc và chuyển đổi các kỹ năng công việc (jobSkills)
         profileDTO.setJobSkills(profile.getJobSkills().stream()
                 .filter(jobSkill -> !jobSkill.getIsDeleted()) // Chỉ lấy những kỹ năng không bị xóa
@@ -237,7 +236,6 @@ public class ProfileServiceImpl extends BaseService<Profile, Integer> implements
                         .description(jobSkill.getDescription())
                         .build())
                 .toList());
-
         // Tính số lượng công việc đã hoàn thành
         profileDTO.setNumOfJob((int) profile.getAppliedJobs().stream()
                 .filter(appliedJob -> appliedJob.getApplieStatus().getName().equals(ApplieStatusEnum.COMPLETED.name()))
@@ -247,5 +245,45 @@ public class ProfileServiceImpl extends BaseService<Profile, Integer> implements
         profileDTO.setStar(null);
 
         return profileDTO;
+    }
+
+    public static ProfileAppliesDTO convertToAppliesDTO(Profile profile) {
+        ProfileAppliesDTO profileAppliesDTO = ProfileAppliesDTO.builder()
+                .id(profile.getId())
+                .fullname(profile.getFullname())
+                .address(profile.getAddress())
+                .avatar(profile.getAvatar())
+                .isVerified(profile.getIsVerified())
+                .createdDate(profile.getCreatedDate())
+                .build();
+
+        // Tính toán tuổi nếu profile có ngày sinh
+        if (profile.getDob() != null) {
+            profileAppliesDTO.setAge(Period.between(profile.getDob(), LocalDate.now()).getYears());
+        }
+
+        // Lọc và chuyển đổi các kỹ năng công việc (jobSkills)
+        profileAppliesDTO.setJobSkills(profile.getJobSkills().stream()
+                .filter(jobSkill -> !jobSkill.getIsDeleted()) // Chỉ lấy những kỹ năng không bị xóa
+                .map(jobSkill -> JobSkillDTO.builder()
+                        .id(jobSkill.getId())
+                        .skill(jobSkill.getSkill())
+                        .description(jobSkill.getDescription())
+                        .build())
+                .toList());
+
+        int numOfJob = (int)profile.getAppliedJobs().stream()
+                .filter(appliedJob -> appliedJob.getApplieStatus().getName().equals(ApplieStatusEnum.COMPLETED))
+                .count();
+        // Thuộc tính numOfJob để null cho bạn tự viết logic
+        profileAppliesDTO.setNumOfJob(numOfJob); // Placeholder cho numOfJob
+        int hourOfWork = (int) (int)profile.getAppliedJobs().stream()
+                .filter(appliedJob -> appliedJob.getApplieStatus().getName().equals(ApplieStatusEnum.COMPLETED))
+                .mapToInt(t -> t.getJobDetail().getDuration()).sum();
+        profileAppliesDTO.setHourOfWork(hourOfWork);
+        // Nếu có thuộc tính star trong ProfileAppliesDTO, đặt null hoặc tự tính toán nếu cần
+        profileAppliesDTO.setStar(null);
+
+        return profileAppliesDTO;
     }
 }

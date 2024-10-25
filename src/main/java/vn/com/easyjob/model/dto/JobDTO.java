@@ -2,6 +2,8 @@ package vn.com.easyjob.model.dto;
 
 import lombok.Builder;
 import lombok.Data;
+import vn.com.easyjob.model.entity.JobApprovalStatus;
+import vn.com.easyjob.util.JobApprovalStatusEnum;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -26,4 +28,5 @@ public class JobDTO {
     private Date postedDate;            // Ngày đăng công việc
     private Boolean verified;           // Trạng thái xác thực công việc
     private Set<JobSkillDTO> jobSkills; // Danh sách các kỹ năng thích hợp cho công việc này
+    private JobApprovalStatusEnum jobApprovalStatus;
 }

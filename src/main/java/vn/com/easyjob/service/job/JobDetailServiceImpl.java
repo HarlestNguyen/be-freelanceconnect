@@ -101,6 +101,7 @@ public class JobDetailServiceImpl extends BaseService<JobDetail, Long> implement
                         .collect(Collectors.toSet()))  // Gán danh sách kỹ năng thích hợp cho công việc
                 .postedDate(jobDetail.getCreatedDate())  // Gán ngày đăng công việc
                 .verified(jobDetail.getIsDeleted())  // Gán trạng thái xác thực công việc (có thể là isDeleted hay isVerified, tùy vào logic của bạn)
+                .jobApprovalStatus(jobDetail.getJobApprovalStatus().getName())
                 .build();
     }
 
@@ -183,6 +184,24 @@ public class JobDetailServiceImpl extends BaseService<JobDetail, Long> implement
         return toDTO(jobDetailRepository.findById(id).orElseThrow(() -> new ErrorHandler(HttpStatus.NOT_FOUND, "Job Not found")));
     }
 
+    @Override
+    public void toggleAcceptJob(Long id) {
+        JobDetail jobDetail = jobDetailRepository.findById(id).orElseThrow(() -> new ErrorHandler(HttpStatus.NOT_FOUND, "Job Not found"));
+        jobDetail.setJobApprovalStatus( jobApprovalStatusRepository.findByName(JobApprovalStatusEnum.APPROVED).orElseThrow(
+                () -> new ErrorHandler(HttpStatus.NOT_FOUND, "ApprovalStatus Not found")
+        ));
+        jobDetailRepository.save(jobDetail);
+    }
+
+    @Override
+    public void toggleRejectJob(Long id) {
+        JobDetail jobDetail = jobDetailRepository.findById(id).orElseThrow(() -> new ErrorHandler(HttpStatus.NOT_FOUND, "Job Not found"));
+        jobDetail.setJobApprovalStatus( jobApprovalStatusRepository.findByName(JobApprovalStatusEnum.REJECTED).orElseThrow(
+                () -> new ErrorHandler(HttpStatus.NOT_FOUND, "ApprovalStatus Not found")
+        ));
+        jobDetailRepository.save(jobDetail);
+    }
+
     // Phương thức lưu JobDetail
     private JobDetail saveJobDetail(JobDetailRecord request, Profile profile, JobType jobType) {
         return jobDetailRepository.save(
@@ -198,6 +217,11 @@ public class JobDetailServiceImpl extends BaseService<JobDetail, Long> implement
                         .phone(request.phone())
                         .duration(request.duration())
                         .poster(profile)
+                        .jobApprovalStatus(
+                                jobApprovalStatusRepository.findByName(JobApprovalStatusEnum.PENDING).orElseThrow(
+                                     () -> new ErrorHandler(HttpStatus.NOT_FOUND, "ApprovalStatus Not found")
+                                )
+                        )
                         .build()
         );
     }

@@ -8,5 +8,5 @@ import vn.com.easyjob.repository.custom.CustomPagingRepository;
 
 @Repository
 public interface JobDetailRepository extends IRepository<JobDetail, Long>, JpaSpecificationExecutor<JobDetail>, CustomPagingRepository<JobDetail> {
-
+    boolean existsByPosterId(Long posterId);
 }
