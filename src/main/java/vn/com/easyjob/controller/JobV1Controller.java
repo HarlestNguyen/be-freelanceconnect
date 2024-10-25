@@ -30,10 +30,10 @@ public class JobV1Controller {
 
     // API lấy tất cả các công việc (có phân trang)
     @GetMapping
-    @Parameter(in = ParameterIn.QUERY, name = "page", schema = @Schema(type = "integer", defaultValue = "0"))
-    @Parameter(in = ParameterIn.QUERY, name = "size", schema = @Schema(type = "integer", defaultValue = "12"))
-    @Parameter(in = ParameterIn.QUERY, name = "sortBy", schema = @Schema(type = "string", defaultValue = "id"))
-    @Parameter(in = ParameterIn.QUERY, name = "direction", schema = @Schema(type = "string", defaultValue = "asc", allowableValues = {"asc", "desc"}))
+    @Parameter(in = ParameterIn.QUERY, name = "page", schema = @Schema(type = "integer"))
+    @Parameter(in = ParameterIn.QUERY, name = "size", schema = @Schema(type = "integer"))
+    @Parameter(in = ParameterIn.QUERY, name = "sortBy", schema = @Schema(type = "string", allowableValues = { "title",  "startDate",  "endDate",  "duration",  "jobType"}))
+    @Parameter(in = ParameterIn.QUERY, name = "direction", schema = @Schema(type = "string", allowableValues = {"asc", "desc"}))
     @Parameter(in = ParameterIn.QUERY, name = "title", schema = @Schema(type = "string"), description = "Job title for filtering")
     @Parameter(in = ParameterIn.QUERY, name = "districtId", schema = @Schema(type = "integer"), description = "District ID for filtering")
     @Parameter(in = ParameterIn.QUERY, name = "provinceId", schema = @Schema(type = "integer"), description = "Province ID for filtering")
