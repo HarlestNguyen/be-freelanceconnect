@@ -9,11 +9,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import vn.com.easyjob.model.dto.ResponseDTO;
 import vn.com.easyjob.model.entity.Profile;
 import vn.com.easyjob.service.auth.ProfileService;
+import vn.com.easyjob.util.AuthConstants;
 import vn.com.easyjob.util.SortUtils;
 
 import java.util.List;
@@ -27,6 +29,7 @@ public class ProfileV1Controller {
     private ProfileService profileService;
 
     @GetMapping
+    @PreAuthorize(AuthConstants.ADMIN)
     public ResponseEntity<?> getProfile(Pageable pageable,
                                         @RequestParam(required = false) Boolean isDel,
                                         @RequestParam(required = false) Integer role){
@@ -48,6 +51,7 @@ public class ProfileV1Controller {
 
     // API tìm kiếm hồ sơ theo từ khóa và phân trang
     @GetMapping("/search")
+    @PreAuthorize(AuthConstants.ADMIN)
     public ResponseEntity<?> getProfileById(
             @RequestParam(required = false) String keywords,
             Pageable pageable) {
@@ -69,6 +73,7 @@ public class ProfileV1Controller {
     }
 
     @PostMapping("toggleIsDeleted/{id}")
+    @PreAuthorize(AuthConstants.ADMIN)
     public ResponseEntity<?> changeStatus(
             @PathVariable int id) {
             profileService.ChangeIsdel(id);
