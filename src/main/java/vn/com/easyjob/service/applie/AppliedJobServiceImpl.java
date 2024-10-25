@@ -20,11 +20,9 @@ import vn.com.easyjob.repository.AppliedJobRepository;
 import vn.com.easyjob.repository.JobDetailRepository;
 import vn.com.easyjob.service.auth.ProfileService;
 import vn.com.easyjob.service.auth.ProfileServiceImpl;
-import vn.com.easyjob.service.job.JobDetailService;
 import vn.com.easyjob.service.job.JobDetailServiceImpl;
 import vn.com.easyjob.util.ApplieStatusEnum;
 import vn.com.easyjob.util.JobApprovalStatusEnum;
-import vn.com.easyjob.util.RoleEnum;
 
 @Service
 public class AppliedJobServiceImpl extends BaseService<AppliedJob, Long> implements AppliedJobService {
@@ -97,6 +95,11 @@ public class AppliedJobServiceImpl extends BaseService<AppliedJob, Long> impleme
                         ).toList()
                 )
                 .build();
+    }
+
+    @Override
+    public AppliesDTO acceptAppliedJob(Long jobId, Long applierId) {
+        return null;
     }
 
 }

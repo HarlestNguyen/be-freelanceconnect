@@ -13,4 +13,5 @@ import vn.com.easyjob.util.ApplieStatusEnum;
 public interface AppliedJobService extends IService<AppliedJob, Long> {
     AppliesDTO addAppliedJob(Long jobId);
     CustomPageResponse<ProfileAppliesDTO> getAppliedJobs(Long jobId, ApplieStatusEnum applieStatus, Pageable pageable);
+    AppliesDTO acceptAppliedJob(Long jobId, Long applierId);
 }

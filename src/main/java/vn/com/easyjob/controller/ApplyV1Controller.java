@@ -55,4 +55,10 @@ public class ApplyV1Controller {
                 new ResponseDTO(HttpStatus.ACCEPTED.name(),appliedJobService.getAppliedJobs(id,applieStatusEnum,pageable))
         );
     }
+
+    @PreAuthorize(AuthConstants.EMPLOYER)
+    @PostMapping
+    public ResponseEntity<?> AcceptApplyV1(@RequestParam Long apllyid, @RequestParam Long profileId) {
+        return ResponseEntity.ok().body(apllyid+ "-" + profileId);
+    }
 }

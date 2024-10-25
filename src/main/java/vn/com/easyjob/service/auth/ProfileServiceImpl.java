@@ -38,6 +38,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProfileServiceImpl extends BaseService<Profile, Integer> implements ProfileService {
+
     @Autowired
     private ProfileRepository profileRepository;
 
@@ -215,6 +216,7 @@ public class ProfileServiceImpl extends BaseService<Profile, Integer> implements
 
     private static ProfileDTO convertToDTO(Profile profile) {
         ProfileDTO profileDTO = ProfileDTO.builder()
+                .id(profile.getId())
                 .fullname(profile.getFullname())
                 .address(profile.getAddress())
                 .avatar(profile.getAvatar())
