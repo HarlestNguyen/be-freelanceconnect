@@ -75,6 +75,21 @@ public class JobV1Controller {
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO(jobDetailService.findJobById(jobId)));
     }
 
+
+    @PostMapping("toggle-accept/{jobId}")
+    public ResponseEntity<?> toggleaccept(@PathVariable("jobId") Long jobId) {
+            jobDetailService.toggleAcceptJob(jobId);
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("Job accepted"));
+    }
+
+
+    @PostMapping("toggle-reject/{jobId}")
+    public ResponseEntity<?> togglereject(@PathVariable("jobId") Long jobId) {
+        jobDetailService.toggleRejectJob(jobId);
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("Job rejected"));
+    }
+
+
     @PreAuthorize(AuthConstants.APPLIER)
     @SecurityRequirement(name = "bearer-key")
     @PostMapping("/{id}/applie")

@@ -1,9 +1,6 @@
 package vn.com.easyjob.model.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import vn.com.easyjob.base.BaseAuditableEntity;
 
@@ -14,7 +11,11 @@ import vn.com.easyjob.base.BaseAuditableEntity;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "tbl_job_applie")
+@Table(name = "tbl_job_applie",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = { "applier", "job_detail" })
+        }
+)
 public class AppliedJob extends BaseAuditableEntity {
     @ManyToOne
     @JoinColumn(name = "applier", nullable = false)
@@ -23,6 +24,6 @@ public class AppliedJob extends BaseAuditableEntity {
     @JoinColumn(name = "job_detail", nullable = false)
     private JobDetail jobDetail;
     @ManyToOne
-    @JoinColumn(name = "applie_status_id", nullable = false)
+    @JoinColumn(name = "applie_status_id", nullable = false, columnDefinition = "BIGINT DEFAULT 1")
     private ApplieStatus applieStatus;
 }

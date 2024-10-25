@@ -14,4 +14,8 @@ public interface JobDetailService extends IService<JobDetail, Long> {
     void createJob(JobDetailRecord request) throws Exception;
 
     JobDTO findJobById(Long id);
+
+    void toggleAcceptJob(Long id);
+
+    void toggleRejectJob(Long id);
 }
