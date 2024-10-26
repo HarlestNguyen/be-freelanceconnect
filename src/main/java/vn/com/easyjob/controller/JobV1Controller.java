@@ -31,6 +31,7 @@ public class JobV1Controller {
 
     // API lấy tất cả các công việc (có phân trang)
     @GetMapping
+    @SecurityRequirement(name = "bearer-key")
     @Parameter(in = ParameterIn.QUERY, name = "page", schema = @Schema(type = "integer"))
     @Parameter(in = ParameterIn.QUERY, name = "size", schema = @Schema(type = "integer"))
     @Parameter(in = ParameterIn.QUERY, name = "sortBy", schema = @Schema(type = "string", allowableValues = { "title",  "startDate",  "endDate",  "duration",  "jobType"}))
