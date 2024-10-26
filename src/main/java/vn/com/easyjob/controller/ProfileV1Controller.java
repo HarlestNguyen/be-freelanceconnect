@@ -1,5 +1,7 @@
 package vn.com.easyjob.controller;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
@@ -13,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import vn.com.easyjob.base.CustomPageResponse;
 import vn.com.easyjob.model.dto.ResponseDTO;
 import vn.com.easyjob.model.entity.Profile;
 import vn.com.easyjob.service.auth.ProfileService;
@@ -26,52 +29,39 @@ import java.util.List;
 @RequestMapping("/api/v1/profile")
 @SecurityRequirement(name = "bearer-key")
 public class ProfileV1Controller {
+    private static final Logger log = LoggerFactory.getLogger(ProfileV1Controller.class);
+
     @Autowired
     private ProfileService profileService;
 
     @GetMapping
     @PreAuthorize(AuthConstants.ADMIN)
-    public ResponseEntity<?> getProfile(Pageable pageable,
-                                        @RequestParam(required = false) Boolean isDel,
-                                        @RequestParam(required = false) Integer role){
-        // Khởi tạo PageAndKeyword từ các tham số
-        Sort sort = pageable.getSort();
-        for (Sort.Order order : sort) {
-            String field = order.getProperty();
-            // Kiểm tra xem field có hợp lệ không
-            if (!SortUtils.isValidSortField(Profile.class, field)) {
-                // Nếu field không hợp lệ, bỏ qua sort hoặc thiết lập lại sort mặc định
-                pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
-                break;
-            }
+    public ResponseEntity<?> searchProfiles(
+            @Parameter(description = "Search by Email or FullName")
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @Parameter(description = "2 => Employer - 3 => Apllier")
+            @RequestParam(value = "role", required = false) Integer role,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "sort", defaultValue = "id") String sortBy,
+            @Parameter(description = "Sort direction", schema = @Schema(allowableValues = {"ASC", "DESC"}))
+            @RequestParam(value = "direction", defaultValue = "ASC") String direction,
+            @RequestParam(value = "isDeleted", required = false) Boolean isDeleted
+    ) {
+        // Tạo đối tượng Sort
+        Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+        // Kiểm tra tính hợp lệ của trường sortBy, nếu không hợp lệ đặt sort mặc định là "id"
+        if (!SortUtils.isValidSortField(Profile.class, sortBy)) {
+            sort = Sort.by(Sort.Direction.fromString(direction),"id"); // Đặt sort mặc định là "id"
         }
+        // Tạo đối tượng Pageable với Sort đã xử lý
+        Pageable pageable = PageRequest.of(page, size, sort);
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseDTO("Get all Profile Success",profileService.getProfiles(pageable,role,isDel))
+                new ResponseDTO(profileService.getProfiles(keyword, isDeleted, role, pageable))
         );
     }
 
-    // API tìm kiếm hồ sơ theo từ khóa và phân trang
-    @GetMapping("/search")
-    @PreAuthorize(AuthConstants.ADMIN)
-    public ResponseEntity<?> getProfileById(
-            @RequestParam(required = false) String keywords,
-            Pageable pageable) {
 
-        // Khởi tạo PageAndKeyword từ các tham số
-        Sort sort = pageable.getSort();
-        for (Sort.Order order : sort) {
-            String field = order.getProperty();
-            // Kiểm tra xem field có hợp lệ không
-            if (!SortUtils.isValidSortField(Profile.class, field)) {
-                // Nếu field không hợp lệ, bỏ qua sort hoặc thiết lập lại sort mặc định
-                pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
-                break;
-            }
-        }
-        // Gọi service để tìm kiếm hồ sơ theo từ khóa và phân trang
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new ResponseDTO("Search Profile Success", profileService.sreachProfile(pageable,keywords)));
-    }
 
     @PostMapping("toggleIsDeleted/{id}")
     @PreAuthorize(AuthConstants.ADMIN)

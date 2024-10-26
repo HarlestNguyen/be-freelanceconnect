@@ -2,6 +2,7 @@ package vn.com.easyjob.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -13,18 +14,9 @@ import vn.com.easyjob.repository.custom.CustomPagingRepository;
 import java.util.Optional;
 
 @Repository
-public interface ProfileRepository extends IRepository<Profile, Integer>, CustomPagingRepository<Profile> {
+public interface ProfileRepository extends IRepository<Profile, Integer>, JpaSpecificationExecutor<Profile>, CustomPagingRepository<Profile> {
     //    @Query("SELECT p FROM Profile p WHERE p.account.email = :email")
     Optional<Profile> findByAccount_Email(String email);
 
-    // Tìm kiếm theo fullname và email, đồng thời hỗ trợ phân trang
-    @Query("SELECT p FROM Profile p WHERE LOWER(p.fullname) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
-            "OR LOWER(p.account.email) LIKE LOWER(CONCAT('%', :keyword, '%'))")
-    Page<Profile> searchByFullnameOrEmail(@Param("keyword") String keyword, Pageable pageable);
 
-    @Query("SELECT p FROM Profile p " +
-            "WHERE (:isDeleted IS NULL OR p.isDeleted = :isDeleted) " +
-            "AND ((:role IS NULL OR :role = 1) AND (p.account.role.id = 2 OR p.account.role.id = 3) " +
-            "OR (:role IS NOT NULL AND :role != 1 AND p.account.role.id = :role))")
-    Page<Profile> findByIsDeletedAndRole(Boolean isDeleted, Integer role, Pageable pageable);
 }
