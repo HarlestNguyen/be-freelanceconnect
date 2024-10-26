@@ -77,8 +77,10 @@ public class ProfileServiceImpl extends BaseService<Profile, Integer> implements
         dto.setId(profile.getId());
         dto.setPhone(profile.getPhone());
         dto.setDob(profile.getDob());
-        dto.setImgFrontOfCard(profile.getCitizenIdentityCard().getFrontOfCard());
-        dto.setImgBackOfCard(profile.getCitizenIdentityCard().getBackOfCard());
+        if (profile.getCitizenIdentityCard() != null){
+            dto.setImgFrontOfCard(profile.getCitizenIdentityCard().getFrontOfCard());
+            dto.setImgBackOfCard(profile.getCitizenIdentityCard().getBackOfCard());
+        }
         dto.setFullname(profile.getFullname());
         dto.setAddress(profile.getAddress());
         dto.setAvatar(profile.getAvatar());
