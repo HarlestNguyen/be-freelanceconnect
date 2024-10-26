@@ -26,7 +26,6 @@ import java.util.List;
 @RequestMapping("/api/v1/profile")
 @SecurityRequirement(name = "bearer-key")
 public class ProfileV1Controller {
-    private static final Logger log = LoggerFactory.getLogger(ProfileV1Controller.class);
     @Autowired
     private ProfileService profileService;
 

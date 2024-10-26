@@ -17,7 +17,6 @@ public record JobDetailRecord(
         LocalDateTime endDate,
         Integer duration,
         String description,
-
         Long jobTypeId,
         MultipartFile[] imageJobDetails
 ) {

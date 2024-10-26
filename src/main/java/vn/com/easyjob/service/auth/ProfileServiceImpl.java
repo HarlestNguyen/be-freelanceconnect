@@ -74,6 +74,10 @@ public class ProfileServiceImpl extends BaseService<Profile, Integer> implements
         if (profile.getDob() != null) {
             dto.setAge(Period.between(profile.getDob(), LocalDate.now()).getYears());
         }
+        dto.setId(profile.getId());
+        dto.setDob(profile.getDob());
+        dto.setImgFrontOfCard(profile.getCitizenIdentityCard().getFrontOfCard());
+        dto.setImgBackOfCard(profile.getCitizenIdentityCard().getBackOfCard());
         dto.setFullname(profile.getFullname());
         dto.setAddress(profile.getAddress());
         dto.setAvatar(profile.getAvatar());
@@ -87,7 +91,7 @@ public class ProfileServiceImpl extends BaseService<Profile, Integer> implements
                 .description(jobSkill.getDescription())
                 .build()).toList());
         dto.setStar(null);
-        dto.setNumOfJob((int) profile.getAppliedJobs().stream().filter(appliedJob -> appliedJob.getApplieStatus().getName().equals(ApplieStatusEnum.COMPLETED.name())).count());
+        dto.setNumOfJob((int) profile.getAppliedJobs().stream().filter(appliedJob -> appliedJob.getApplieStatus().getName().equals(ApplieStatusEnum.COMPLETED)).count());
 
         return dto;
     }
