@@ -4,6 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public record ChangeInfoRecord(
         String fullname,
+        String phone,
         String dob,
         MultipartFile avatar,
         String address,

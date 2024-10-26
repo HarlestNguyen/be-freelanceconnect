@@ -16,6 +16,7 @@ import java.util.Date;
 public class ProfileDTO {
     private Long id;
     private String email;
+    private String phone;
     private String fullname;
     private Integer age;
     private LocalDate dob;

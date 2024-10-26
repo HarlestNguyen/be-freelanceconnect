@@ -54,7 +54,7 @@ public class SelfV1Controller {
     }
 
     @PatchMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> updateSelf(@ModelAttribute ChangeInfoRecord record) throws Exception {
+    public ResponseEntity<?> updateSelf(@ModelAttribute ChangeInfoRecord record) {
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("Update profile successfully.", profileService.updateProfile(record)));
     }
 

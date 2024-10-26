@@ -75,6 +75,7 @@ public class ProfileServiceImpl extends BaseService<Profile, Integer> implements
             dto.setAge(Period.between(profile.getDob(), LocalDate.now()).getYears());
         }
         dto.setId(profile.getId());
+        dto.setPhone(profile.getPhone());
         dto.setDob(profile.getDob());
         dto.setImgFrontOfCard(profile.getCitizenIdentityCard().getFrontOfCard());
         dto.setImgBackOfCard(profile.getCitizenIdentityCard().getBackOfCard());
@@ -135,6 +136,11 @@ public class ProfileServiceImpl extends BaseService<Profile, Integer> implements
                 case "provinceId":
                     if (record.provinceId()!=null){
                         profile.setProvinceId(record.provinceId());
+                    }
+                    break;
+                case "phone":
+                    if (record.phone()!=null){
+                        profile.setPhone(record.phone());
                     }
                     break;
                 case "skillIds":
