@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
 
@@ -15,8 +16,10 @@ import java.util.Date;
 public class ProfileDTO {
     private Long id;
     private String email;
+    private String phone;
     private String fullname;
     private Integer age;
+    private LocalDate dob;
     private String avatar;
     private Boolean isVerified;
     private Integer numOfJob;
@@ -26,4 +29,6 @@ public class ProfileDTO {
     private Integer provinceId;
     private Integer districtId;
     private Collection<JobSkillDTO> jobSkills;
+    private String imgFrontOfCard;
+    private String imgBackOfCard;
 }

@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -63,9 +64,9 @@ public class JobV1Controller {
 
     @PreAuthorize(AuthConstants.EMPLOYER)
     @SecurityRequirement(name = "bearer-key")
-    @PostMapping
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> createJob(@ModelAttribute JobDetailRecord request) throws Exception {
-        jobDetailService.createJob(request);  // Không cần kết quả trả về
+        jobDetailService.createJob(request);
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("Job created successfully"));
     }
 

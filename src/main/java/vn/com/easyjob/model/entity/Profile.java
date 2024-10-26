@@ -34,6 +34,7 @@ public class Profile extends BaseAuditableEntity {
     @Column(name = "is_verified", nullable = false)
     @ColumnDefault("b'0'")
     private Boolean isVerified;
+    private String phone;
     private LocalDate dob;
     private String avatar;
     private String address;
