@@ -3,6 +3,7 @@ package vn.com.easyjob.service.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +24,7 @@ import vn.com.easyjob.repository.ProfileRepository;
 import vn.com.easyjob.response.ResponseListPagination;
 import vn.com.easyjob.service.cloudiary.CloudinaryService;
 import vn.com.easyjob.service.job.JobSkillService;
+import vn.com.easyjob.specification.ProfileSpecification;
 import vn.com.easyjob.util.ApplieStatusEnum;
 import vn.com.easyjob.util.DateTimeFormat;
 import org.springframework.data.domain.Pageable;
@@ -171,8 +173,21 @@ public class ProfileServiceImpl extends BaseService<Profile, Integer> implements
     }
 
     @Override
-    public CustomPageResponse<ProfileDTO> getProfiles(Pageable pageable, Integer role ,Boolean isDel) {
-        Page<Profile> profiles = profileRepository.findByIsDeletedAndRole(isDel,role,pageable);
+    public CustomPageResponse<ProfileDTO> getProfiles(String keyword, Boolean isDeleted, Integer role, Pageable pageable) {
+        // Khởi tạo Specification là null, sau đó thêm điều kiện khi trường có giá trị
+        Specification<Profile> spec = Specification.where(null);
+
+        if (keyword != null && !keyword.isEmpty()) {
+            spec = spec.and(ProfileSpecification.hasKeyword(keyword));
+        }
+        if (isDeleted != null) {
+            spec = spec.and(ProfileSpecification.hasIsDeleted(isDeleted));
+        }
+        if (role != null) {
+            spec = spec.and(ProfileSpecification.hasRole(role));
+        }
+        // Gọi findAll với Specification và Pageable
+        Page<Profile> profiles = profileRepository.findAll(spec, pageable);
         return CustomPageResponse.<ProfileDTO>builder()
                 .content(profiles.stream().map(ProfileServiceImpl::convertToDTO).toList())
                 .last(profiles.isLast())
@@ -186,24 +201,6 @@ public class ProfileServiceImpl extends BaseService<Profile, Integer> implements
                 .build();
     }
 
-    @Override
-    public CustomPageResponse<ProfileDTO> sreachProfile(Pageable pageable,String keyword) {
-        Page<Profile> profilePage = profileRepository.searchByFullnameOrEmail(keyword,pageable);
-        // Chuyển đổi từ Profile sang ProfileDTO
-        List<ProfileDTO> profileDTOs = profilePage.getContent().stream()
-                .map(ProfileServiceImpl::convertToDTO)
-                .toList();
-        return CustomPageResponse.<ProfileDTO>builder()
-                .content(profileDTOs)
-                .first(profilePage.isFirst())
-                .last(profilePage.isLast())
-                .empty(profilePage.isEmpty())
-                .size(profilePage.getSize())
-                .number(profilePage.getNumber())
-                .totalElements(profilePage.getTotalElements())
-                .totalPages(profilePage.getTotalPages())
-                .build();
-    }
 
     @Override
     public void ChangeIsdel(int id) {
