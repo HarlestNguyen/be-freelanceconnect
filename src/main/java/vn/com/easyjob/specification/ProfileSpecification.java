@@ -24,10 +24,8 @@ public class ProfileSpecification {
 
     public static Specification<Profile> hasRole(Integer role) {
         return (root, query, criteriaBuilder) -> {
-            if (role == null) {
-                return criteriaBuilder.conjunction();
-            }
-            if (role != 2 && role != 3) {
+          
+            if (role == null || role != 2 && role != 3) {
                 return criteriaBuilder.or(
                         criteriaBuilder.equal(root.get("account").get("role").get("id"), 2),
                         criteriaBuilder.equal(root.get("account").get("role").get("id"), 3)

@@ -187,7 +187,7 @@ public class ProfileServiceImpl extends BaseService<Profile, Integer> implements
     @Override
     public CustomPageResponse<ProfileDTO> getProfiles(String keyword, Boolean isDeleted, Integer role, Pageable pageable) {
         // Khởi tạo Specification là null, sau đó thêm điều kiện khi trường có giá trị
-        Specification<Profile> spec = Specification.where(null);
+        Specification<Profile> spec = Specification.where(ProfileSpecification.hasRole(role));
 
         if (keyword != null && !keyword.isEmpty()) {
             spec = spec.and(ProfileSpecification.hasKeyword(keyword));
@@ -195,9 +195,9 @@ public class ProfileServiceImpl extends BaseService<Profile, Integer> implements
         if (isDeleted != null) {
             spec = spec.and(ProfileSpecification.hasIsDeleted(isDeleted));
         }
-        if (role != null) {
-            spec = spec.and(ProfileSpecification.hasRole(role));
-        }
+//        if (role != null) {
+//
+//        }
         // Gọi findAll với Specification và Pageable
         Page<Profile> profiles = profileRepository.findAll(spec, pageable);
         return CustomPageResponse.<ProfileDTO>builder()
