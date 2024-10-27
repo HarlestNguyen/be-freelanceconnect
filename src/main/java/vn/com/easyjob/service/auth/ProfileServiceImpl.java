@@ -97,7 +97,7 @@ public class ProfileServiceImpl extends BaseService<Profile, Integer> implements
                 .build()).toList());
         dto.setStar(null);
         dto.setNumOfJob((int) profile.getAppliedJobs().stream().filter(appliedJob -> appliedJob.getApplieStatus().getName().equals(ApplieStatusEnum.COMPLETED)).count());
-
+        dto.setEmail(profile.getAccount().getEmail());
         return dto;
     }
 
@@ -226,6 +226,7 @@ public class ProfileServiceImpl extends BaseService<Profile, Integer> implements
     private static ProfileDTO convertToDTO(Profile profile) {
         ProfileDTO profileDTO = ProfileDTO.builder()
                 .id(profile.getId())
+                .phone(profile.getPhone())
                 .email(profile.getAccount().getEmail())
                 .fullname(profile.getFullname())
                 .address(profile.getAddress())
@@ -233,6 +234,7 @@ public class ProfileServiceImpl extends BaseService<Profile, Integer> implements
                 .districtId(profile.getDistrictId())
                 .provinceId(profile.getProvinceId())
                 .isVerified(profile.getIsVerified())
+                .dob(profile.getDob())
                 .createdDate(profile.getCreatedDate()) // Assuming this field exists in Profile
                 .build();
         // Tính toán tuổi nếu profile có ngày sinh
