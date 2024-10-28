@@ -18,6 +18,7 @@ import vn.com.easyjob.model.dto.ResponseDTO;
 import vn.com.easyjob.model.record.JobDetailRecord;
 import vn.com.easyjob.service.job.JobDetailService;
 import vn.com.easyjob.util.AuthConstants;
+import vn.com.easyjob.util.JobActionEnum;
 import vn.com.easyjob.util.JobApprovalStatusEnum;
 
 import java.util.Map;
@@ -92,10 +93,11 @@ public class JobV1Controller {
     }
 
 
-    @PreAuthorize(AuthConstants.APPLIER)
-    @SecurityRequirement(name = "bearer-key")
-    @PostMapping("/{id}/applie")
-    public ResponseEntity<?> applyJob(@PathVariable("id") Long id) {
-        return null;
-    }
+//    @PreAuthorize(AuthConstants.APPLIER)
+//    @SecurityRequirement(name = "bearer-key")
+//    @PostMapping("/{id}")
+//    public ResponseEntity<?> applyJob(@PathVariable("id") Long id, @RequestParam JobActionEnum action) {
+//
+//        return null;
+//    }
 }

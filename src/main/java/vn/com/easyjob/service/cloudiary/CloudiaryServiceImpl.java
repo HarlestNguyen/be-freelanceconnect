@@ -12,9 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import vn.com.easyjob.exception.ErrorHandler;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Lazy
@@ -46,6 +44,38 @@ public class CloudiaryServiceImpl implements CloudinaryService {
         multipartFile.transferTo(fileToUpload);
         Map upload = this.cloudinary.uploader().upload(fileToUpload, param);
         return upload;
+    }
+
+    // Phương thức mới để upload mảng MultipartFile
+    @Override
+    public List<String> uploadImages(ArrayList<MultipartFile> files) throws Exception {
+        List<String> urls = new ArrayList<>(); // Danh sách lưu URL kết quả
+        for (int i = 0; i < files.size(); i++) {
+            MultipartFile file = files.get(i);
+            String uuid = UUID.randomUUID().toString(); // Tạo UUID cho mỗi file
+            if (file.isEmpty()) {
+                throw new ErrorHandler(HttpStatus.NOT_FOUND, "File at index " + i + " is empty");
+            }
+            if (!cloudiaryValidationService.isValid(file, uuid)) {
+                throw new ErrorHandler(HttpStatus.NOT_FOUND, "ImageError for file at index " + i);
+            }
+
+            Map<String, Object> param = new HashMap<>() {{
+                put("public_id", uuid);
+                put("overwrite", true);
+                put("resource_type", "auto");
+            }};
+
+            File fileToUpload = File.createTempFile("temp-file", file.getOriginalFilename());
+            file.transferTo(fileToUpload);
+            Map uploadResult = this.cloudinary.uploader().upload(fileToUpload, param);
+            fileToUpload.delete(); // Xóa file tạm sau khi upload
+
+            // Lấy URL từ kết quả upload và thêm vào danh sách URLs
+            String url = (String) uploadResult.get("url");
+            urls.add(url);
+        }
+        return urls; // Trả về danh sách URLs theo thứ tự
     }
 
     @Override

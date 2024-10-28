@@ -127,23 +127,33 @@
 			<groupId>jakarta.validation</groupId>
 			<artifactId>jakarta.validation-api</artifactId>
 		</dependency>
+
+		<!--                        cloudinary                          -->
 		<!-- https://mvnrepository.com/artifact/com.cloudinary/cloudinary-http44 -->
 		<dependency>
 			<groupId>com.cloudinary</groupId>
 			<artifactId>cloudinary-http44</artifactId>
 			<version>1.33.0</version>
 		</dependency>
-		<!-- .env	-->
+		<!--                        cloudinary                          -->
+
+		<!--                           .env                             -->
 		<!-- https://mvnrepository.com/artifact/me.paulschwarz/spring-dotenv -->
 		<dependency>
 			<groupId>me.paulschwarz</groupId>
 			<artifactId>spring-dotenv</artifactId>
 			<version>4.0.0</version>
 		</dependency>
+		<!--                           .env                             -->
+
+
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
 		</dependency>
+
+
+		<!--                          Mapstruct                         -->
 		<!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
 		<dependency>
 			<groupId>org.mapstruct</groupId>
@@ -156,7 +166,9 @@
 			<artifactId>mapstruct-processor</artifactId>
 			<version>1.6.0</version>
 		</dependency>
-		<!--add redis-->
+		<!--                          Mapstruct                         -->
+
+		<!--                          Redis                             -->
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-redis</artifactId>
@@ -167,11 +179,14 @@
 			<artifactId>lettuce-core</artifactId>
 			<version>6.4.0.RELEASE</version>
 		</dependency>
+		<!--                          Redis                             -->
+
 		<!-- Thymeleaf for server-side rendering (optional, use only if needed) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
+		<!--                        Thymeleaf                           -->
 	</dependencies>
 
 	<build>

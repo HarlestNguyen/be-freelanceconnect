@@ -12,6 +12,7 @@ import vn.com.easyjob.model.dto.ResponseDTO;
 import vn.com.easyjob.model.entity.Profile;
 import vn.com.easyjob.model.record.ChangeInfoRecord;
 import vn.com.easyjob.model.record.ChangePasswordRecord;
+import vn.com.easyjob.model.record.VerificationRecord;
 import vn.com.easyjob.service.auth.AccountService;
 import vn.com.easyjob.service.auth.ProfileService;
 import vn.com.easyjob.service.cloudiary.CloudinaryService;
@@ -64,5 +65,10 @@ public class SelfV1Controller {
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("Delete successfully."));
         }
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("Delete failed."));
+    }
+
+    @PostMapping(value = "/verification", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> verifySelf(@ModelAttribute VerificationRecord record) {
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("Verified success, wait for admin accept.", profileService.verifySelf(record)));
     }
 }

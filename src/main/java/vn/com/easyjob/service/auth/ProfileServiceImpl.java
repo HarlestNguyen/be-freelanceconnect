@@ -9,17 +9,24 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import vn.com.easyjob.base.BaseService;
 import vn.com.easyjob.base.CustomPageResponse;
 import vn.com.easyjob.base.IRepository;
 
 import vn.com.easyjob.exception.ErrorHandler;
+import vn.com.easyjob.model.dto.CitizenIdentityCardDTO;
 import vn.com.easyjob.model.dto.JobSkillDTO;
 import vn.com.easyjob.model.dto.ProfileAppliesDTO;
 import vn.com.easyjob.model.dto.ProfileDTO;
+import vn.com.easyjob.model.entity.CitizenIdentityCard;
 import vn.com.easyjob.model.entity.JobSkill;
 import vn.com.easyjob.model.entity.Profile;
+import vn.com.easyjob.model.mapper.CitizenIdentityCardMapper;
+import vn.com.easyjob.model.mapper.CitizenIdentityCardMapperImpl;
 import vn.com.easyjob.model.record.ChangeInfoRecord;
+import vn.com.easyjob.model.record.VerificationRecord;
+import vn.com.easyjob.repository.CitizenIdentityCardRepository;
 import vn.com.easyjob.repository.ProfileRepository;
 import vn.com.easyjob.response.ResponseListPagination;
 import vn.com.easyjob.service.cloudiary.CloudinaryService;
@@ -32,10 +39,7 @@ import java.lang.reflect.Field;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,6 +56,12 @@ public class ProfileServiceImpl extends BaseService<Profile, Integer> implements
 
     @Autowired
     private JobSkillService jobSkillService;
+
+    @Autowired
+    private CitizenIdentityCardRepository citizenIdentityCardRepository;
+
+    @Autowired
+    private CitizenIdentityCardMapper citizenIdentityCardMapper;
 
     @Override
     protected IRepository<Profile, Integer> getRepository() {
@@ -221,6 +231,34 @@ public class ProfileServiceImpl extends BaseService<Profile, Integer> implements
         );
       p.setIsDeleted(!p.getIsDeleted());
       profileRepository.save(p);
+    }
+
+    @Override
+    public CitizenIdentityCardDTO verifySelf(VerificationRecord record) {
+        try {
+            Profile profile = getAuthenticatedProfile();
+            CitizenIdentityCard cic = new CitizenIdentityCard();
+            cic.setProfile(profile);
+            cic.setNo(record.no());
+            cic.setFullname(record.fullname());
+            cic.setDob(dateTimeFormat.parseStringToLocalDate(record.dateOfBirth()));
+            cic.setGender(record.gender());
+            cic.setPlaceOfPrecidence(record.placeOfPrecidence());
+            cic.setDateOfIssue(dateTimeFormat.parseStringToLocalDate(record.dateOfIssue()));
+            if (record.backOfCard() != null && record.frontOfCard() != null){
+                ArrayList<MultipartFile> files = new ArrayList<>();
+                files.add(record.frontOfCard());
+                files.add(record.backOfCard());
+                List<String> rs = cloudinaryService.uploadImages(files);
+                if (rs.size() == 2){
+                    cic.setFrontOfCard(rs.get(0));
+                    cic.setBackOfCard(rs.get(1));
+                }else throw new RuntimeException("Upload image failed");
+            }else throw new RuntimeException("Front and back image can not be null");
+            return citizenIdentityCardMapper.toDto(citizenIdentityCardRepository.save(cic));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static ProfileDTO convertToDTO(Profile profile) {

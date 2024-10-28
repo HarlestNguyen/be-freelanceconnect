@@ -2,10 +2,13 @@ package vn.com.easyjob.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import vn.com.easyjob.base.BaseEntity;
 import vn.com.easyjob.util.GenderEnum;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -15,17 +18,19 @@ import java.sql.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "tbl_citizen_identity_card")
+@DynamicInsert
+@DynamicUpdate
 public class CitizenIdentityCard extends BaseEntity {
     @OneToOne
     @MapsId
     @JoinColumn(nullable = false, name = "id")
     private Profile profile;
     @Column(nullable = false, length = 12)
-    private Character no;
+    private String no;
     @Column(nullable = false)
     private String fullname;
     @Column(nullable = false, name = "dob")
-    private Date dateOfBirth;
+    private LocalDate dob;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private GenderEnum gender;
@@ -36,5 +41,5 @@ public class CitizenIdentityCard extends BaseEntity {
     @Column(nullable = false, name = "back_of_card")
     private String backOfCard;
     @Column(nullable = false, name = "date_of_issue")
-    private Date dateOfIssue;
+    private LocalDate dateOfIssue;
 }
