@@ -82,7 +82,6 @@ public class JobDetailServiceImpl extends BaseService<JobDetail, Long> implement
                         .maxPrice(jobDetail.getJobType() != null ? jobDetail.getJobType().getMaxPrice() : null)
                         .build()
                 )
-                .approvalStatus(jobDetail.getJobApprovalStatus().getName().getName())
                 .images(Optional.ofNullable(jobDetail.getImageJobDetails())
                         .orElse(Collections.emptyList())
                         .stream()

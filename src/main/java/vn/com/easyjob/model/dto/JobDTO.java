@@ -14,7 +14,6 @@ import java.util.Set;
 @Builder
 public class JobDTO {
     private Long jobId;                 // ID công việc
-    private String approvalStatus;      // Trạng thái của công việc
     private String title;               // Tiêu đề công việc
     private String address;             // Địa chỉ nơi làm việc
     private String phone;               // Số điện thoại liên hệ
@@ -28,5 +27,5 @@ public class JobDTO {
     private Date postedDate;            // Ngày đăng công việc
     private Boolean verified;           // Trạng thái xác thực công việc
     private Set<JobSkillDTO> jobSkills; // Danh sách các kỹ năng thích hợp cho công việc này
-    private JobApprovalStatusEnum jobApprovalStatus;
+    private JobApprovalStatusEnum jobApprovalStatus; // Trạng thái của công việc
 }
