@@ -44,7 +44,8 @@ public class JobV1Controller {
     @Parameter(in = ParameterIn.QUERY, name = "endDate", schema = @Schema(type = "string", format = "date"), description = "End date in yyyy-MM-dd format")
     @Parameter(in = ParameterIn.QUERY, name = "jobTypeId", schema = @Schema(type = "integer"), description = "Job type ID for filtering")
     @Parameter(in = ParameterIn.QUERY, name = "jobSkillId", schema = @Schema(type = "integer"), description = "Job skill ID for filtering")
-    @Parameter(in = ParameterIn.QUERY, name = "approval", schema = @Schema(type = "string", defaultValue = "", allowableValues = {"PENDING", "REJECTED", "APPROVED"}), description = "Required role ROLE_ADMIN")
+    @Parameter(in = ParameterIn.QUERY, name = "approval", schema = @Schema(type = "string", allowableValues = {"PENDING", "REJECTED", "APPROVED"}), description = "Required role ROLE_ADMIN")
+    @Parameter(in = ParameterIn.QUERY, name = "owner", schema = @Schema(type = "string", allowableValues = {"self"}), description = "Required role ROLE_EMPLOYER")
     public ResponseEntity<?> getAllJobs(@RequestParam(required = false) Map<String, String> params) {
         if (params.containsKey("approval")) {
             // Lấy thông tin Authentication hiện tại
@@ -55,6 +56,15 @@ public class JobV1Controller {
                     .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
 
             // Nếu không có quyền ROLE_ADMIN, ném ngoại lệ AccessDenied
+            if (!isAdmin) {
+                throw new AccessDeniedException("You do not have permission to access this resource.");
+            }
+        }
+
+        if (params.containsKey("owner")) {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            boolean isAdmin = authentication.getAuthorities().stream()
+                    .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_EMPLOYER"));
             if (!isAdmin) {
                 throw new AccessDeniedException("You do not have permission to access this resource.");
             }

@@ -4,10 +4,7 @@ import jakarta.persistence.criteria.Predicate;
 import org.springframework.boot.autoconfigure.batch.BatchProperties;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
-import vn.com.easyjob.model.entity.JobApprovalStatus;
-import vn.com.easyjob.model.entity.JobDetail;
-import vn.com.easyjob.model.entity.JobSkill;
-import vn.com.easyjob.model.entity.JobType;
+import vn.com.easyjob.model.entity.*;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -60,6 +57,11 @@ public class JobDetailSpecification {
 
             return cb.and(predicates);  // Trả về điều kiện AND cho tất cả kỹ năng
         };
+    }
+
+    public Specification<JobDetail> hasProfile(Profile profile) {
+        return (root, query, cb) ->
+                profile == null ? cb.conjunction() : cb.equal(root.get("poster"), profile);
     }
 
     public Specification<JobDetail> hasJobSkill(JobSkill skill) {

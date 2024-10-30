@@ -140,6 +140,8 @@ public class JobDetailServiceImpl extends BaseService<JobDetail, Long> implement
                 .map(id -> jobSkillRepository.findById(id.longValue())
                         .orElseThrow(() -> new RuntimeException("Job skill not found")))
                 .orElse(null);  // Trả về null nếu jobSkillId là null
+        Profile poster = profileService.getAuthenticatedProfile();
+
         // Kết hợp các Specification, chỉ tạo các điều kiện khi giá trị không null
         Specification<JobDetail> spec = Specification.where(
                         (title != null ? jobDetailSpecification.hasTitle(title) : null))
@@ -148,6 +150,7 @@ public class JobDetailServiceImpl extends BaseService<JobDetail, Long> implement
                 .and((startDate != null || endDate != null) ? jobDetailSpecification.isWithinDateRange(startDate, endDate) : null)
                 .and(jobDetailSpecification.hasApprovalStatus(jobApprovalStatus))
                 .and(jobSkill != null ? jobDetailSpecification.hasJobSkill(jobSkill) : null)
+                .and(poster != null ? jobDetailSpecification.hasProfile(poster) : null)
                 .and(jobType != null ? jobDetailSpecification.hasJobType(jobType) : null);
 
         // Lấy danh sách phân trang của JobDetail từ repository
