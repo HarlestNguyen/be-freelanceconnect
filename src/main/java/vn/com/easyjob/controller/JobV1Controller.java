@@ -61,15 +61,6 @@ public class JobV1Controller {
             }
         }
 
-        if (params.containsKey("owner")) {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            boolean isAdmin = authentication.getAuthorities().stream()
-                    .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_EMPLOYER"));
-            if (!isAdmin) {
-                throw new AccessDeniedException("You do not have permission to access this resource.");
-            }
-        }
-
         // Nếu không có "adminParam" hoặc người dùng có ROLE_ADMIN thì tiếp tục xử lý
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO(jobDetailService.findAllJobs(params)));
     }

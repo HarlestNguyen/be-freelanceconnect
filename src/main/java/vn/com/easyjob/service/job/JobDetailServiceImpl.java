@@ -8,6 +8,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.com.easyjob.base.BaseService;
@@ -140,7 +143,19 @@ public class JobDetailServiceImpl extends BaseService<JobDetail, Long> implement
                 .map(id -> jobSkillRepository.findById(id.longValue())
                         .orElseThrow(() -> new RuntimeException("Job skill not found")))
                 .orElse(null);  // Trả về null nếu jobSkillId là null
-        Profile poster = profileService.getAuthenticatedProfile();
+
+        Profile poster = null;
+        if (params.containsKey("owner")) {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            boolean isAdmin = authentication.getAuthorities().stream()
+                    .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_EMPLOYER"));
+            if (!isAdmin) {
+                throw new AccessDeniedException("You do not have permission to access this resource.");
+            }else {
+                poster = profileService.getAuthenticatedProfile();
+            }
+        }
+
 
         // Kết hợp các Specification, chỉ tạo các điều kiện khi giá trị không null
         Specification<JobDetail> spec = Specification.where(
