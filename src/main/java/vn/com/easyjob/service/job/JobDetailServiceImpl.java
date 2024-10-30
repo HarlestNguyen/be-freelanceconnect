@@ -102,7 +102,9 @@ public class JobDetailServiceImpl extends BaseService<JobDetail, Long> implement
                                 .build())
                         .collect(Collectors.toSet()))  // Gán danh sách kỹ năng thích hợp cho công việc
                 .postedDate(jobDetail.getCreatedDate())  // Gán ngày đăng công việc
-                .verified(jobDetail.getIsDeleted())  // Gán trạng thái xác thực công việc (có thể là isDeleted hay isVerified, tùy vào logic của bạn)
+                .districtId(jobDetail.getDistrictId())
+                .provinceId(jobDetail.getProvinceId())
+                .isDeleted(jobDetail.getIsDeleted())  // Gán trạng thái xác thực công việc (có thể là isDeleted hay isVerified, tùy vào logic của bạn)
                 .jobApprovalStatus(jobDetail.getJobApprovalStatus().getName())
                 .build();
     }

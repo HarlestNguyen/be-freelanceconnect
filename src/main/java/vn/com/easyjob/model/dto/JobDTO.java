@@ -21,11 +21,13 @@ public class JobDTO {
     private LocalDateTime startDate;    // Ngày giờ bắt đầu làm việc
     private LocalDateTime endDate;      // Ngày giờ ngưng nhận việc
     private Integer duration;           // Thời gian làm việc (giờ)
+    private Integer districtId;
+    private Integer provinceId;
     private JobTypeDTO jobType;         // Loại công việc (bao gồm ID và tên)
     private List<ImageDTO> images;      // Danh sách hình ảnh của công việc
     private String description;         // Mô tả công việc
     private Date postedDate;            // Ngày đăng công việc
-    private Boolean verified;           // Trạng thái xác thực công việc
+    private Boolean isDeleted;           // Trạng thái xác thực công việc
     private Set<JobSkillDTO> jobSkills; // Danh sách các kỹ năng thích hợp cho công việc này
     private JobApprovalStatusEnum jobApprovalStatus; // Trạng thái của công việc
 }
