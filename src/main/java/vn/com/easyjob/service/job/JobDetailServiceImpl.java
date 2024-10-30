@@ -136,8 +136,32 @@ public class JobDetailServiceImpl extends BaseService<JobDetail, Long> implement
         LocalDateTime endDate = params.containsKey("endDate") && params.get("endDate") != null ? dateTimeFormat.parseStringToLocalDate(params.get("endDate")).atStartOfDay() : null;
         String jobTypeId = params.get("jobTypeId");
         JobType jobType = jobTypeId != null ? jobTypeService.findOne(Long.parseLong(jobTypeId)) : null;
+
         JobApprovalStatusEnum approvalStatus = params.containsKey("approval") && params.get("approval") != null ? JobApprovalStatusEnum.valueOf(params.get("approval")) : JobApprovalStatusEnum.APPROVED;
-        JobApprovalStatus jobApprovalStatus = jobApprovalStatusRepository.findByName(approvalStatus).orElseThrow(() -> new RuntimeException("Approval status not found"));
+        JobApprovalStatus jobApprovalStatus = null;
+
+        if (params.containsKey("approval")) {
+            // Lấy thông tin Authentication hiện tại
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+            // Kiểm tra xem người dùng có phải là ROLE_ADMIN không
+            boolean isAdmin = authentication.getAuthorities().stream()
+                    .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
+
+            // Nếu không có quyền ROLE_ADMIN, ném ngoại lệ AccessDenied
+            if (!isAdmin) {
+                throw new AccessDeniedException("You do not have permission to access this resource.");
+            }else {
+                if (approvalStatus.equals(JobApprovalStatusEnum.ALL)) {
+                    jobApprovalStatus = null;
+                }else {
+                    jobApprovalStatus = jobApprovalStatusRepository.findByName(approvalStatus).orElseThrow(() -> new RuntimeException("Approval status not found"));
+                }
+            }
+        }else {
+            jobApprovalStatus = jobApprovalStatusRepository.findByName(approvalStatus).orElseThrow(() -> new RuntimeException("Approval status not found"));;
+        }
+
         Integer jobSkillId = params.containsKey("jobSkillId") && params.get("jobSkillId") != null ? Integer.parseInt(params.get("jobSkillId")) : null;
         JobSkill jobSkill = Optional.ofNullable(jobSkillId)
                 .map(id -> jobSkillRepository.findById(id.longValue())
@@ -163,7 +187,7 @@ public class JobDetailServiceImpl extends BaseService<JobDetail, Long> implement
                 .and(districtId != null ? jobDetailSpecification.hasDistrictId(districtId) : null)
                 .and(provinceId != null ? jobDetailSpecification.hasProvinceId(provinceId) : null)
                 .and((startDate != null || endDate != null) ? jobDetailSpecification.isWithinDateRange(startDate, endDate) : null)
-                .and(jobDetailSpecification.hasApprovalStatus(jobApprovalStatus))
+                .and(jobApprovalStatus != null ? jobDetailSpecification.hasApprovalStatus(jobApprovalStatus) : null)
                 .and(jobSkill != null ? jobDetailSpecification.hasJobSkill(jobSkill) : null)
                 .and(poster != null ? jobDetailSpecification.hasProfile(poster) : null)
                 .and(jobType != null ? jobDetailSpecification.hasJobType(jobType) : null);

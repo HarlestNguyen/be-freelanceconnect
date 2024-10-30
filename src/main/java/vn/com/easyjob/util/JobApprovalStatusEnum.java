@@ -6,6 +6,7 @@ import java.util.Arrays;
 
 @Getter
 public enum JobApprovalStatusEnum {
+    ALL(4, "ALL"),
     PENDING(1, "PENDING"),
     REJECTED(2, "REJECTED"),
     APPROVED(3, "APPROVED");
