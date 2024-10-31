@@ -3,6 +3,7 @@ package vn.com.easyjob.service.job;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -30,6 +31,7 @@ import vn.com.easyjob.repository.JobTypeRepository;
 import vn.com.easyjob.service.auth.ProfileService;
 import vn.com.easyjob.service.image.ImageJobDetailService;
 import vn.com.easyjob.specification.JobDetailSpecification;
+import vn.com.easyjob.util.ApplieStatusEnum;
 import vn.com.easyjob.util.DateTimeFormat;
 import vn.com.easyjob.util.JobApprovalStatusEnum;
 
@@ -243,6 +245,29 @@ public class JobDetailServiceImpl extends BaseService<JobDetail, Long> implement
                 () -> new ErrorHandler(HttpStatus.NOT_FOUND, "ApprovalStatus Not found")
         ));
         jobDetailRepository.save(jobDetail);
+    }
+
+    @Override
+    public CustomPageResponse<JobDTO> findJobApprovalBySelf(Pageable pageable,JobApprovalStatusEnum jobApprovalStatusEnum) {
+        Profile profile = profileService.getAuthenticatedProfile();
+        Page<JobDetail> Rs = jobDetailRepository.findByPosterIdAndJobApprovalStatusName(profile.getId(),pageable,jobApprovalStatusEnum);
+        return CustomPageResponse.<JobDTO>builder()
+                .first(Rs.isFirst())
+                .last(Rs.isLast())
+                .number(Rs.getNumber())
+                .empty(Rs.isEmpty())
+                .size(Rs.getSize())
+                .totalElements(Rs.getTotalElements())
+                .totalPages(Rs.getTotalPages())
+                .content(
+                        Rs.getContent().stream().map(JobDetailServiceImpl::toDTO).toList()
+                )
+                .build();
+    }
+
+    @Override
+    public CustomPageResponse<JobDTO> findJobApplieStatusEnumBySelf(Pageable pageable,ApplieStatusEnum applieStatusEnum) {
+        return null;
     }
 
     // Phương thức lưu JobDetail

@@ -192,9 +192,9 @@ public class ProfileServiceImpl extends BaseService<Profile, Integer> implements
         profileDTO.setEmail(rs.getAccount().getEmail());
         profileDTO.setPhone(rs.getPhone());
         profileDTO.setDob(rs.getDob());
+        profileDTO.setStar(5.0);
         profileDTO.setNumOfJob((int) profile.getAppliedJobs().stream().filter(appliedJob -> appliedJob.getApplieStatus().getName().equals(ApplieStatusEnum.COMPLETED.name())).count());
         return profileDTO;
-
 
     }
 
