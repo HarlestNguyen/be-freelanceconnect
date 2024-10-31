@@ -5,7 +5,12 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +20,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import vn.com.easyjob.model.dto.ResponseDTO;
+import vn.com.easyjob.model.entity.JobDetail;
+import vn.com.easyjob.model.entity.Profile;
 import vn.com.easyjob.model.record.JobDetailRecord;
+import vn.com.easyjob.service.auth.ProfileServiceImpl;
 import vn.com.easyjob.service.job.JobDetailService;
-import vn.com.easyjob.util.AuthConstants;
-import vn.com.easyjob.util.JobActionEnum;
-import vn.com.easyjob.util.JobApprovalStatusEnum;
+import vn.com.easyjob.util.*;
 
 import java.util.Map;
 
@@ -27,8 +33,11 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/job")
 public class JobV1Controller {
+    private static final Logger log = LoggerFactory.getLogger(JobV1Controller.class);
     @Autowired
     private JobDetailService jobDetailService;
+    @Autowired
+    private ProfileServiceImpl profileServiceImpl;
 
     // API lấy tất cả các công việc (có phân trang)
     @GetMapping
@@ -65,6 +74,57 @@ public class JobV1Controller {
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO(jobDetailService.findJobById(jobId)));
     }
 
+    @GetMapping("/job-my-self")
+    @PreAuthorize(AuthConstants.EMPLOYER)
+    @SecurityRequirement(name = "bearer-key")
+    public ResponseEntity<?> findMyJobsByApproval(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "sort", defaultValue = "id") String sortBy,
+            @Parameter(description = "Sort direction", schema = @Schema(allowableValues = {"ASC", "DESC"}))
+            @RequestParam(value = "direction", defaultValue = "ASC") String direction,
+            @RequestParam(value = "jobApprovalStatusEnum", defaultValue = "APPROVED") JobApprovalStatusEnum jobApprovalStatusEnum
+    ) {
+        // Tạo đối tượng Sort
+        Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+        // Kiểm tra tính hợp lệ của trường sortBy, nếu không hợp lệ đặt sort mặc định là "id"
+        if (!SortUtils.isValidSortField(JobDetail.class, sortBy)) {
+            sort = Sort.by(Sort.Direction.fromString(direction),"id"); // Đặt sort mặc định là "id"
+        }
+        // Tạo đối tượng Pageable với Sort đã xử lý
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("get My Job Successfully",
+                jobDetailService.findJobApprovalBySelf(pageable, jobApprovalStatusEnum)
+        ));
+    }
+
+    @GetMapping("/job-my-self-by-applierstatus")
+    @PreAuthorize(AuthConstants.EMPLOYER)
+    @SecurityRequirement(name = "bearer-key")
+    public ResponseEntity<?> findMyJobsbyApplierStatus(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "sort", defaultValue = "id") String sortBy,
+            @Parameter(description = "Sort direction", schema = @Schema(allowableValues = {"ASC", "DESC"}))
+            @RequestParam(value = "direction", defaultValue = "ASC") String direction,
+            @RequestParam(value = "ApplieStatusEnum", defaultValue = "WAITING") ApplieStatusEnum applieStatusEnum
+    ) {
+        // Tạo đối tượng Sort
+        Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+        // Kiểm tra tính hợp lệ của trường sortBy, nếu không hợp lệ đặt sort mặc định là "id"
+        if (!SortUtils.isValidSortField(JobDetail.class, sortBy)) {
+            sort = Sort.by(Sort.Direction.fromString(direction),"id"); // Đặt sort mặc định là "id"
+        }
+        // Tạo đối tượng Pageable với Sort đã xử lý
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("get My Job Successfully",
+//                jobDetailService.findJobApprovalBySelf(pageable, jobApprovalStatusEnum)
+                null
+        ));
+
+    }
 
     @PostMapping("toggle-accept/{jobId}")
     public ResponseEntity<?> toggleaccept(@PathVariable("jobId") Long jobId) {
