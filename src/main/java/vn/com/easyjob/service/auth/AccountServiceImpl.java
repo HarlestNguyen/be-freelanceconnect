@@ -241,13 +241,13 @@ public class AccountServiceImpl extends BaseService<Account, Long> implements Ac
                         .profile(
                                 profileRepository.save(
                                         Profile.builder()
-                                                .fullname(userInfo.getGivenName())
+                                                .fullname("ABC")
                                                 .build()
                                 )
                         )
                         .build()
         );
-        log.info("user Profile" +userInfo.getName() + " family name - " + userInfo.getFamilyName() + "-" + userInfo.getGivenName());
+        System.out.println("user Profile" +userInfo.getName() + " family name - " + userInfo.getFamilyName() + "-" + userInfo.getGivenName());
         mailService.sendWithTemplate(newAccount.getEmail(), password, EmailSubjectEnum.PASSWORD, TypeMailEnum.PASSWORD);
 
         return new TokenDTO(jwtService.generateToken(newAccount));
