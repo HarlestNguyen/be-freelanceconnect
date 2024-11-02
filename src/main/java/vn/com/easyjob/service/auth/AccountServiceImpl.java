@@ -247,7 +247,7 @@ public class AccountServiceImpl extends BaseService<Account, Long> implements Ac
                         )
                         .build()
         );
-        System.out.println("user Profile" +userInfo.getName() + " family name - " + userInfo.getFamilyName() + "-" + userInfo.getGivenName());
+
         mailService.sendWithTemplate(newAccount.getEmail(), password, EmailSubjectEnum.PASSWORD, TypeMailEnum.PASSWORD);
 
         return new TokenDTO(jwtService.generateToken(newAccount));
