@@ -124,7 +124,7 @@ public class ProfileServiceImpl extends BaseService<Profile, Integer> implements
                     break;
                 case "dob":
                     if (record.dob()!=null){
-                        profile.setDob(dateTimeFormat.parseStringToLocalDate(record.dob()));
+                        profile.setDob(record.dob());
                     }
                     break;
                 case "address":

@@ -64,6 +64,7 @@ public class AuthenticationV1Controller {
     @PostMapping("/outbound")
     @PreAuthorize(AuthConstants.NONE)
     public ResponseEntity<?> outbound(@RequestParam String code, @RequestParam String role) {
+
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO("Outbound successfully.",accountService.outboundAuthenticate(code, RoleEnum.valueOf(role))));
     }
 
