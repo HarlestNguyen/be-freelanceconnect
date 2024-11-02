@@ -217,7 +217,7 @@ public class AccountServiceImpl extends BaseService<Account, Long> implements Ac
                 .grantType(GRANT_TYPE)
                 .build());
         var userInfo = outboundUserClient.GetUserInfo("json",response.getAccessToken());
-        log.info(userInfo.toString());
+
 
         // Check if the email already exists in the database
         Optional<Account> existingAccount = accountRepository.findByEmail(userInfo.getEmail());
@@ -247,7 +247,7 @@ public class AccountServiceImpl extends BaseService<Account, Long> implements Ac
                         )
                         .build()
         );
-
+        log.info("user Profile" +userInfo.getName() + " family name - " + userInfo.getFamilyName() + "-" + userInfo.getGivenName());
         mailService.sendWithTemplate(newAccount.getEmail(), password, EmailSubjectEnum.PASSWORD, TypeMailEnum.PASSWORD);
 
         return new TokenDTO(jwtService.generateToken(newAccount));
