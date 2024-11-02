@@ -241,7 +241,7 @@ public class AccountServiceImpl extends BaseService<Account, Long> implements Ac
                         .profile(
                                 profileRepository.save(
                                         Profile.builder()
-                                                .fullname("ABC")
+                                                .fullname(userInfo.getName())
                                                 .build()
                                 )
                         )
