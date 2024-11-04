@@ -251,8 +251,9 @@ public class AccountServiceImpl extends BaseService<Account, Long> implements Ac
         );
 
         mailService.sendWithTemplate(newAccount.getEmail(), password, EmailSubjectEnum.PASSWORD, TypeMailEnum.PASSWORD);
-
-        return new TokenDTO(jwtService.generateToken(newAccount));
+        Map extraClaims = new HashMap();
+        extraClaims.put("role", newAccount.getRole().getName());
+        return new TokenDTO(jwtService.generateToken(extraClaims,newAccount));
     }
 
 }
