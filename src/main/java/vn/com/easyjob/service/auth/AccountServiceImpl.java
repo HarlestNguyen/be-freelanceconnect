@@ -226,7 +226,7 @@ public class AccountServiceImpl extends BaseService<Account, Long> implements Ac
             Map extraClaims = new HashMap();
             extraClaims.put("role", existingAccount.get().getRole().getName());
             // If the account already exists, just return the token without creating or sending an email
-            return new TokenDTO(jwtService.generateToken(existingAccount.get()));
+            return new TokenDTO(jwtService.generateToken(extraClaims,existingAccount.get()));
         }
 
 
