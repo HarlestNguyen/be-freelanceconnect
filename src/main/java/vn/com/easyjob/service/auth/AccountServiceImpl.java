@@ -223,6 +223,8 @@ public class AccountServiceImpl extends BaseService<Account, Long> implements Ac
         Optional<Account> existingAccount = accountRepository.findByEmail(userInfo.getEmail());
 
         if (existingAccount.isPresent()) {
+            Map extraClaims = new HashMap();
+            extraClaims.put("role", existingAccount.get().getRole().getName());
             // If the account already exists, just return the token without creating or sending an email
             return new TokenDTO(jwtService.generateToken(existingAccount.get()));
         }
