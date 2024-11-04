@@ -242,6 +242,8 @@ public class AccountServiceImpl extends BaseService<Account, Long> implements Ac
                                 profileRepository.save(
                                         Profile.builder()
                                                 .fullname(userInfo.getName())
+                                                .avatar(userInfo.getPicture())
+                                                .isVerified(userInfo.isVerified_email())
                                                 .build()
                                 )
                         )
